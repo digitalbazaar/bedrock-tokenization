@@ -27,8 +27,8 @@
     "assert-plus": "^1.0.0",
     "axios": "^0.19.2",
     "bnid": "^2.0.0",
-    "crypto-ld": "^3.7.0",
     "canonicalize": "^1.0.1",
+    "crypto-ld": "^3.7.0",
     "did-io": "^0.8.0",
     "did-method-key": "^0.6.1",
     "did-veres-one": "^12.1.1",
@@ -36,8 +36,9 @@
     "jsonld-signatures": "^5.0.1",
     "lru-cache": "^5.1.1",
     "minimal-cipher": "^1.0.0",
-    "pako": "^1.0.11",
     "ocapld": "^2.0.0",
+    "p-limit": "^3.0.1",
+    "pako": "^1.0.11",
     "webkms-client": "^2.1.0"
   },
   "peerDependencies": {
