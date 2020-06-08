@@ -36,6 +36,7 @@
     "jsonld-signatures": "^5.0.1",
     "lru-cache": "^5.1.1",
     "minimal-cipher": "^1.0.0",
+    "pako": "^1.0.11",
     "ocapld": "^2.0.0",
     "webkms-client": "^2.1.0"
   },
