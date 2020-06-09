@@ -33,6 +33,7 @@
     "did-method-key": "^0.6.1",
     "did-veres-one": "^12.1.1",
     "edv-client": "^2.7.0",
+    "isomorphic-webcrypto": "^2.3.6",
     "jsonld-signatures": "^5.0.1",
     "lru-cache": "^5.1.1",
     "minimal-cipher": "^1.0.0",
