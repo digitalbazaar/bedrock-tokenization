@@ -1,5 +1,7 @@
 module.exports = {
-  root: true,
+  globals: {
+    should: true
+  },
   env: {
     node: true,
     mocha: true
