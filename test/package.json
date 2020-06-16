@@ -1,15 +1,21 @@
 {
-  "name": "test",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "name": "bedrock-tokenization-test",
+  "version": "0.0.1-0",
+  "description": "Bedrock Tokenization Tests",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "node --preserve-symlinks test.js test",
+    "coverage": "cross-env NODE_ENV=test nyc --reporter=lcov --reporter=text-summary npm test",
+    "coverage-ci": "cross-env NODE_ENV=test nyc --reporter=text-lcov npm test > coverage.lcov",
+    "coverage-report": "nyc report"
   },
   "author": "",
   "dependencies": {
     "bedrock": "^3.1.1",
+    "bedrock-https-agent": "^1.0.1",
+    "bedrock-tokenization": "file://..",
     "bedrock-mongodb": "^7.0.0",
-    "bedrock-test": "^5.3.0"
+    "bedrock-test": "^5.3.0",
+    "cross-env": "^7.0.2",
+    "nyc": "^15.1.0"
   }
 }
