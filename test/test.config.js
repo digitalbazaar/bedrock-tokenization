@@ -17,3 +17,14 @@ config.mongodb.local.collection = 'bedrock_tokenization_test';
 config.mongodb.dropCollections = {};
 config.mongodb.dropCollections.onInit = true;
 config.mongodb.dropCollections.collections = [];
+
+// HTTPS Agent
+config['https-agent'].rejectUnauthorized = false;
+
+// KMS
+config.kms.allowedHost = config.server.host;
+
+// KMS HTTPS API
+// optionally require an authenticated session
+// this option may be set to false when operating behind an authenticated proxy
+config['kms-http'].requireAuthentication = false;
