@@ -27,6 +27,8 @@
     "assert-plus": "^1.0.0",
     "bnid": "^2.0.0",
     "canonicalize": "^1.0.1",
+    "did-io": "^0.8.2",
+    "did-method-key": "^0.6.1",
     "isomorphic-webcrypto": "^2.3.6",
     "minimal-cipher": "^1.0.0",
     "p-limit": "^3.0.1",
