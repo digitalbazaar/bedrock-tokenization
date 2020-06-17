@@ -20,7 +20,7 @@ exports.isTokenizer = possibleTokenizer => {
   isHmac(possibleTokenizer.hmac);
 };
 
-exports.isTokenVersion = possibleTokenVersion => {
+exports.isTokenVersion = (possibleTokenVersion, expectedOptions) => {
   should.exist(possibleTokenVersion);
   possibleTokenVersion.should.be.an('object');
   possibleTokenVersion.should.have.property('meta');
@@ -34,4 +34,7 @@ exports.isTokenVersion = possibleTokenVersion => {
   tokenVersion.tokenizerId.should.be.a('string');
   tokenVersion.should.have.property('options');
   tokenVersion.options.should.be.an('object');
+  if(expectedOptions) {
+    tokenVersion.options.should.deep.equal(expectedOptions);
+  }
 };
