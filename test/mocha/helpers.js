@@ -1,3 +1,5 @@
+const database = require('bedrock-mongodb');
+
 const isHmac = hmac => {
   hmac.should.be.an('object');
   hmac.should.have.property('id');
@@ -37,4 +39,13 @@ exports.isTokenVersion = (possibleTokenVersion, expectedOptions) => {
   if(expectedOptions) {
     tokenVersion.options.should.deep.equal(expectedOptions);
   }
+};
+
+exports.cleanDB = async () => {
+  await database.collections['tokenization-document'].deleteMany({});
+  await database.collections['tokenization-pairwiseToken'].deleteMany({});
+  await database.collections['tokenization-tokenizer'].deleteMany({});
+  await database.collections['tokenization-tokenVersion'].deleteMany({});
+  await database.collections['tokenization-tokenVersionOptions'].deleteMany({});
+  await database.collections['tokenization-tokenBatch'].deleteMany({});
 };
