@@ -1,7 +1,7 @@
 const {tokenizers, tokenVersions} = require('bedrock-tokenization');
 const {isTokenVersion, cleanDB} = require('./helpers');
 
-describe('TokenVersions', function() {
+describe.skip('TokenVersions', function() {
   let tokenizer = null;
   before(async function() {
     await cleanDB();
