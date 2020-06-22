@@ -1,13 +1,12 @@
-const {tokenizers, tokenVersions} = require('bedrock-tokenization');
-const {isTokenVersion, cleanDB} = require('./helpers');
+const {requireUncached, isTokenVersion} = require('./helpers');
+const {tokenizers, tokenVersions} = requireUncached('bedrock-tokenization');
 
-describe.skip('TokenVersions', function() {
+describe('TokenVersions', function() {
   let tokenizer = null;
   before(async function() {
-    await cleanDB();
     tokenizer = await tokenizers.getCurrent();
   });
-  it('should create a TokenVersion with out an id', async function() {
+  it.skip('should create a TokenVersion with out an id', async function() {
     const options = {batchIdSize: 16, batchSaltSize: 99};
     const {id: tokenizerId} = tokenizer;
     await tokenVersions.create({tokenizerId, options});
@@ -67,7 +66,7 @@ describe.skip('TokenVersions', function() {
     tokenVersionOptions.should.have.property('options');
     tokenVersionOptions.options.should.deep.equal(options);
   });
-  it('should insert options', async function() {
+  it.skip('should insert options', async function() {
     const options = {batchIdSize: 24, batchSaltSize: 31};
     const result = await tokenVersions.insertOptions({options});
     console.log({result});
