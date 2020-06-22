@@ -1,8 +1,10 @@
 const {tokens, tokenizers} = require('bedrock-tokenization');
+const {cleanDB} = require('./helpers');
 
 describe('Tokens', function() {
   let tokenizer = null;
   before(async function() {
+    await cleanDB();
     tokenizer = await tokenizers.getCurrent();
   });
   it('should create a token', async function() {
