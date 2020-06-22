@@ -1,7 +1,10 @@
 const {tokenizers} = require('bedrock-tokenization');
-const {isTokenizer} = require('./helpers');
+const {isTokenizer, cleanDB} = require('./helpers');
 
 describe('Tokenizers', function() {
+  before(async function() {
+    await cleanDB();
+  });
   it('should getCurrent tokenizer when none is cached', async function() {
     const tokenizer = await tokenizers.getCurrent();
     isTokenizer(tokenizer);
