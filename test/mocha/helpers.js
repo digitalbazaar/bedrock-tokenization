@@ -49,3 +49,21 @@ exports.cleanDB = async () => {
   await database.collections['tokenization-tokenVersionOptions'].deleteMany({});
   await database.collections['tokenization-tokenBatch'].deleteMany({});
 };
+
+exports.areTokens = result => {
+  should.exist(result);
+  result.should.be.an('object');
+  result.should.have.property('tokens');
+  const {tokens} = result;
+  tokens.should.be.an('array');
+  tokens.forEach(token => {
+    should.exist(token);
+    token.should.be.an('Uint8Array');
+  });
+};
+
+// we need to reset the module for most tests
+exports.requireUncached = module => {
+  delete require.cache[require.resolve(module)];
+  return require(module);
+};

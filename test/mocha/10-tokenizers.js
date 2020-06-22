@@ -1,10 +1,7 @@
-const {tokenizers} = require('bedrock-tokenization');
-const {isTokenizer, cleanDB} = require('./helpers');
+const {requireUncached, isTokenizer} = require('./helpers');
+const {tokenizers} = requireUncached('bedrock-tokenization');
 
-describe.skip('Tokenizers', function() {
-  before(async function() {
-    await cleanDB();
-  });
+describe('Tokenizers', function() {
   it('should getCurrent tokenizer when none is cached', async function() {
     const tokenizer = await tokenizers.getCurrent();
     isTokenizer(tokenizer);
