@@ -24,9 +24,9 @@ exports.isTokenVersion = (possibleTokenVersion, expectedOptions) => {
 };
 
 exports.cleanDB = async () => {
+  await database.collections['tokenizer-tokenizer'].deleteMany({});
   await database.collections['tokenization-document'].deleteMany({});
   await database.collections['tokenization-pairwiseToken'].deleteMany({});
-  await database.collections['tokenization-tokenizer'].deleteMany({});
   await database.collections['tokenization-tokenVersion'].deleteMany({});
   await database.collections['tokenization-tokenVersionOptions'].deleteMany({});
   await database.collections['tokenization-tokenBatch'].deleteMany({});
