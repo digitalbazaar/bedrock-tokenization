@@ -8,6 +8,7 @@ require('bedrock-jsonld-document-loader');
 require('bedrock-passport');
 require('bedrock-permission');
 require('bedrock-mongodb');
+require('bedrock-tokenizer');
 require('bedrock-tokenization');
 require('bedrock-https-agent');
 require('bedrock-kms');
