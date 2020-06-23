@@ -1,5 +1,6 @@
 const {requireUncached, isTokenVersion} = require('./helpers');
-const {tokenizers, tokenVersions} = requireUncached('bedrock-tokenization');
+const {tokenizers} = requireUncached('bedrock-tokenizer');
+const {tokenVersions} = requireUncached('bedrock-tokenization');
 
 describe('TokenVersions', function() {
   let tokenizer = null;
