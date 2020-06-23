@@ -1,5 +1,9 @@
 const database = require('bedrock-mongodb');
 
+exports.isDocument = result => {
+  console.log('isDocument', {result});
+};
+
 const isHmac = hmac => {
   hmac.should.be.an('object');
   hmac.should.have.property('id');
