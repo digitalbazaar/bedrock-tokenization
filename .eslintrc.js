@@ -7,4 +7,4 @@ module.exports = {
     'digitalbazaar'
   ],
   ignorePatterns: ['node_modules/']
-}
+};
