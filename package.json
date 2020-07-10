@@ -4,7 +4,7 @@
   "description": "Bedrock Tokenization Engine",
   "main": "./lib",
   "scripts": {
-    "lint": "eslint lib test"
+    "lint": "eslint ."
   },
   "repository": {
     "type": "git",
