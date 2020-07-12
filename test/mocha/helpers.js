@@ -32,6 +32,10 @@ exports.cleanDB = async () => {
   await database.collections['tokenization-tokenBatch'].deleteMany({});
 };
 
+exports.cleanBatchDB = async () => {
+  await database.collections['tokenization-tokenBatch'].deleteMany({});
+};
+
 exports.areTokens = result => {
   should.exist(result);
   result.should.be.an('object');
