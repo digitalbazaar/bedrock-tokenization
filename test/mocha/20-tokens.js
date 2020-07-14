@@ -1,7 +1,35 @@
 const {requireUncached, areTokens, cleanBatchDB} = require('./helpers');
 const {tokens} = requireUncached('bedrock-tokenization');
+// const crypto = require('crypto');
+// const sinon = require('sinon');
+// const MAX_UINT32 = 4294967295;
 
 describe('Tokens', function() {
+  /* let randomBytesStub;
+  let mathRandomStub;
+  before(async () => {
+    // Math.random will always return 0
+    // this will ensure that the same shard is selected every time
+    mathRandomStub = sinon.stub(Math, 'random').callsFake(() => 0);
+    // create randomBytes stub to return constant value
+    randomBytesStub = sinon.stub(crypto, 'randomBytes').callsFake(
+      async (size, cb) => {
+        if(size > MAX_UINT32) {
+          throw new RangeError('requested too many random bytes');
+        }
+        const bytes = Buffer.alloc(size);
+        if(typeof cb === 'function') {
+          return process.nextTick(function() {
+            cb(null, bytes);
+          });
+        }
+        return bytes;
+      });
+  });
+  after(async () => {
+    mathRandomStub.restore();
+    randomBytesStub.restore();
+  }); */
   it('should create a token with attributes', async function() {
     const tokenCount = 5;
     const attributes = Uint8Array.from(new Set([1, 2]));
@@ -55,34 +83,24 @@ describe('Tokens', function() {
       should.exist(err);
       err.message.should.equal('"attributes" maximum size is 8 bytes.');
     });
-  // it.only('should throw duplicate error if token is created twice.',
-  //   async function() {
-  //     const tokenCount = 1;
-  //     const attributes = Uint8Array.from(new Set([1]));
-  //     const internalId = 'foo';
-  //     const requester = 'requester';
-  //     const requester1 = 'rerrr';
-  //     let err;
-  //     let result1;
-  //     let result2;
-  //     let token;
-  //     try {
-  //       const {tokens: tks} = await tokens.create(
-  //         {internalId, attributes, tokenCount});
-  //         token = tks[0];
-  //         result1 = await tokens.resolve({requester, token});
-  //         console.log(result1);
-  //         try {
-  //           result2 = await tokens.resolve({requester: requester1, token});
-  //         } catch (error) {
-  //           console.log(error, '------------>');
-  //         }
-  //         console.log(result2);
-  //     } catch(e) {
-  //       err = e;
-  //     }
-  //     console.log(err, 'this is the err');
-  //   });
+  it.skip('should throw duplicate error if token is created twice.',
+    async function() {
+      const tokenCount = 1;
+      const attributes = Uint8Array.from(new Set([1]));
+      const internalId = 'foo';
+      let err;
+      let result;
+      let result2;
+      try {
+        result = await tokens.create({internalId, attributes, tokenCount});
+        console.log(result, 'result::::::::::::');
+        result2 = await tokens.create({internalId, attributes, tokenCount});
+        console.log(result2, 'result2::::::::::::');
+      } catch(e) {
+        err = e;
+      }
+      console.log(err, 'this is the err::::::');
+    });
   it('should throw error if token does not exist in database',
     async function() {
       const tokenCount = 1;
