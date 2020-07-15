@@ -1,6 +1,7 @@
 module.exports = {
   globals: {
-    should: true
+    should: true,
+    assertNoError: true
   },
   env: {
     node: true,

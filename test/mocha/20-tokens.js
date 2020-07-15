@@ -1,3 +1,6 @@
+/*!
+ * Copyright (c) 2020 Digital Bazaar, Inc. All rights reserved.
+ */
 const {requireUncached, areTokens, cleanBatchDB} = require('./helpers');
 const {tokens} = requireUncached('bedrock-tokenization');
 const crypto = require('crypto');
@@ -94,12 +97,13 @@ describe('Tokens', function() {
       const requester = 'requester';
       let err;
       let result;
+
+      const {tokens: tks} = await tokens.create(
+        {internalId, attributes, tokenCount});
+      const token = tks[0];
+      // intentionally clear tokenBatch database to remove token created
+      await cleanBatchDB();
       try {
-        const {tokens: tks} = await tokens.create(
-          {internalId, attributes, tokenCount});
-        const token = tks[0];
-        // intentionally clear tokenBatch database to remove token created
-        await cleanBatchDB();
         result = await tokens.resolve({requester, token});
       } catch(e) {
         err = e;
@@ -117,16 +121,16 @@ describe('Tokens', function() {
       const requester = 'requester';
       let err;
       let result;
-      let tks;
+
+      const tks = await tokens.create(
+        {internalId, attributes, tokenCount});
+      const token = tks.tokens[0];
       try {
-        tks = await tokens.create(
-          {internalId, attributes, tokenCount});
-        const token = tks.tokens[0];
         result = await tokens.resolve({requester, token});
       } catch(e) {
         err = e;
       }
-      should.not.exist(err);
+      assertNoError(err);
       areTokens(tks);
       should.exist(result.pairwiseToken);
     });
@@ -137,21 +141,19 @@ describe('Tokens', function() {
       const attributes = Uint8Array.from(new Set([1]));
       const requester = 'requester';
       let err;
-      let result1;
       let result2;
-      let tks;
+
+      const tks = await tokens.create(
+        {internalId, attributes, tokenCount});
+      const token = tks.tokens[0];
+      const result1 = await tokens.resolve({requester, token});
       try {
-        tks = await tokens.create(
-          {internalId, attributes, tokenCount});
-        const token = tks.tokens[0];
-        result1 = await tokens.resolve({requester, token});
         // resolve token with same requester again
         result2 = await tokens.resolve({requester, token});
-
       } catch(e) {
         err = e;
       }
-      should.not.exist(err);
+      assertNoError(err);
       areTokens(tks);
       should.exist(result1.pairwiseToken);
       should.exist(result2.pairwiseToken);
@@ -165,17 +167,15 @@ describe('Tokens', function() {
       const requester1 = 'requester1';
       const requester2 = 'requester2';
       let err;
-      let result1;
       let result2;
-      let tks;
+
+      const tks = await tokens.create(
+        {internalId, attributes, tokenCount});
+      const token = tks.tokens[0];
+      const result1 = await tokens.resolve({requester: requester1, token});
       try {
-        tks = await tokens.create(
-          {internalId, attributes, tokenCount});
-        const token = tks.tokens[0];
-        result1 = await tokens.resolve({requester: requester1, token});
         // resolve token with different requester
         result2 = await tokens.resolve({requester: requester2, token});
-
       } catch(e) {
         err = e;
       }
@@ -215,12 +215,13 @@ describe('Tokens', function() {
     const requester = 'requester';
     let err;
     let result;
+
+    const {tokens: tks} = await tokens.create(
+      {internalId, attributes, tokenCount});
+    let token = tks[0];
+    // change type of token to string
+    token = '';
     try {
-      const {tokens: tks} = await tokens.create(
-        {internalId, attributes, tokenCount});
-      let token = tks[0];
-      // change type of token to string
-      token = '';
       result = await tokens.resolve({requester, token});
     } catch(e) {
       err = e;
@@ -239,12 +240,12 @@ describe('Tokens', function() {
       const requester = 'requester';
       let err;
       let result;
+      const {tokens: tks} = await tokens.create(
+        {internalId, attributes, tokenCount});
+      let token = tks[0];
+      // change length of token to be less than 50
+      token = token.slice(0, 48);
       try {
-        const {tokens: tks} = await tokens.create(
-          {internalId, attributes, tokenCount});
-        let token = tks[0];
-        // change length of token to be less than 50
-        token = token.slice(0, 48);
         result = await tokens.resolve({requester, token});
       } catch(e) {
         err = e;
@@ -263,19 +264,19 @@ describe('Tokens', function() {
       let err;
       let result;
       let token;
+      const {tokens: tks} = await tokens.create(
+        {internalId, attributes, tokenCount});
+      token = tks[0];
+      // change length of token to be greater than 58
+      token = Uint8Array.from([
+        0, 0, 129, 160, 29, 189, 3, 64, 185, 31, 158,
+        32, 154, 159, 45, 235, 20, 205, 64, 222, 9,
+        66, 192, 79, 183, 54, 204, 169, 197, 19, 52,
+        89, 223, 49, 130, 40, 202, 189, 181, 112, 245,
+        14, 251, 121, 5, 64, 178, 119, 89, 75, 1, 2, 3,
+        4, 5, 10, 200, 300, 10
+      ]);
       try {
-        const {tokens: tks} = await tokens.create(
-          {internalId, attributes, tokenCount});
-        token = tks[0];
-        // change length of token to be greater than 58
-        token = Uint8Array.from([
-          0, 0, 129, 160, 29, 189, 3, 64, 185, 31, 158,
-          32, 154, 159, 45, 235, 20, 205, 64, 222, 9,
-          66, 192, 79, 183, 54, 204, 169, 197, 19, 52,
-          89, 223, 49, 130, 40, 202, 189, 181, 112, 245,
-          14, 251, 121, 5, 64, 178, 119, 89, 75, 1, 2, 3,
-          4, 5, 10, 200, 300, 10
-        ]);
         result = await tokens.resolve({requester, token});
       } catch(e) {
         err = e;
@@ -292,15 +293,15 @@ describe('Tokens', function() {
     const internalId = 'aM6pup9s6XTaYTho';
     let err;
     let result;
+    const {tokens: tks} = await tokens.create(
+      {internalId, attributes, tokenCount});
+    const token = tks[0];
     try {
-      const {tokens: tks} = await tokens.create(
-        {internalId, attributes, tokenCount});
-      const token = tks[0];
       result = await tokens.resolveToInternalId({token});
     } catch(e) {
       err = e;
     }
-    should.not.exist(err);
+    assertNoError(err);
     should.exist(result);
     result.should.be.an('object');
     result.should.deep.equal({internalId: 'aM6pup9s6XTaYTho'});
@@ -313,12 +314,13 @@ describe('Tokens', function() {
       const requester = 'requester';
       let err;
       let result;
+
+      const {tokens: tks} = await tokens.create(
+        {internalId, attributes, tokenCount});
+      const token = tks[0];
+      // change wrapped value by altering its first index
+      token[26] = 0;
       try {
-        const {tokens: tks} = await tokens.create(
-          {internalId, attributes, tokenCount});
-        const token = tks[0];
-        // change wrapped value by altering its first index
-        token[26] = 0;
         result = await tokens.resolve({requester, token});
       } catch(e) {
         err = e;
@@ -337,12 +339,13 @@ describe('Tokens', function() {
       const requester = 'requester';
       let err;
       let result;
+
+      const {tokens: tks} = await tokens.create(
+        {internalId, attributes, tokenCount});
+      const token = tks[0];
+      // change attributes value by altering its index at 50
+      token[50] = 0;
       try {
-        const {tokens: tks} = await tokens.create(
-          {internalId, attributes, tokenCount});
-        const token = tks[0];
-        // change attributes value by altering its index at 50
-        token[50] = 0;
         result = await tokens.resolve({requester, token});
       } catch(e) {
         err = e;
@@ -362,6 +365,8 @@ describe('TokensDuplicateError', function() {
         if(size > MAX_UINT32) {
           throw new RangeError('requested too many random bytes');
         }
+        // allocate a zero filled buffer which is returned without further
+        // modification
         const bytes = Buffer.alloc(size);
         if(typeof cb === 'function') {
           return process.nextTick(function() {
@@ -376,14 +381,18 @@ describe('TokensDuplicateError', function() {
   });
   it('should throw duplicate error if token is created twice.',
     async function() {
+      // crypto.randomBytes has been stubbed so that the same batch ID will be
+      // generated everytime, and we are consuming all tokens in the first batch
+      // associated with the internalId so that when a new batch is created, the
+      // same ID is generated and the error occurs.
       const tokenCount = 100;
       const attributes = Uint8Array.from(new Set([1]));
       const internalId = 'aM6pup9s6XTaYTho';
       let err;
-      let result1;
       let result2;
+
+      const result1 = await tokens.create({internalId, attributes, tokenCount});
       try {
-        result1 = await tokens.create({internalId, attributes, tokenCount});
         // create token again with same parameters
         result2 = await tokens.create({internalId, attributes, tokenCount});
       } catch(e) {
