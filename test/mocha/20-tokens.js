@@ -1,57 +1,60 @@
 const {requireUncached, areTokens, cleanBatchDB} = require('./helpers');
 const {tokens} = requireUncached('bedrock-tokenization');
-// const crypto = require('crypto');
-// const sinon = require('sinon');
-// const MAX_UINT32 = 4294967295;
+const crypto = require('crypto');
+const sinon = require('sinon');
+const MAX_UINT32 = 4294967295;
 
 describe('Tokens', function() {
-  /* let randomBytesStub;
-  let mathRandomStub;
-  before(async () => {
-    // Math.random will always return 0
-    // this will ensure that the same shard is selected every time
-    mathRandomStub = sinon.stub(Math, 'random').callsFake(() => 0);
-    // create randomBytes stub to return constant value
-    randomBytesStub = sinon.stub(crypto, 'randomBytes').callsFake(
-      async (size, cb) => {
-        if(size > MAX_UINT32) {
-          throw new RangeError('requested too many random bytes');
-        }
-        const bytes = Buffer.alloc(size);
-        if(typeof cb === 'function') {
-          return process.nextTick(function() {
-            cb(null, bytes);
-          });
-        }
-        return bytes;
-      });
-  });
-  after(async () => {
-    mathRandomStub.restore();
-    randomBytesStub.restore();
-  }); */
   it('should create a token with attributes', async function() {
     const tokenCount = 5;
     const attributes = Uint8Array.from(new Set([1, 2]));
-    const internalId = 'foo';
+    const internalId = 'aM6pup9s6XTaYTho';
     const result = await tokens.create({internalId, attributes, tokenCount});
     areTokens(result);
   });
   it('should create a token without attributes', async function() {
     const tokenCount = 5;
-    const internalId = 'no-attr';
+    const internalId = 'no-attr-aM6pup9s';
     const result = await tokens.create({internalId, tokenCount});
     areTokens(result);
   });
-  it('should create a token without internalId', async function() {
+  it('should throw error if internalId is not given', async function() {
     const tokenCount = 2;
     const attributes = Uint8Array.from(new Set([1, 2]));
-    const result = await tokens.create({attributes, tokenCount});
-    areTokens(result);
+    let err;
+    let result;
+    try {
+      result = await tokens.create({attributes, tokenCount});
+    } catch(e) {
+      err = e;
+    }
+    should.not.exist(result);
+    should.exist(err);
+    err.message.should.equal('internalId (string) is required');
   });
-  it('should throw error if "attributes" is not uint8Array', async function() {
+  it('should throw error if internalId.length does not equal INTERNAL_ID_SIZE',
+    async function() {
+      const tokenCount = 2;
+      const attributes = Uint8Array.from(new Set([1, 2]));
+      const internalIds = ['foo', 'aM6pup9s6XTaYThooo'];
+
+      for(const internalId of internalIds) {
+        let err;
+        let result;
+        try {
+          result = await tokens.create({internalId, attributes, tokenCount});
+        } catch(e) {
+          err = e;
+        }
+        should.not.exist(result);
+        should.exist(err);
+        err.name.should.equal('TypeError');
+        err.message.should.equal('"internalId.length" must be 16.');
+      }
+    });
+  it('should throw error if attributes is not uint8Array', async function() {
     const tokenCount = 5;
-    const internalId = 'foo';
+    const internalId = 'aM6pup9s6XTaYTho';
     const attributesTypes = [1, false, {}, '', []];
 
     for(const attributes of attributesTypes) {
@@ -67,10 +70,10 @@ describe('Tokens', function() {
       err.message.should.equal('"attributes" must be a Uint8Array.');
     }
   });
-  it('should throw error if "attributes" length is greater than max size',
+  it('should throw error if attributes.length is greater than MAX_AAD_SIZE',
     async function() {
       const tokenCount = 5;
-      const internalId = 'foo';
+      const internalId = 'aM6pup9s6XTaYTho';
       const attributes = Uint8Array.from(new Set([1, 2, 3, 4, 5, 6, 7, 8, 9]));
       let err;
       let result;
@@ -83,29 +86,11 @@ describe('Tokens', function() {
       should.exist(err);
       err.message.should.equal('"attributes" maximum size is 8 bytes.');
     });
-  it.skip('should throw duplicate error if token is created twice.',
-    async function() {
-      const tokenCount = 1;
-      const attributes = Uint8Array.from(new Set([1]));
-      const internalId = 'foo';
-      let err;
-      let result;
-      let result2;
-      try {
-        result = await tokens.create({internalId, attributes, tokenCount});
-        console.log(result, 'result::::::::::::');
-        result2 = await tokens.create({internalId, attributes, tokenCount});
-        console.log(result2, 'result2::::::::::::');
-      } catch(e) {
-        err = e;
-      }
-      console.log(err, 'this is the err::::::');
-    });
   it('should throw error if token does not exist in database',
     async function() {
       const tokenCount = 1;
       const attributes = Uint8Array.from(new Set([1]));
-      const internalId = 'foo';
+      const internalId = 'aM6pup9s6XTaYTho';
       const requester = 'requester';
       let err;
       let result;
@@ -127,7 +112,7 @@ describe('Tokens', function() {
   it('should resolve token to the party identified by "requester"',
     async function() {
       const tokenCount = 1;
-      const internalId = 'foo';
+      const internalId = 'aM6pup9s6XTaYTho';
       const attributes = Uint8Array.from(new Set([1]));
       const requester = 'requester';
       let err;
@@ -148,7 +133,7 @@ describe('Tokens', function() {
   it('should resolve token when called twice with same "requester"',
     async function() {
       const tokenCount = 1;
-      const internalId = 'foo';
+      const internalId = 'aM6pup9s6XTaYTho';
       const attributes = Uint8Array.from(new Set([1]));
       const requester = 'requester';
       let err;
@@ -160,6 +145,7 @@ describe('Tokens', function() {
           {internalId, attributes, tokenCount});
         const token = tks.tokens[0];
         result1 = await tokens.resolve({requester, token});
+        // resolve token with same requester again
         result2 = await tokens.resolve({requester, token});
 
       } catch(e) {
@@ -174,11 +160,10 @@ describe('Tokens', function() {
   it('should throw error when token is resolved with different "requester"',
     async function() {
       const tokenCount = 1;
-      const internalId = 'foo';
+      const internalId = 'aM6pup9s6XTaYTho';
       const attributes = Uint8Array.from(new Set([1]));
       const requester1 = 'requester1';
       const requester2 = 'requester2';
-
       let err;
       let result1;
       let result2;
@@ -188,6 +173,7 @@ describe('Tokens', function() {
           {internalId, attributes, tokenCount});
         const token = tks.tokens[0];
         result1 = await tokens.resolve({requester: requester1, token});
+        // resolve token with different requester
         result2 = await tokens.resolve({requester: requester2, token});
 
       } catch(e) {
@@ -200,9 +186,31 @@ describe('Tokens', function() {
       err.name.should.equal('NotAllowedError');
       err.message.should.equal('Token already used.');
     });
+  it('should throw error when tokenCount is greater than 100 or less than 0',
+    async function() {
+      const tokenCounts = [0, 101];
+      const internalId = 'aM6pup9s6XTaYTho';
+      const attributes = Uint8Array.from(new Set([1]));
+
+      for(const tokenCount of tokenCounts) {
+        let err;
+        let tks;
+        try {
+          tks = await tokens.create(
+            {internalId, attributes, tokenCount});
+        } catch(e) {
+          err = e;
+        }
+        should.not.exist(tks);
+        should.exist(err);
+        err.name.should.equal('TypeError');
+        err.message.should.equal('"tokenCount" must be greater than 0 or ' +
+          'less than or equal to 100.');
+      }
+    });
   it('should throw error when token is not uint8Array', async function() {
     const tokenCount = 1;
-    const internalId = 'foo';
+    const internalId = 'aM6pup9s6XTaYTho';
     const attributes = Uint8Array.from(new Set([1]));
     const requester = 'requester';
     let err;
@@ -211,7 +219,7 @@ describe('Tokens', function() {
       const {tokens: tks} = await tokens.create(
         {internalId, attributes, tokenCount});
       let token = tks[0];
-      // change type of token
+      // change type of token to string
       token = '';
       result = await tokens.resolve({requester, token});
     } catch(e) {
@@ -226,7 +234,7 @@ describe('Tokens', function() {
   it('should throw error if token length is less than minimumSize',
     async function() {
       const tokenCount = 1;
-      const internalId = 'foo';
+      const internalId = 'aM6pup9s6XTaYTho';
       const attributes = Uint8Array.from(new Set([1, 2, 3]));
       const requester = 'requester';
       let err;
@@ -249,7 +257,7 @@ describe('Tokens', function() {
   it('should throw error if token length is greater than maximumSize',
     async function() {
       const tokenCount = 1;
-      const internalId = 'foo';
+      const internalId = 'aM6pup9s6XTaYTho';
       const attributes = Uint8Array.from(new Set([1, 2, 3]));
       const requester = 'requester';
       let err;
@@ -281,7 +289,7 @@ describe('Tokens', function() {
   it('should resolve token to "internalId" it is linked to', async function() {
     const tokenCount = 5;
     const attributes = Uint8Array.from(new Set([1]));
-    const internalId = 'foo';
+    const internalId = 'aM6pup9s6XTaYTho';
     let err;
     let result;
     try {
@@ -295,32 +303,13 @@ describe('Tokens', function() {
     should.not.exist(err);
     should.exist(result);
     result.should.be.an('object');
-    result.should.deep.equal({internalId: 'foo'});
-  });
-  it('"internalID" should be null if no internalId was provided when creating' +
-    ' token', async function() {
-    const tokenCount = 5;
-    const attributes = Uint8Array.from(new Set([1]));
-    let err;
-    let result;
-    try {
-      const {tokens: tks} = await tokens.create(
-        {attributes, tokenCount});
-      const token = tks[0];
-      result = await tokens.resolveToInternalId({token});
-    } catch(e) {
-      err = e;
-    }
-    should.not.exist(err);
-    should.exist(result);
-    result.should.be.an('object');
-    result.should.deep.equal({internalId: null});
+    result.should.deep.equal({internalId: 'aM6pup9s6XTaYTho'});
   });
   it('should throw error when wrapped value fails to get decrypted',
     async function() {
       const tokenCount = 1;
       const attributes = Uint8Array.from(new Set([1]));
-      const internalId = 'foo';
+      const internalId = 'aM6pup9s6XTaYTho';
       const requester = 'requester';
       let err;
       let result;
@@ -328,8 +317,8 @@ describe('Tokens', function() {
         const {tokens: tks} = await tokens.create(
           {internalId, attributes, tokenCount});
         const token = tks[0];
-        // change first wrapped value to zero
-        token[18] = 0;
+        // change wrapped value by altering its first index
+        token[26] = 0;
         result = await tokens.resolve({requester, token});
       } catch(e) {
         err = e;
@@ -340,11 +329,11 @@ describe('Tokens', function() {
       err.message.should.equal('Invalid token.');
       err.cause.message.should.equal('Decryption failed.');
     });
-  it('should throw error when "attributes" is incorrect.',
+  it('should throw error when attributes is incorrect.',
     async function() {
       const tokenCount = 1;
       const attributes = Uint8Array.from(new Set([1]));
-      const internalId = 'foo';
+      const internalId = 'aM6pup9s6XTaYTho';
       const requester = 'requester';
       let err;
       let result;
@@ -352,7 +341,7 @@ describe('Tokens', function() {
         const {tokens: tks} = await tokens.create(
           {internalId, attributes, tokenCount});
         const token = tks[0];
-        //mess with attribute at index 50
+        // change attributes value by altering its index at 50
         token[50] = 0;
         result = await tokens.resolve({requester, token});
       } catch(e) {
@@ -362,5 +351,48 @@ describe('Tokens', function() {
       should.exist(err);
       err.name.should.equal('DataError');
       err.message.should.equal('Invalid token.');
+    });
+});
+
+describe('TokensDuplicateError', function() {
+  let randomBytesStub;
+  before(() => {
+    randomBytesStub = sinon.stub(crypto, 'randomBytes').callsFake(
+      (size, cb) => {
+        if(size > MAX_UINT32) {
+          throw new RangeError('requested too many random bytes');
+        }
+        const bytes = Buffer.alloc(size);
+        if(typeof cb === 'function') {
+          return process.nextTick(function() {
+            cb(null, bytes);
+          });
+        }
+        return bytes;
+      });
+  });
+  after(() => {
+    randomBytesStub.restore();
+  });
+  it('should throw duplicate error if token is created twice.',
+    async function() {
+      const tokenCount = 100;
+      const attributes = Uint8Array.from(new Set([1]));
+      const internalId = 'aM6pup9s6XTaYTho';
+      let err;
+      let result1;
+      let result2;
+      try {
+        result1 = await tokens.create({internalId, attributes, tokenCount});
+        // create token again with same parameters
+        result2 = await tokens.create({internalId, attributes, tokenCount});
+      } catch(e) {
+        err = e;
+      }
+      should.exist(result1);
+      should.not.exist(result2);
+      should.exist(err);
+      err.name.should.equal('DuplicateError');
+      err.message.should.equal('Duplicate token batch.');
     });
 });
