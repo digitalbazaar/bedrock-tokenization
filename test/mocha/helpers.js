@@ -4,22 +4,22 @@ exports.isDocument = result => {
   console.log('isDocument', {result});
 };
 
-exports.isTokenVersion = (possibleTokenVersion, expectedOptions) => {
-  should.exist(possibleTokenVersion);
-  possibleTokenVersion.should.be.an('object');
-  possibleTokenVersion.should.have.property('meta');
-  possibleTokenVersion.meta.should.be.an('object');
-  possibleTokenVersion.should.have.property('tokenVersion');
-  const {tokenVersion} = possibleTokenVersion;
-  tokenVersion.should.be.an('object');
-  tokenVersion.should.have.property('id');
-  tokenVersion.id.should.be.a('number');
-  tokenVersion.should.have.property('tokenizerId');
-  tokenVersion.tokenizerId.should.be.a('string');
-  tokenVersion.should.have.property('options');
-  tokenVersion.options.should.be.an('object');
+exports.isBatchVersion = (possibleBatchVersion, expectedOptions) => {
+  should.exist(possibleBatchVersion);
+  possibleBatchVersion.should.be.an('object');
+  possibleBatchVersion.should.have.property('meta');
+  possibleBatchVersion.meta.should.be.an('object');
+  possibleBatchVersion.should.have.property('batchVersion');
+  const {batchVersion} = possibleBatchVersion;
+  batchVersion.should.be.an('object');
+  batchVersion.should.have.property('id');
+  batchVersion.id.should.be.a('number');
+  batchVersion.should.have.property('tokenizerId');
+  batchVersion.tokenizerId.should.be.a('string');
+  batchVersion.should.have.property('options');
+  batchVersion.options.should.be.an('object');
   if(expectedOptions) {
-    tokenVersion.options.should.deep.equal(expectedOptions);
+    batchVersion.options.should.deep.equal(expectedOptions);
   }
 };
 
@@ -27,8 +27,8 @@ exports.cleanDB = async () => {
   await database.collections['tokenizer-tokenizer'].deleteMany({});
   await database.collections['tokenization-document'].deleteMany({});
   await database.collections['tokenization-pairwiseToken'].deleteMany({});
-  await database.collections['tokenization-tokenVersion'].deleteMany({});
-  await database.collections['tokenization-tokenVersionOptions'].deleteMany({});
+  await database.collections['tokenization-batchVersion'].deleteMany({});
+  await database.collections['tokenization-batchVersionOptions'].deleteMany({});
   await database.collections['tokenization-tokenBatch'].deleteMany({});
 };
 
