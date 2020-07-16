@@ -53,7 +53,7 @@ describe('Tokens', function() {
         }
         should.not.exist(result);
         should.exist(err);
-        err.name.should.equal('TypeError');
+        err.name.should.equal('RangeError');
         err.message.should.equal('"internalId.length" must be 23.');
       }
     });
@@ -130,6 +130,7 @@ describe('Tokens', function() {
       }
       should.not.exist(result);
       should.exist(err);
+      err.name.should.equal('RangeError');
       err.message.should.equal('"attributes" maximum size is 8 bytes.');
     });
   it('should throw error if token does not exist in database',
@@ -246,7 +247,7 @@ describe('Tokens', function() {
         }
         should.not.exist(tks);
         should.exist(err);
-        err.name.should.equal('TypeError');
+        err.name.should.equal('RangeError');
         err.message.should.equal('"tokenCount" must be greater than 0 or ' +
           'less than or equal to 100.');
       }
