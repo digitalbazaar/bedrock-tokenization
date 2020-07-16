@@ -11,13 +11,13 @@ describe('Tokens', function() {
   it('should create a token with attributes', async function() {
     const tokenCount = 5;
     const attributes = Uint8Array.from(new Set([1, 2]));
-    const internalId = 'aM6pup9s6XTaYTho';
+    const internalId = 'aM6pup9s6XTaYThoUxThuEx';
     const result = await tokens.create({internalId, attributes, tokenCount});
     areTokens(result);
   });
   it('should create a token without attributes', async function() {
     const tokenCount = 5;
-    const internalId = 'no-attr-aM6pup9s';
+    const internalId = 'no-attr-aM6pup9sKldyRuI';
     const result = await tokens.create({internalId, tokenCount});
     areTokens(result);
   });
@@ -52,12 +52,12 @@ describe('Tokens', function() {
         should.not.exist(result);
         should.exist(err);
         err.name.should.equal('TypeError');
-        err.message.should.equal('"internalId.length" must be 16.');
+        err.message.should.equal('"internalId.length" must be 23.');
       }
     });
   it('should throw error if attributes is not uint8Array', async function() {
     const tokenCount = 5;
-    const internalId = 'aM6pup9s6XTaYTho';
+    const internalId = 'aM6pup9s6XTaYThoUxThuEx';
     const attributesTypes = [1, false, {}, '', []];
 
     for(const attributes of attributesTypes) {
@@ -76,7 +76,7 @@ describe('Tokens', function() {
   it('should throw error if attributes.length is greater than MAX_AAD_SIZE',
     async function() {
       const tokenCount = 5;
-      const internalId = 'aM6pup9s6XTaYTho';
+      const internalId = 'aM6pup9s6XTaYThoUxThuEx';
       const attributes = Uint8Array.from(new Set([1, 2, 3, 4, 5, 6, 7, 8, 9]));
       let err;
       let result;
@@ -93,7 +93,7 @@ describe('Tokens', function() {
     async function() {
       const tokenCount = 1;
       const attributes = Uint8Array.from(new Set([1]));
-      const internalId = 'aM6pup9s6XTaYTho';
+      const internalId = 'aM6pup9s6XTaYThoUxThuEx';
       const requester = 'requester';
       let err;
       let result;
@@ -116,7 +116,7 @@ describe('Tokens', function() {
   it('should resolve token to the party identified by "requester"',
     async function() {
       const tokenCount = 1;
-      const internalId = 'aM6pup9s6XTaYTho';
+      const internalId = 'aM6pup9s6XTaYThoUxThuEx';
       const attributes = Uint8Array.from(new Set([1]));
       const requester = 'requester';
       let err;
@@ -137,7 +137,7 @@ describe('Tokens', function() {
   it('should resolve token when called twice with same "requester"',
     async function() {
       const tokenCount = 1;
-      const internalId = 'aM6pup9s6XTaYTho';
+      const internalId = 'aM6pup9s6XTaYThoUxThuEx';
       const attributes = Uint8Array.from(new Set([1]));
       const requester = 'requester';
       let err;
@@ -162,7 +162,7 @@ describe('Tokens', function() {
   it('should throw error when token is resolved with different "requester"',
     async function() {
       const tokenCount = 1;
-      const internalId = 'aM6pup9s6XTaYTho';
+      const internalId = 'aM6pup9s6XTaYThoUxThuEx';
       const attributes = Uint8Array.from(new Set([1]));
       const requester1 = 'requester1';
       const requester2 = 'requester2';
@@ -189,7 +189,7 @@ describe('Tokens', function() {
   it('should throw error when tokenCount is greater than 100 or less than 0',
     async function() {
       const tokenCounts = [0, 101];
-      const internalId = 'aM6pup9s6XTaYTho';
+      const internalId = 'aM6pup9s6XTaYThoUxThuEx';
       const attributes = Uint8Array.from(new Set([1]));
 
       for(const tokenCount of tokenCounts) {
@@ -210,7 +210,7 @@ describe('Tokens', function() {
     });
   it('should throw error when token is not uint8Array', async function() {
     const tokenCount = 1;
-    const internalId = 'aM6pup9s6XTaYTho';
+    const internalId = 'aM6pup9s6XTaYThoUxThuEx';
     const attributes = Uint8Array.from(new Set([1]));
     const requester = 'requester';
     let err;
@@ -235,7 +235,7 @@ describe('Tokens', function() {
   it('should throw error if token length is less than minimumSize',
     async function() {
       const tokenCount = 1;
-      const internalId = 'aM6pup9s6XTaYTho';
+      const internalId = 'aM6pup9s6XTaYThoUxThuEx';
       const attributes = Uint8Array.from(new Set([1, 2, 3]));
       const requester = 'requester';
       let err;
@@ -258,7 +258,7 @@ describe('Tokens', function() {
   it('should throw error if token length is greater than maximumSize',
     async function() {
       const tokenCount = 1;
-      const internalId = 'aM6pup9s6XTaYTho';
+      const internalId = 'aM6pup9s6XTaYThoUxThuEx';
       const attributes = Uint8Array.from(new Set([1, 2, 3]));
       const requester = 'requester';
       let err;
@@ -290,7 +290,7 @@ describe('Tokens', function() {
   it('should resolve token to "internalId" it is linked to', async function() {
     const tokenCount = 5;
     const attributes = Uint8Array.from(new Set([1]));
-    const internalId = 'aM6pup9s6XTaYTho';
+    const internalId = 'aM6pup9s6XTaYThoUxThuEx';
     let err;
     let result;
     const {tokens: tks} = await tokens.create(
@@ -304,13 +304,13 @@ describe('Tokens', function() {
     assertNoError(err);
     should.exist(result);
     result.should.be.an('object');
-    result.should.deep.equal({internalId: 'aM6pup9s6XTaYTho'});
+    result.should.deep.equal({internalId: 'aM6pup9s6XTaYThoUxThuEx'});
   });
   it('should throw error when wrapped value fails to get decrypted',
     async function() {
       const tokenCount = 1;
       const attributes = Uint8Array.from(new Set([1]));
-      const internalId = 'aM6pup9s6XTaYTho';
+      const internalId = 'aM6pup9s6XTaYThoUxThuEx';
       const requester = 'requester';
       let err;
       let result;
@@ -387,7 +387,7 @@ describe('TokensDuplicateError', function() {
       // same ID is generated and the error occurs.
       const tokenCount = 100;
       const attributes = Uint8Array.from(new Set([1]));
-      const internalId = 'aM6pup9s6XTaYTho';
+      const internalId = 'aM6pup9s6XTaYThoUxThuEx';
       let err;
       let result2;
 
