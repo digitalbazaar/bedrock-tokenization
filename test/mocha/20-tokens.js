@@ -2,7 +2,9 @@
  * Copyright (c) 2020 Digital Bazaar, Inc. All rights reserved.
  */
 const {requireUncached, areTokens, cleanBatchDB} = require('./helpers');
-const {tokens} = requireUncached('bedrock-tokenization');
+const {tokens, documents} = requireUncached('bedrock-tokenization');
+const {encode} = require('base58-universal');
+const canonicalize = require('canonicalize');
 const crypto = require('crypto');
 const sinon = require('sinon');
 const MAX_UINT32 = 4294967295;
@@ -55,6 +57,47 @@ describe('Tokens', function() {
         err.message.should.equal('"internalId.length" must be 23.');
       }
     });
+  it('should create token successfully with dynamically created internalId',
+    async function() {
+      const dateOfBirth = '1990-05-01';
+      const expires = '2021-05-01';
+      const identifier = 'T65851254';
+      const issuer = 'VA';
+      const type = 'DriversLicense';
+      const recipients = [
+        {
+          header: {
+            kid: 'did:key:z6MkpTHR8VNsBxYAAWHut2Geadd9jSwuBV8xRoA' +
+              'nwWsdvktH#z6LSbysY2xFMRpGMhb7tFTLMpeuPRaqaWM1yECx2AtzE3KCc',
+            alg: 'ECDH-ES+A256KW',
+          }
+        }
+      ];
+      const tokenCount = 1;
+      // canonicalize object then hash it then base58 encode it
+      const externalId = encode(crypto.createHash('sha256')
+        .update(canonicalize({dateOfBirth, identifier, issuer}))
+        .digest());
+
+      const documentResult = await documents.register({
+        externalId,
+        document: {dateOfBirth, expires, identifier, issuer, type},
+        recipients,
+        ttl: 1209600000
+      });
+
+      const {internalId} = documentResult.document;
+      let tokenResult;
+      let err;
+      try {
+        tokenResult = await tokens.create({internalId, tokenCount});
+      } catch(e) {
+        err = e;
+      }
+      assertNoError(err);
+      should.exist(tokenResult);
+    }
+  );
   it('should throw error if attributes is not uint8Array', async function() {
     const tokenCount = 5;
     const internalId = 'aM6pup9s6XTaYThoUxThuEx';
@@ -335,7 +378,7 @@ describe('Tokens', function() {
     async function() {
       const tokenCount = 1;
       const attributes = Uint8Array.from(new Set([1]));
-      const internalId = 'aM6pup9s6XTaYTho';
+      const internalId = 'aM6pup9s6XTaYThoUxThuEx';
       const requester = 'requester';
       let err;
       let result;
