@@ -1,4 +1,4 @@
-const {requireUncached, isDocument} = require('./helpers');
+const {requireUncached, isRegistration} = require('./helpers');
 const {documents} = requireUncached('bedrock-tokenization');
 
 // this is test data borrowed from minimal-cipher
@@ -20,7 +20,7 @@ describe('Documents', function() {
       recipients,
       ttl: 30000
     });
-    isDocument(result);
+    isRegistration(result);
   });
 
   it.skip('should register a document with creator', async function() {
@@ -31,7 +31,7 @@ describe('Documents', function() {
       ttl: 30000,
       creator: 'some_creator'
     });
-    isDocument(result);
+    isRegistration(result);
   });
 
   it.skip('should delete a document with an expired ttl', async function() {
@@ -41,6 +41,6 @@ describe('Documents', function() {
       recipients: [],
       ttl: 1000
     });
-    isDocument(result);
+    isRegistration(result);
   });
 });
