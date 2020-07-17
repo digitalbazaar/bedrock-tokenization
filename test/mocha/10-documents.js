@@ -13,7 +13,7 @@ const recipients = [
 ];
 
 describe('Documents', function() {
-  it('should register a document with out registrationData', async function() {
+  it('should register a document without creator', async function() {
     const result = await documents.register({
       externalId: 'did:test:register',
       document: {},
@@ -23,13 +23,13 @@ describe('Documents', function() {
     isDocument(result);
   });
 
-  it.skip('should register a document with registrationData', async function() {
+  it.skip('should register a document with creator', async function() {
     const result = await documents.register({
       externalId: 'did:test:register:with:data',
       document: {},
       recipients: [],
       ttl: 30000,
-      registrationData: {test: 'registerData'}
+      creator: 'some_creator'
     });
     isDocument(result);
   });
