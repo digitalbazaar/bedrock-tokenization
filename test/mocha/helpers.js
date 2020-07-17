@@ -1,7 +1,7 @@
 const database = require('bedrock-mongodb');
 
-exports.isDocument = result => {
-  console.log('isDocument', {result});
+exports.isRegistration = result => {
+  console.log('isRegistration', {result});
 };
 
 exports.isBatchVersion = (possibleBatchVersion, expectedOptions) => {

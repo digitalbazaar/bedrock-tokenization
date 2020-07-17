@@ -79,14 +79,14 @@ describe('Tokens', function() {
         .update(canonicalize({dateOfBirth, identifier, issuer}))
         .digest());
 
-      const documentResult = await documents.register({
+      const registrationRecord = await documents.register({
         externalId,
         document: {dateOfBirth, expires, identifier, issuer, type},
         recipients,
         ttl: 1209600000
       });
 
-      const {internalId} = documentResult.document;
+      const {internalId} = registrationRecord.registration;
       let tokenResult;
       let err;
       try {
