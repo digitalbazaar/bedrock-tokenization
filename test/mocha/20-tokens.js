@@ -116,23 +116,6 @@ describe('Tokens', function() {
       err.message.should.equal('"attributes" must be a Uint8Array.');
     }
   });
-  it('should throw error if attributes.length is greater than MAX_AAD_SIZE',
-    async function() {
-      const tokenCount = 5;
-      const internalId = 'aM6pup9s6XTaYThoUxThuEx';
-      const attributes = Uint8Array.from(new Set([1, 2, 3, 4, 5, 6, 7, 8, 9]));
-      let err;
-      let result;
-      try {
-        result = await tokens.create({internalId, attributes, tokenCount});
-      } catch(e) {
-        err = e;
-      }
-      should.not.exist(result);
-      should.exist(err);
-      err.name.should.equal('RangeError');
-      err.message.should.equal('"attributes" maximum size is 8 bytes.');
-    });
   it('should throw error if token does not exist in database',
     async function() {
       const tokenCount = 1;
@@ -362,8 +345,8 @@ describe('Tokens', function() {
       const {tokens: tks} = await tokens.create(
         {internalId, attributes, tokenCount});
       const token = tks[0];
-      // change wrapped value by altering its first index
-      token[26] = 0;
+      // change wrapped value by incrementing its first index
+      token[65] = (token[65] + 1) & 0xFF;
       try {
         result = await tokens.resolve({requester, token});
       } catch(e) {
