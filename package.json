@@ -24,8 +24,10 @@
   },
   "homepage": "https://github.com/digitalbazaar/bedrock-tokenization",
   "dependencies": {
-    "assert-plus": "^1.0.0",
     "@digitalbazaar/bitstring": "^1.0.0",
+    "@digitalbazaar/cborld": "^1.0.0",
+    "assert-plus": "^1.0.0",
+    "base58-universal": "^1.0.0",
     "bnid": "^2.0.0",
     "canonicalize": "^1.0.1",
     "did-io": "^0.8.2",
