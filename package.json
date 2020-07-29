@@ -34,7 +34,7 @@
     "did-method-key": "digitalbazaar/did-method-key-js#async-keyToDidDoc",
     "isomorphic-webcrypto": "^2.3.6",
     "lru-cache": "^6.0.0",
-    "minimal-cipher": "^1.0.0",
+    "minimal-cipher": "digitalbazaar/minimal-cipher#x25519",
     "p-limit": "^3.0.1",
     "pako": "^1.0.11"
   },
