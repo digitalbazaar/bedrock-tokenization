@@ -12,7 +12,7 @@ const MAX_UINT32 = 4294967295;
 describe('Tokens', function() {
   it('should create a token with attributes', async function() {
     const tokenCount = 5;
-    const attributes = Uint8Array.from(new Set([1, 2]));
+    const attributes = new Uint8Array([1, 2]);
     const internalId = 'aM6pup9s6XTaYThoUxThuEx';
     const result = await tokens.create({internalId, attributes, tokenCount});
     areTokens(result);
@@ -25,7 +25,7 @@ describe('Tokens', function() {
   });
   it('should throw error if internalId is not given', async function() {
     const tokenCount = 2;
-    const attributes = Uint8Array.from(new Set([1, 2]));
+    const attributes = new Uint8Array([1, 2]);
     let err;
     let result;
     try {
@@ -40,7 +40,7 @@ describe('Tokens', function() {
   it('should throw error if internalId.length does not equal INTERNAL_ID_SIZE',
     async function() {
       const tokenCount = 2;
-      const attributes = Uint8Array.from(new Set([1, 2]));
+      const attributes = new Uint8Array([1, 2]);
       const internalIds = ['foo', 'aM6pup9s6XTaYThooo'];
 
       for(const internalId of internalIds) {
@@ -119,7 +119,7 @@ describe('Tokens', function() {
   it('should throw error if token does not exist in database',
     async function() {
       const tokenCount = 1;
-      const attributes = Uint8Array.from(new Set([1]));
+      const attributes = new Uint8Array([1]);
       const internalId = 'aM6pup9s6XTaYThoUxThuEx';
       const requester = 'requester';
       let err;
@@ -144,7 +144,7 @@ describe('Tokens', function() {
     async function() {
       const tokenCount = 1;
       const internalId = 'aM6pup9s6XTaYThoUxThuEx';
-      const attributes = Uint8Array.from(new Set([1]));
+      const attributes = new Uint8Array([1]);
       const requester = 'requester';
       let err;
       let result;
@@ -165,7 +165,7 @@ describe('Tokens', function() {
     async function() {
       const tokenCount = 1;
       const internalId = 'aM6pup9s6XTaYThoUxThuEx';
-      const attributes = Uint8Array.from(new Set([1]));
+      const attributes = new Uint8Array([1]);
       const requester = 'requester';
       let err;
       let result2;
@@ -190,7 +190,7 @@ describe('Tokens', function() {
     async function() {
       const tokenCount = 1;
       const internalId = 'aM6pup9s6XTaYThoUxThuEx';
-      const attributes = Uint8Array.from(new Set([1]));
+      const attributes = new Uint8Array([1]);
       const requester1 = 'requester1';
       const requester2 = 'requester2';
       let err;
@@ -217,7 +217,7 @@ describe('Tokens', function() {
     async function() {
       const tokenCounts = [0, 101];
       const internalId = 'aM6pup9s6XTaYThoUxThuEx';
-      const attributes = Uint8Array.from(new Set([1]));
+      const attributes = new Uint8Array([1]);
 
       for(const tokenCount of tokenCounts) {
         let err;
@@ -238,7 +238,7 @@ describe('Tokens', function() {
   it('should throw error when token is not uint8Array', async function() {
     const tokenCount = 1;
     const internalId = 'aM6pup9s6XTaYThoUxThuEx';
-    const attributes = Uint8Array.from(new Set([1]));
+    const attributes = new Uint8Array([1]);
     const requester = 'requester';
     let err;
     let result;
@@ -263,7 +263,7 @@ describe('Tokens', function() {
     async function() {
       const tokenCount = 1;
       const internalId = 'aM6pup9s6XTaYThoUxThuEx';
-      const attributes = Uint8Array.from(new Set([1, 2, 3]));
+      const attributes = new Uint8Array([1, 2, 3]);
       const requester = 'requester';
       let err;
       let result;
@@ -286,7 +286,7 @@ describe('Tokens', function() {
     async function() {
       const tokenCount = 1;
       const internalId = 'aM6pup9s6XTaYThoUxThuEx';
-      const attributes = Uint8Array.from(new Set([1, 2, 3]));
+      const attributes = new Uint8Array([1, 2, 3]);
       const requester = 'requester';
       let err;
       let result;
@@ -295,7 +295,7 @@ describe('Tokens', function() {
         {internalId, attributes, tokenCount});
       token = tks[0];
       // change length of token to be greater than 58
-      token = Uint8Array.from([
+      token = new Uint8Array([
         0, 0, 129, 160, 29, 189, 3, 64, 185, 31, 158,
         32, 154, 159, 45, 235, 20, 205, 64, 222, 9,
         66, 192, 79, 183, 54, 204, 169, 197, 19, 52,
@@ -316,7 +316,7 @@ describe('Tokens', function() {
     });
   it('should resolve token to "internalId" it is linked to', async function() {
     const tokenCount = 5;
-    const attributes = Uint8Array.from(new Set([1]));
+    const attributes = new Uint8Array([1]);
     const internalId = 'aM6pup9s6XTaYThoUxThuEx';
     let err;
     let result;
@@ -336,7 +336,7 @@ describe('Tokens', function() {
   it('should throw error when wrapped value fails to get decrypted',
     async function() {
       const tokenCount = 1;
-      const attributes = Uint8Array.from(new Set([1]));
+      const attributes = new Uint8Array([1]);
       const internalId = 'aM6pup9s6XTaYThoUxThuEx';
       const requester = 'requester';
       let err;
@@ -361,7 +361,7 @@ describe('Tokens', function() {
   it('should throw error when attributes is incorrect.',
     async function() {
       const tokenCount = 1;
-      const attributes = Uint8Array.from(new Set([1]));
+      const attributes = new Uint8Array([1]);
       const internalId = 'aM6pup9s6XTaYThoUxThuEx';
       const requester = 'requester';
       let err;
@@ -413,7 +413,7 @@ describe('TokensDuplicateError', function() {
       // associated with the internalId so that when a new batch is created, the
       // same ID is generated and the error occurs.
       const tokenCount = 100;
-      const attributes = Uint8Array.from(new Set([1]));
+      const attributes = new Uint8Array([1]);
       const internalId = 'aM6pup9s6XTaYThoUxThuEx';
       let err;
       let result2;
