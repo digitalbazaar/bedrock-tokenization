@@ -30,6 +30,7 @@
     "base58-universal": "^1.0.0",
     "bnid": "^2.0.0",
     "canonicalize": "^1.0.1",
+    "cit-context": "digitalbazaar/cit-context#initial",
     "did-io": "^0.8.2",
     "did-method-key": "^0.6.1",
     "lru-cache": "^6.0.0",
