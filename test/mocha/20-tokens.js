@@ -406,7 +406,6 @@ describe('TokensDuplicateError', function() {
   after(() => {
     randomBytesStub.restore();
   });
-  // FIXME: Math.random will need to be stubbed as well
   it('should throw duplicate error if token is created twice.',
     async function() {
       // crypto.randomBytes has been stubbed so that the same batch ID will be
