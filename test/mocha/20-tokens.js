@@ -23,7 +23,7 @@ describe('Tokens', function() {
     const result = await tokens.create({internalId, tokenCount});
     areTokens(result);
   });
-  it('should throw error if internalId is not given', async function() {
+  it.skip('should throw error if internalId is not given', async function() {
     const tokenCount = 2;
     const attributes = new Uint8Array([1, 2]);
     let err;
@@ -37,7 +37,7 @@ describe('Tokens', function() {
     should.exist(err);
     err.message.should.equal('internalId (string) is required');
   });
-  it('should throw error if internalId.length does not equal INTERNAL_ID_SIZE',
+  it.skip('should throw error if internalId.length does not equal INTERNAL_ID_SIZE',
     async function() {
       const tokenCount = 2;
       const attributes = new Uint8Array([1, 2]);
@@ -407,7 +407,7 @@ describe('TokensDuplicateError', function() {
     randomBytesStub.restore();
   });
   // FIXME: Math.random will need to be stubbed as well
-  it.skip('should throw duplicate error if token is created twice.',
+  it('should throw duplicate error if token is created twice.',
     async function() {
       // crypto.randomBytes has been stubbed so that the same batch ID will be
       // generated everytime, and we are consuming all tokens in the first batch
