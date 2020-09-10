@@ -34,6 +34,7 @@
     "did-method-key": "^0.6.1",
     "lru-cache": "^6.0.0",
     "minimal-cipher": "^1.0.0",
+    "mongodb": "^3.6.1",
     "p-limit": "^3.0.1",
     "pako": "^1.0.11"
   },
