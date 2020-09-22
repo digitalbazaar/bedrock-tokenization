@@ -382,6 +382,85 @@ describe('Tokens', function() {
       err.name.should.equal('DataError');
       err.message.should.equal('Invalid token.');
     });
+  it('should register and create token concurrently', async function() {
+    const dateOfBirth = '2000-05-01';
+    const expires = '2021-05-01';
+    const identifier = 'T99991234';
+    const issuer = 'VA';
+    const type = 'DriversLicense';
+    const recipients = [
+      {
+        header: {
+          kid: 'did:key:z6MkpTHR8VNsBxYAAWHut2Geadd9jSwuBV8xRoA' +
+            'nwWsdvktH#z6LSbysY2xFMRpGMhb7tFTLMpeuPRaqaWM1yECx2AtzE3KCc',
+          alg: 'ECDH-ES+A256KW',
+        }
+      }
+    ];
+    const tokenCount = 1;
+    // canonicalize object then hash it then base58 encode it
+    const externalId = encode(crypto.createHash('sha256')
+      .update(canonicalize({dateOfBirth, identifier, issuer}))
+      .digest());
+
+    let tokenResult;
+    let err;
+    try {
+      tokenResult = await tokens.registerDocumentAndCreate({
+        registerOptions: {
+          externalId,
+          document: {dateOfBirth, expires, identifier, issuer, type},
+          recipients,
+          ttl: 1209600000
+        },
+        tokenCount
+      });
+    } catch(e) {
+      err = e;
+    }
+    assertNoError(err);
+    should.exist(tokenResult);
+  });
+  it('should register duplicate and create token concurrently',
+    async function() {
+      const dateOfBirth = '2000-05-01';
+      const expires = '2021-05-01';
+      const identifier = 'T99991234';
+      const issuer = 'VA';
+      const type = 'DriversLicense';
+      const recipients = [
+        {
+          header: {
+            kid: 'did:key:z6MkpTHR8VNsBxYAAWHut2Geadd9jSwuBV8xRoA' +
+              'nwWsdvktH#z6LSbysY2xFMRpGMhb7tFTLMpeuPRaqaWM1yECx2AtzE3KCc',
+            alg: 'ECDH-ES+A256KW',
+          }
+        }
+      ];
+      const tokenCount = 1;
+      // canonicalize object then hash it then base58 encode it
+      const externalId = encode(crypto.createHash('sha256')
+        .update(canonicalize({dateOfBirth, identifier, issuer}))
+        .digest());
+
+      let tokenResult;
+      let err;
+      try {
+        tokenResult = await tokens.registerDocumentAndCreate({
+          registerOptions: {
+            externalId,
+            document: {dateOfBirth, expires, identifier, issuer, type},
+            recipients,
+            ttl: 1209600000
+          },
+          tokenCount
+        });
+      } catch(e) {
+        err = e;
+      }
+      assertNoError(err);
+      should.exist(tokenResult);
+    });
 });
 
 describe('TokensDuplicateError', function() {
