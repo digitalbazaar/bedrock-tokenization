@@ -23,6 +23,12 @@ describe('Tokens', function() {
     const result = await tokens.create({internalId, tokenCount});
     areTokens(result);
   });
+  it('should create a full batch of tokens', async function() {
+    const tokenCount = 100;
+    const internalId = 'aM6pup9s6XTaYThoUxThuEb';
+    const result = await tokens.create({internalId, tokenCount});
+    areTokens(result);
+  });
   it('should throw error if internalId is not given', async function() {
     const tokenCount = 2;
     const attributes = new Uint8Array([1, 2]);
