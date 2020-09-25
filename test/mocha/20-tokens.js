@@ -192,7 +192,7 @@ describe('Tokens', function() {
       areTokens(tks);
       should.exist(result1.pairwiseToken);
       should.exist(result2.pairwiseToken);
-      result1.pairwiseToken.should.equal(result2.pairwiseToken);
+      result1.pairwiseToken.should.deep.equal(result2.pairwiseToken);
     });
   it('should throw error when token is resolved with different "requester"',
     async function() {
