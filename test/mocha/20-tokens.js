@@ -13,19 +13,19 @@ describe('Tokens', function() {
   it('should create a token with attributes', async function() {
     const tokenCount = 5;
     const attributes = new Uint8Array([1, 2]);
-    const internalId = 'aM6pup9s6XTaYThoUxThuEx';
+    const internalId = await documents._generateInternalId();
     const result = await tokens.create({internalId, attributes, tokenCount});
     areTokens(result);
   });
   it('should create a token without attributes', async function() {
     const tokenCount = 5;
-    const internalId = 'no-attr-aM6pup9sKldyRuI';
+    const internalId = await documents._generateInternalId();
     const result = await tokens.create({internalId, tokenCount});
     areTokens(result);
   });
   it('should create a full batch of tokens', async function() {
     const tokenCount = 100;
-    const internalId = 'aM6pup9s6XTaYThoUxThuEb';
+    const internalId = await documents._generateInternalId();
     const result = await tokens.create({internalId, tokenCount});
     areTokens(result);
   });
@@ -41,14 +41,16 @@ describe('Tokens', function() {
     }
     should.not.exist(result);
     should.exist(err);
-    err.message.should.equal('internalId (string) is required');
+    err.message.should.equal('internalId (buffer) is required');
   });
   it('should throw error if internalId.length does not equal INTERNAL_ID_SIZE',
     async function() {
       const tokenCount = 2;
       const attributes = new Uint8Array([1, 2]);
-      const internalIds = ['foo', 'aM6pup9s6XTaYThooo'];
-
+      const internalIds = [
+        Buffer.from([1]),
+        Buffer.concat([await documents._generateInternalId(), Buffer.from([1])])
+      ];
       for(const internalId of internalIds) {
         let err;
         let result;
@@ -60,7 +62,7 @@ describe('Tokens', function() {
         should.not.exist(result);
         should.exist(err);
         err.name.should.equal('RangeError');
-        err.message.should.equal('"internalId.length" must be 23.');
+        err.message.should.equal('"internalId.length" must be 16.');
       }
     });
   it('should create token successfully with dynamically created internalId',
@@ -106,7 +108,7 @@ describe('Tokens', function() {
   );
   it('should throw error if attributes is not uint8Array', async function() {
     const tokenCount = 5;
-    const internalId = 'aM6pup9s6XTaYThoUxThuEx';
+    const internalId = await documents._generateInternalId();
     const attributesTypes = [1, false, {}, '', []];
 
     for(const attributes of attributesTypes) {
@@ -126,7 +128,7 @@ describe('Tokens', function() {
     async function() {
       const tokenCount = 1;
       const attributes = new Uint8Array([1]);
-      const internalId = 'aM6pup9s6XTaYThoUxThuEx';
+      const internalId = await documents._generateInternalId();
       const requester = 'requester';
       let err;
       let result;
@@ -149,7 +151,7 @@ describe('Tokens', function() {
   it('should resolve token to the party identified by "requester"',
     async function() {
       const tokenCount = 1;
-      const internalId = 'aM6pup9s6XTaYThoUxThuEx';
+      const internalId = await documents._generateInternalId();
       const attributes = new Uint8Array([1]);
       const requester = 'requester';
       let err;
@@ -170,7 +172,7 @@ describe('Tokens', function() {
   it('should resolve token when called twice with same "requester"',
     async function() {
       const tokenCount = 1;
-      const internalId = 'aM6pup9s6XTaYThoUxThuEx';
+      const internalId = await documents._generateInternalId();
       const attributes = new Uint8Array([1]);
       const requester = 'requester';
       let err;
@@ -195,7 +197,7 @@ describe('Tokens', function() {
   it('should throw error when token is resolved with different "requester"',
     async function() {
       const tokenCount = 1;
-      const internalId = 'aM6pup9s6XTaYThoUxThuEx';
+      const internalId = await documents._generateInternalId();
       const attributes = new Uint8Array([1]);
       const requester1 = 'requester1';
       const requester2 = 'requester2';
@@ -222,7 +224,7 @@ describe('Tokens', function() {
   it('should throw error when tokenCount is greater than 100 or less than 0',
     async function() {
       const tokenCounts = [0, 101];
-      const internalId = 'aM6pup9s6XTaYThoUxThuEx';
+      const internalId = await documents._generateInternalId();
       const attributes = new Uint8Array([1]);
 
       for(const tokenCount of tokenCounts) {
@@ -243,7 +245,7 @@ describe('Tokens', function() {
     });
   it('should throw error when token is not uint8Array', async function() {
     const tokenCount = 1;
-    const internalId = 'aM6pup9s6XTaYThoUxThuEx';
+    const internalId = await documents._generateInternalId();
     const attributes = new Uint8Array([1]);
     const requester = 'requester';
     let err;
@@ -268,7 +270,7 @@ describe('Tokens', function() {
   it('should throw error if token length is less than minimumSize',
     async function() {
       const tokenCount = 1;
-      const internalId = 'aM6pup9s6XTaYThoUxThuEx';
+      const internalId = await documents._generateInternalId();
       const attributes = new Uint8Array([1, 2, 3]);
       const requester = 'requester';
       let err;
@@ -291,7 +293,7 @@ describe('Tokens', function() {
   it('should throw error if token length is greater than maximumSize',
     async function() {
       const tokenCount = 1;
-      const internalId = 'aM6pup9s6XTaYThoUxThuEx';
+      const internalId = await documents._generateInternalId();
       const attributes = new Uint8Array([1, 2, 3]);
       const requester = 'requester';
       let err;
@@ -323,7 +325,7 @@ describe('Tokens', function() {
   it('should resolve token to "internalId" it is linked to', async function() {
     const tokenCount = 5;
     const attributes = new Uint8Array([1]);
-    const internalId = 'aM6pup9s6XTaYThoUxThuEx';
+    const internalId = await documents._generateInternalId();
     let err;
     let result;
     const {tokens: tks} = await tokens.create(
@@ -337,13 +339,13 @@ describe('Tokens', function() {
     assertNoError(err);
     should.exist(result);
     result.should.be.an('object');
-    result.should.deep.equal({internalId: 'aM6pup9s6XTaYThoUxThuEx'});
+    result.should.deep.equal({internalId});
   });
   it('should throw error when wrapped value fails to get decrypted',
     async function() {
       const tokenCount = 1;
       const attributes = new Uint8Array([1]);
-      const internalId = 'aM6pup9s6XTaYThoUxThuEx';
+      const internalId = await documents._generateInternalId();
       const requester = 'requester';
       let err;
       let result;
@@ -368,7 +370,7 @@ describe('Tokens', function() {
     async function() {
       const tokenCount = 1;
       const attributes = new Uint8Array([1]);
-      const internalId = 'aM6pup9s6XTaYThoUxThuEx';
+      const internalId = await documents._generateInternalId();
       const requester = 'requester';
       let err;
       let result;
@@ -499,7 +501,7 @@ describe('TokensDuplicateError', function() {
       // same ID is generated and the error occurs.
       const tokenCount = 100;
       const attributes = new Uint8Array([1]);
-      const internalId = 'aM6pup9s6XTaYThoUxThuEx';
+      const internalId = await documents._generateInternalId();
       let err;
       let result2;
 
