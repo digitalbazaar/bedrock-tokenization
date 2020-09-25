@@ -4,6 +4,7 @@
 
 ### Changed
 - **BREAKING**: Changed format for storing token resolutions.
+- **BREAKING**: Use BinData for storing IDs, hashes, and bit strings.
 
 ## 2.0.0 - 2020-08-24
 
