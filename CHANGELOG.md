@@ -1,5 +1,10 @@
 # bedrock-tokenization ChangeLog
 
+## 3.0.1 - 2020-09-28
+
+### Changed
+- Update peer deps.
+
 ## 3.0.0 - 2020-09-28
 
 ### Changed
