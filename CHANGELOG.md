@@ -1,5 +1,10 @@
 # bedrock-tokenization ChangeLog
 
+## 4.0.0 - 2020-TBD
+
+### Changed
+- Use cborld@2.0.1.
+
 ## 3.0.1 - 2020-09-28
 
 ### Changed
