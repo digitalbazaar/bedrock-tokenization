@@ -12,8 +12,8 @@ const recipients = [
   }
 ];
 
-describe('Documents', function() {
-  it('should register a document without creator', async function() {
+describe('documents.register()', () => {
+  it('should register a document without creator', async () => {
     const result = await documents.register({
       externalId: 'did:test:register',
       document: {},
@@ -23,7 +23,7 @@ describe('Documents', function() {
     isRegistration(result);
   });
 
-  it.skip('should register a document with creator', async function() {
+  it.skip('should register a document with creator', async () => {
     const result = await documents.register({
       externalId: 'did:test:register:with:data',
       document: {},
@@ -34,7 +34,7 @@ describe('Documents', function() {
     isRegistration(result);
   });
 
-  it.skip('should delete a document with an expired ttl', async function() {
+  it.skip('should delete a document with an expired ttl', async () => {
     const result = await documents.register({
       externalId: 'did:test:register:with:small:ttl',
       document: {},
@@ -43,4 +43,8 @@ describe('Documents', function() {
     });
     isRegistration(result);
   });
+});
+
+describe('documents.encrypt()', () => {
+  it('should encrypt a document with recipients');
 });
