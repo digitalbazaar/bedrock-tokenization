@@ -39,8 +39,10 @@ describe('documents.getRegistration()', () => {
       {header: {kid: key1.id, alg: 'ECDH-ES+A256KW'}}
     ];
     const document = {example: 'document'};
+    const externalId = 'did:test:getRegistration';
     const {registration: {jwe: encryptedRegistration, internalId}} =
       await documents.register({
+        externalId,
         creator: 'someCreatorId',
         document,
         recipients,
@@ -65,10 +67,11 @@ describe('documents.register()', () => {
 
   it('should error when an empty recipients array is passed', async () => {
     const recipients = [];
+    const externalId = 'did:test:failure';
     const document = {example: 'document'};
     let err;
     try {
-      await documents.register({document, recipients});
+      await documents.register({externalId, document, recipients});
     } catch(e) {
       err = e;
     }
@@ -77,10 +80,11 @@ describe('documents.register()', () => {
 
   it('should error when an empty recipientChain array is passed', async () => {
     const recipientChain = [];
+    const externalId = 'did:test:failure';
     const document = {example: 'document'};
     let err;
     try {
-      await documents.register({document, recipientChain});
+      await documents.register({externalId, document, recipientChain});
     } catch(e) {
       err = e;
     }
@@ -89,32 +93,39 @@ describe('documents.register()', () => {
 
   it('should error when an empty recipientChain item is passed', async () => {
     const recipientChain = [[]];
+    const externalId = 'did:test:failure';
     const document = {example: 'document'};
     let err;
     try {
-      await documents.register({document, recipientChain});
+      await documents.register({externalId, document, recipientChain});
     } catch(e) {
       err = e;
     }
-    err.message.should.equal('"recipientChain" must be a non-empty array.');
+    err.message.should.equal('"recipients" must be a non-empty array.');
   });
 
-  it.skip('should register a document with creator', async () => {
+  it('should register a document with creator', async () => {
+    const recipients = [
+      {header: {kid: key1.id, alg: 'ECDH-ES+A256KW'}}
+    ];
     const result = await documents.register({
       externalId: 'did:test:register:with:data',
       document: {},
-      recipients: [],
+      recipients,
       ttl: 30000,
       creator: 'some_creator'
     });
     isRegistration(result);
   });
 
-  it.skip('should delete a document with an expired ttl', async () => {
+  it('should delete a document with an expired ttl', async () => {
+    const recipients = [
+      {header: {kid: key1.id, alg: 'ECDH-ES+A256KW'}}
+    ];
     const result = await documents.register({
       externalId: 'did:test:register:with:small:ttl',
       document: {},
-      recipients: [],
+      recipients,
       ttl: 1000
     });
     isRegistration(result);
