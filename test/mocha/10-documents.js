@@ -72,10 +72,7 @@ describe('documents.register()', () => {
     } catch(e) {
       err = e;
     }
-    err.name.should.equal('TypeError');
     err.message.should.equal('"recipients" must be a non-empty array.');
-    err.should.have.property('details');
-    err.details.should.have.property('httpStatusCode', 400);
   });
 
   it('should error when an empty recipientChain array is passed', async () => {
@@ -87,10 +84,19 @@ describe('documents.register()', () => {
     } catch(e) {
       err = e;
     }
-    err.name.should.equal('TypeError');
     err.message.should.equal('"recipientChain" must be a non-empty array.');
-    err.should.have.property('details');
-    err.details.should.have.property('httpStatusCode', 400);
+  });
+
+  it('should error when an empty recipientChain item is passed', async () => {
+    const recipientChain = [[]];
+    const document = {example: 'document'};
+    let err;
+    try {
+      await documents.register({document, recipientChain});
+    } catch(e) {
+      err = e;
+    }
+    err.message.should.equal('"recipientChain" must be a non-empty array.');
   });
 
   it.skip('should register a document with creator', async () => {
