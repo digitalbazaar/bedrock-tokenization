@@ -15,6 +15,43 @@ const recipients = [
   }
 ];
 
+const key1 = new X25519KeyPair({
+  id: 'did:key:z6MkgDEDniwkugeRADbi5CmHFB2eFdFKh6gSCYHFUeHXaV2x' +
+    '#z6LScXou54NfzNThVwG1aF85TCuFbVPmKuKspufF7eVmHW7G',
+  controller: 'did:key:z6MkgDEDniwkugeRADbi5CmHFB2eFdFKh6gSCYHFUeHXaV2x',
+  type: 'X25519KeyAgreementKey2019',
+  publicKeyBase58: 'rdjYkZotujxQYtF3bc88cgmkLredJ9iwvwZdBrEa8LW',
+  privateKeyBase58: '4HKArAGZaGzwutAEjsbTSjbKDLrQJAP3zLPoZQtHxeuh'
+});
+
+const key2 = new X25519KeyPair({
+  id: 'did:key:z6MkrefS4sDAGNBdo7CeXKh52sBfK94NGMANfHKfbYpvPz8S' +
+    '#z6LScKCBLkDApcTvYPbjQi6EDKgpYwWiM9Ppd6X1PbjXF2dg',
+  controller: 'did:key:z6MkrefS4sDAGNBdo7CeXKh52sBfK94NGMANfHKfbYpvPz8S',
+  type: 'X25519KeyAgreementKey2019',
+  publicKeyBase58: 'e21pSQJj9kBT1Dxt4aGtjULhnybeYDfk7oKu95zXerv',
+  privateKeyBase58: 'bcB3uZng7RPz7VSEJSid54cyiU2STGHk4Ub91VEenPP'
+});
+
+describe('documents.getRegistration()', () => {
+  it('should retrieve a registration for an internalId', async () => {
+    const recipients = [
+      {header: {kid: key1.id, alg: 'ECDH-ES+A256KW'}}
+    ];
+    const document = {example: 'document'};
+    const {registration: {jwe: encryptedRegistration, internalId}} =
+      await documents.register({
+        creator: 'someCreatorId',
+        document,
+        recipients,
+        ttl: 30000
+      });
+
+    const {registration: {jwe}} = await documents.getRegistration({internalId});
+    jwe.should.eql(encryptedRegistration);
+  });
+});
+
 describe('documents.register()', () => {
   it('should register a document without creator', async () => {
     const result = await documents.register({
@@ -79,24 +116,6 @@ describe('documents.register()', () => {
 });
 
 describe('documents.encrypt()', () => {
-  const key1 = new X25519KeyPair({
-    id: 'did:key:z6MkgDEDniwkugeRADbi5CmHFB2eFdFKh6gSCYHFUeHXaV2x' +
-      '#z6LScXou54NfzNThVwG1aF85TCuFbVPmKuKspufF7eVmHW7G',
-    controller: 'did:key:z6MkgDEDniwkugeRADbi5CmHFB2eFdFKh6gSCYHFUeHXaV2x',
-    type: 'X25519KeyAgreementKey2019',
-    publicKeyBase58: 'rdjYkZotujxQYtF3bc88cgmkLredJ9iwvwZdBrEa8LW',
-    privateKeyBase58: '4HKArAGZaGzwutAEjsbTSjbKDLrQJAP3zLPoZQtHxeuh'
-  });
-
-  const key2 = new X25519KeyPair({
-    id: 'did:key:z6MkrefS4sDAGNBdo7CeXKh52sBfK94NGMANfHKfbYpvPz8S' +
-      '#z6LScKCBLkDApcTvYPbjQi6EDKgpYwWiM9Ppd6X1PbjXF2dg',
-    controller: 'did:key:z6MkrefS4sDAGNBdo7CeXKh52sBfK94NGMANfHKfbYpvPz8S',
-    type: 'X25519KeyAgreementKey2019',
-    publicKeyBase58: 'e21pSQJj9kBT1Dxt4aGtjULhnybeYDfk7oKu95zXerv',
-    privateKeyBase58: 'bcB3uZng7RPz7VSEJSid54cyiU2STGHk4Ub91VEenPP'
-  });
-
   it('should encrypt a document with recipients', async () => {
     const recipients = [
       {header: {kid: key1.id, alg: 'ECDH-ES+A256KW'}},
