@@ -121,7 +121,7 @@ describe('documents.register()', () => {
   });
 });
 
-describe('documents.encrypt()', () => {
+describe('documents._encrypt()', () => {
   it('should encrypt a document with recipients', async () => {
     const recipients = [
       {header: {kid: key1.id, alg: 'ECDH-ES+A256KW'}},
@@ -129,7 +129,7 @@ describe('documents.encrypt()', () => {
     ];
 
     const document = {example: 'document'};
-    const jwe = await documents.encrypt({document, recipients});
+    const jwe = await documents._encrypt({document, recipients});
 
     jwe.recipients.should.be.an('array');
     jwe.recipients.length.should.equal(2);
@@ -147,7 +147,7 @@ describe('documents.encrypt()', () => {
     ];
 
     const document = {example: 'document'};
-    const outerJwe = await documents.encrypt({document, recipientChain});
+    const outerJwe = await documents._encrypt({document, recipientChain});
 
     outerJwe.recipients.should.be.an('array');
     outerJwe.recipients.length.should.equal(1);
