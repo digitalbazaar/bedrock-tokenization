@@ -1,5 +1,11 @@
 # bedrock-tokenization ChangeLog
 
+## 5.0.0 - 2021-03-xx
+
+### Added
+- **BREAKING**: Implement `levelOfAssurance` in resolve endpoint.
+- **BREAKING**: Implement `minAssuranceForResolution` in create endpoint.
+
 ## 4.0.1 - 2021-03-18
 
 ### Fixed
