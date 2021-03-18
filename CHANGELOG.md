@@ -1,6 +1,6 @@
 # bedrock-tokenization ChangeLog
 
-## 4.0.1 - TBD
+## 4.0.1 - 2021-03-18
 
 ### Fixed
 - Remove duplicate conditional in the `documents.register` API.
