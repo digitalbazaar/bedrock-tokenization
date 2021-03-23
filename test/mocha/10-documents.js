@@ -1,7 +1,8 @@
 const {requireUncached, isRegistration} = require('./helpers');
 const {documents} = requireUncached('bedrock-tokenization');
-const {X25519KeyPair} = require('x25519-key-pair');
-const {Cipher} = require('minimal-cipher');
+const {X25519KeyAgreementKey2019} =
+  require('@digitalbazaar/x25519-key-agreement-key-2019');
+const {Cipher} = require('@digitalbazaar/minimal-cipher');
 const cipher = new Cipher();
 
 // this is test data borrowed from minimal-cipher
@@ -15,7 +16,7 @@ const recipients = [
   }
 ];
 
-const key1 = new X25519KeyPair({
+const key1 = new X25519KeyAgreementKey2019({
   id: 'did:key:z6MkgDEDniwkugeRADbi5CmHFB2eFdFKh6gSCYHFUeHXaV2x' +
     '#z6LScXou54NfzNThVwG1aF85TCuFbVPmKuKspufF7eVmHW7G',
   controller: 'did:key:z6MkgDEDniwkugeRADbi5CmHFB2eFdFKh6gSCYHFUeHXaV2x',
@@ -24,7 +25,7 @@ const key1 = new X25519KeyPair({
   privateKeyBase58: '4HKArAGZaGzwutAEjsbTSjbKDLrQJAP3zLPoZQtHxeuh'
 });
 
-const key2 = new X25519KeyPair({
+const key2 = new X25519KeyAgreementKey2019({
   id: 'did:key:z6MkrefS4sDAGNBdo7CeXKh52sBfK94NGMANfHKfbYpvPz8S' +
     '#z6LScKCBLkDApcTvYPbjQi6EDKgpYwWiM9Ppd6X1PbjXF2dg',
   controller: 'did:key:z6MkrefS4sDAGNBdo7CeXKh52sBfK94NGMANfHKfbYpvPz8S',
