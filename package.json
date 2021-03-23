@@ -25,7 +25,7 @@
   "homepage": "https://github.com/digitalbazaar/bedrock-tokenization",
   "dependencies": {
     "@digitalbazaar/bitstring": "^1.2.0",
-    "@digitalbazaar/cborld": "digitalbazaar/cborld#update-codecs",
+    "@digitalbazaar/cborld": "digitalbazaar/cborld#use-db-cbor",
     "@digitalbazaar/did-method-key": "digitalbazaar/did-method-key-js#v1.x",
     "@digitalbazaar/minimal-cipher": "^2.0.0",
     "assert-plus": "^1.0.0",
