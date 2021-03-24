@@ -32,7 +32,7 @@
     "base58-universal": "^1.0.0",
     "bnid": "^2.0.0",
     "canonicalize": "^1.0.1",
-    "cit-context": "digitalbazaar/cit-context#update-codec",
+    "cit-context": "^2.0.0",
     "lru-cache": "^6.0.0",
     "p-limit": "^3.0.1",
     "pako": "^1.0.11"
