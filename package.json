@@ -33,8 +33,6 @@
     "bnid": "^2.0.0",
     "canonicalize": "^1.0.1",
     "cit-context": "^2.0.0",
-    "did-io": "^0.8.2",
-    "did-method-key": "^0.7.0",
     "lru-cache": "^6.0.0",
     "p-limit": "^3.0.1",
     "pako": "^1.0.11"
