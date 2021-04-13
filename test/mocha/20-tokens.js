@@ -469,6 +469,32 @@ describe('Tokens', function() {
       assertNoError(err);
       should.exist(tokenResult);
     });
+  it('should not resolve token from invalidated batch',
+    async function() {
+      // create tokens
+      const tokenCount = 10;
+      const internalId = await documents._generateInternalId();
+      const attributes = new Uint8Array([1]);
+      const requester = 'requester';
+      let err;
+      let result;
+
+      const tks = await tokens.create(
+        {internalId, attributes, tokenCount});
+      areTokens(tks);
+      const token = tks.tokens[0];
+      // expire tokens
+      const invalidateResult = await tokens.expireTokenBatch({internalId});
+      invalidateResult.should.equal(true);
+      try {
+        result = await tokens.resolve({requester, token});
+      } catch(e) {
+        err = e;
+      }
+      should.not.exist(result);
+      err.name.should.equal('NotFoundError');
+      err.message.should.equal('Token not found.');
+    });
 });
 
 describe('TokensDuplicateError', function() {
