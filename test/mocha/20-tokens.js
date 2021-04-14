@@ -484,7 +484,7 @@ describe('Tokens', function() {
       areTokens(tks);
       const token = tks.tokens[0];
       // expire tokens
-      const invalidateResult = await tokens.expireTokenBatch({internalId});
+      const invalidateResult = await tokens.invalidateTokenBatch({internalId});
       invalidateResult.should.equal(true);
       try {
         result = await tokens.resolve({requester, token});
