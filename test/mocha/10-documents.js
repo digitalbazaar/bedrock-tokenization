@@ -1,7 +1,7 @@
 const {requireUncached, isRegistration} = require('./helpers');
 const {documents} = requireUncached('bedrock-tokenization');
-const {X25519KeyAgreementKey2019} =
-  require('@digitalbazaar/x25519-key-agreement-key-2019');
+const {X25519KeyAgreementKey2020} =
+  require('@digitalbazaar/x25519-key-agreement-key-2020');
 const {Cipher} = require('@digitalbazaar/minimal-cipher');
 const cipher = new Cipher();
 
@@ -16,25 +16,26 @@ const recipients = [
   }
 ];
 
-const key1 = new X25519KeyAgreementKey2019({
-  id: 'did:key:z6MkgDEDniwkugeRADbi5CmHFB2eFdFKh6gSCYHFUeHXaV2x' +
-    '#z6LScXou54NfzNThVwG1aF85TCuFbVPmKuKspufF7eVmHW7G',
-  controller: 'did:key:z6MkgDEDniwkugeRADbi5CmHFB2eFdFKh6gSCYHFUeHXaV2x',
-  type: 'X25519KeyAgreementKey2019',
-  publicKeyBase58: 'rdjYkZotujxQYtF3bc88cgmkLredJ9iwvwZdBrEa8LW',
-  privateKeyBase58: '4HKArAGZaGzwutAEjsbTSjbKDLrQJAP3zLPoZQtHxeuh'
+const key1 = new X25519KeyAgreementKey2020({
+  id: 'did:key:z6MkwPNKWnJqcxyr3P7jQ5MNndpf5on1nTf8iFrJ45pQ9ys4' +
+    '#z6LSpiMsPfcfERVgsmCYJM52qqHdDosUemr3EQneWzcsoQB9',
+  type: 'X25519KeyAgreementKey2020',
+  controller: 'did:key:z6MkwPNKWnJqcxyr3P7jQ5MNndpf5on1nTf8iFrJ45pQ9ys4',
+  publicKeyMultibase: 'zE3BhsMoo8xmwnNpmmhZ5XF59NfLMxAftMS4y2XyM62QP',
+  privateKeyMultibase: 'z3Aurxsbxxpf9cZuuMuX936CM7wCPSEV3CeEosDN2aA4f'
 });
 
-const key2 = new X25519KeyAgreementKey2019({
-  id: 'did:key:z6MkrefS4sDAGNBdo7CeXKh52sBfK94NGMANfHKfbYpvPz8S' +
-    '#z6LScKCBLkDApcTvYPbjQi6EDKgpYwWiM9Ppd6X1PbjXF2dg',
-  controller: 'did:key:z6MkrefS4sDAGNBdo7CeXKh52sBfK94NGMANfHKfbYpvPz8S',
-  type: 'X25519KeyAgreementKey2019',
-  publicKeyBase58: 'e21pSQJj9kBT1Dxt4aGtjULhnybeYDfk7oKu95zXerv',
-  privateKeyBase58: 'bcB3uZng7RPz7VSEJSid54cyiU2STGHk4Ub91VEenPP'
-});
+const key2 = new X25519KeyAgreementKey2020({
+  id: 'did:key:z6Mkg7Mk4L5edodstDnhtBcdsZZNFLDhXA9o7qu2RNYqzU7a' +
+    '#z6LSdLiQKz8WYbsSfVuHUiUWqgM5zszuKHrxX6RohjUt5Jyd',
+  type: 'X25519KeyAgreementKey2020',
+  controller: 'did:key:z6Mkg7Mk4L5edodstDnhtBcdsZZNFLDhXA9o7qu2RNYqzU7a',
+  publicKeyMultibase: 'z2fYEogKeT99ha7XWx4xZX68c9jTncggoe7i8DGqMMwCs',
+  privateKeyMultibase: 'z8azvRy2nU5c8Qr1BLg2cdxPzSjAMXpZCqzMwDSHFriuM'
+}
+);
 
-describe('documents.getRegistration()', () => {
+describe.only('documents.getRegistration()', () => {
   it('should retrieve a registration for an internalId', async () => {
     const recipients = [
       {header: {kid: key1.id, alg: 'ECDH-ES+A256KW'}}

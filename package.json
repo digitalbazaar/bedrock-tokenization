@@ -30,6 +30,7 @@
     "@digitalbazaar/minimal-cipher": "^4.0.0",
     "assert-plus": "^1.0.0",
     "base58-universal": "^1.0.0",
+    "bedrock-tokenizer": "digitalbazaar/bedrock-tokenizer#v2.x",
     "bnid": "^2.0.0",
     "canonicalize": "^1.0.1",
     "cit-context": "^2.0.0",
@@ -39,9 +40,10 @@
   },
   "peerDependencies": {
     "bedrock": "3.x",
+    "bedrock-did-io": "^1.0.0",
     "bedrock-https-agent": "^2.0.0",
     "bedrock-mongodb": "^8.0.1",
-    "bedrock-tokenizer": "^1.0.0"
+    "bedrock-tokenizer": "digitalbazaar/bedrock-tokenizer#v2.x"
   },
   "devDependencies": {
     "eslint": "^7.4.0",
