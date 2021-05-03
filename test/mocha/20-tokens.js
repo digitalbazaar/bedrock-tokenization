@@ -1,8 +1,8 @@
 /*!
- * Copyright (c) 2020 Digital Bazaar, Inc. All rights reserved.
+ * Copyright (c) 2020-2021 Digital Bazaar, Inc. All rights reserved.
  */
 const {requireUncached, areTokens, cleanBatchDB} = require('./helpers');
-const {tokens, documents} = requireUncached('bedrock-tokenization');
+const {tokens, documents, entities} = requireUncached('bedrock-tokenization');
 const {encode} = require('base58-universal');
 const canonicalize = require('canonicalize');
 const crypto = require('crypto');
@@ -14,18 +14,24 @@ describe('Tokens', function() {
     const tokenCount = 5;
     const attributes = new Uint8Array([1, 2]);
     const internalId = await documents._generateInternalId();
+    // upsert mock entity the token is for
+    await entities.upsert({internalId, ttl: 60000});
     const result = await tokens.create({internalId, attributes, tokenCount});
     areTokens(result);
   });
   it('should create a token without attributes', async function() {
     const tokenCount = 5;
     const internalId = await documents._generateInternalId();
+    // upsert mock entity the token is for
+    await entities.upsert({internalId, ttl: 60000});
     const result = await tokens.create({internalId, tokenCount});
     areTokens(result);
   });
   it('should create a full batch of tokens', async function() {
     const tokenCount = 100;
     const internalId = await documents._generateInternalId();
+    // upsert mock entity the token is for
+    await entities.upsert({internalId, ttl: 60000});
     const result = await tokens.create({internalId, tokenCount});
     areTokens(result);
   });
@@ -133,6 +139,9 @@ describe('Tokens', function() {
       let err;
       let result;
 
+      // upsert mock entity the token is for
+      await entities.upsert({internalId, ttl: 60000});
+
       const {tokens: tks} = await tokens.create(
         {internalId, attributes, tokenCount});
       const token = tks[0];
@@ -157,6 +166,9 @@ describe('Tokens', function() {
       let err;
       let result;
 
+      // upsert mock entity the token is for
+      await entities.upsert({internalId, ttl: 60000});
+
       const tks = await tokens.create(
         {internalId, attributes, tokenCount});
       const token = tks.tokens[0];
@@ -177,6 +189,9 @@ describe('Tokens', function() {
       const requester = 'requester';
       let err;
       let result2;
+
+      // upsert mock entity the token is for
+      await entities.upsert({internalId, ttl: 60000});
 
       const tks = await tokens.create(
         {internalId, attributes, tokenCount});
@@ -204,6 +219,9 @@ describe('Tokens', function() {
       let err;
       let result2;
 
+      // upsert mock entity the token is for
+      await entities.upsert({internalId, ttl: 60000});
+
       const tks = await tokens.create(
         {internalId, attributes, tokenCount});
       const token = tks.tokens[0];
@@ -226,6 +244,9 @@ describe('Tokens', function() {
       const tokenCounts = [0, 101];
       const internalId = await documents._generateInternalId();
       const attributes = new Uint8Array([1]);
+
+      // upsert mock entity the token is for
+      await entities.upsert({internalId, ttl: 60000});
 
       for(const tokenCount of tokenCounts) {
         let err;
@@ -251,6 +272,9 @@ describe('Tokens', function() {
     let err;
     let result;
 
+    // upsert mock entity the token is for
+    await entities.upsert({internalId, ttl: 60000});
+
     const {tokens: tks} = await tokens.create(
       {internalId, attributes, tokenCount});
     let token = tks[0];
@@ -275,6 +299,10 @@ describe('Tokens', function() {
       const requester = 'requester';
       let err;
       let result;
+
+      // upsert mock entity the token is for
+      await entities.upsert({internalId, ttl: 60000});
+
       const {tokens: tks} = await tokens.create(
         {internalId, attributes, tokenCount});
       let token = tks[0];
@@ -298,6 +326,10 @@ describe('Tokens', function() {
       const requester = 'requester';
       let err;
       let result;
+
+      // upsert mock entity the token is for
+      await entities.upsert({internalId, ttl: 60000});
+
       let token;
       const {tokens: tks} = await tokens.create(
         {internalId, attributes, tokenCount});
@@ -328,6 +360,10 @@ describe('Tokens', function() {
     const internalId = await documents._generateInternalId();
     let err;
     let result;
+
+    // upsert mock entity the token is for
+    await entities.upsert({internalId, ttl: 60000});
+
     const {tokens: tks} = await tokens.create(
       {internalId, attributes, tokenCount});
     const token = tks[0];
@@ -349,6 +385,9 @@ describe('Tokens', function() {
       const requester = 'requester';
       let err;
       let result;
+
+      // upsert mock entity the token is for
+      await entities.upsert({internalId, ttl: 60000});
 
       const {tokens: tks} = await tokens.create(
         {internalId, attributes, tokenCount});
@@ -374,6 +413,9 @@ describe('Tokens', function() {
       const requester = 'requester';
       let err;
       let result;
+
+      // upsert mock entity the token is for
+      await entities.upsert({internalId, ttl: 60000});
 
       const {tokens: tks} = await tokens.create(
         {internalId, attributes, tokenCount});
@@ -479,12 +521,16 @@ describe('Tokens', function() {
       let err;
       let result;
 
+      // upsert mock entity the token is for
+      await entities.upsert({internalId, ttl: 60000});
+
       const tks = await tokens.create(
         {internalId, attributes, tokenCount});
       areTokens(tks);
       const token = tks.tokens[0];
       // expire tokens
-      const invalidateResult = await tokens.invalidateTokenBatch({internalId});
+      const invalidateResult = await tokens.invalidateTokenBatches(
+        {internalId});
       invalidateResult.should.equal(true);
       try {
         result = await tokens.resolve({requester, token});
@@ -530,6 +576,9 @@ describe('TokensDuplicateError', function() {
       const internalId = await documents._generateInternalId();
       let err;
       let result2;
+
+      // upsert mock entity the token is for
+      await entities.upsert({internalId, ttl: 60000});
 
       const result1 = await tokens.create({internalId, attributes, tokenCount});
       try {
