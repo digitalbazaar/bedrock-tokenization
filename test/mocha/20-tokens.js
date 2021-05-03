@@ -15,7 +15,7 @@ describe('Tokens', function() {
     const attributes = new Uint8Array([1, 2]);
     const internalId = await documents._generateInternalId();
     // upsert mock entity the token is for
-    await entities.upsert({internalId, ttl: 60000});
+    await entities._upsert({internalId, ttl: 60000});
     const result = await tokens.create({internalId, attributes, tokenCount});
     areTokens(result);
   });
@@ -23,7 +23,7 @@ describe('Tokens', function() {
     const tokenCount = 5;
     const internalId = await documents._generateInternalId();
     // upsert mock entity the token is for
-    await entities.upsert({internalId, ttl: 60000});
+    await entities._upsert({internalId, ttl: 60000});
     const result = await tokens.create({internalId, tokenCount});
     areTokens(result);
   });
@@ -31,7 +31,7 @@ describe('Tokens', function() {
     const tokenCount = 100;
     const internalId = await documents._generateInternalId();
     // upsert mock entity the token is for
-    await entities.upsert({internalId, ttl: 60000});
+    await entities._upsert({internalId, ttl: 60000});
     const result = await tokens.create({internalId, tokenCount});
     areTokens(result);
   });
@@ -140,7 +140,7 @@ describe('Tokens', function() {
       let result;
 
       // upsert mock entity the token is for
-      await entities.upsert({internalId, ttl: 60000});
+      await entities._upsert({internalId, ttl: 60000});
 
       const {tokens: tks} = await tokens.create(
         {internalId, attributes, tokenCount});
@@ -167,7 +167,7 @@ describe('Tokens', function() {
       let result;
 
       // upsert mock entity the token is for
-      await entities.upsert({internalId, ttl: 60000});
+      await entities._upsert({internalId, ttl: 60000});
 
       const tks = await tokens.create(
         {internalId, attributes, tokenCount});
@@ -191,7 +191,7 @@ describe('Tokens', function() {
       let result2;
 
       // upsert mock entity the token is for
-      await entities.upsert({internalId, ttl: 60000});
+      await entities._upsert({internalId, ttl: 60000});
 
       const tks = await tokens.create(
         {internalId, attributes, tokenCount});
@@ -220,7 +220,7 @@ describe('Tokens', function() {
       let result2;
 
       // upsert mock entity the token is for
-      await entities.upsert({internalId, ttl: 60000});
+      await entities._upsert({internalId, ttl: 60000});
 
       const tks = await tokens.create(
         {internalId, attributes, tokenCount});
@@ -246,7 +246,7 @@ describe('Tokens', function() {
       const attributes = new Uint8Array([1]);
 
       // upsert mock entity the token is for
-      await entities.upsert({internalId, ttl: 60000});
+      await entities._upsert({internalId, ttl: 60000});
 
       for(const tokenCount of tokenCounts) {
         let err;
@@ -273,7 +273,7 @@ describe('Tokens', function() {
     let result;
 
     // upsert mock entity the token is for
-    await entities.upsert({internalId, ttl: 60000});
+    await entities._upsert({internalId, ttl: 60000});
 
     const {tokens: tks} = await tokens.create(
       {internalId, attributes, tokenCount});
@@ -301,7 +301,7 @@ describe('Tokens', function() {
       let result;
 
       // upsert mock entity the token is for
-      await entities.upsert({internalId, ttl: 60000});
+      await entities._upsert({internalId, ttl: 60000});
 
       const {tokens: tks} = await tokens.create(
         {internalId, attributes, tokenCount});
@@ -328,7 +328,7 @@ describe('Tokens', function() {
       let result;
 
       // upsert mock entity the token is for
-      await entities.upsert({internalId, ttl: 60000});
+      await entities._upsert({internalId, ttl: 60000});
 
       let token;
       const {tokens: tks} = await tokens.create(
@@ -362,7 +362,7 @@ describe('Tokens', function() {
     let result;
 
     // upsert mock entity the token is for
-    await entities.upsert({internalId, ttl: 60000});
+    await entities._upsert({internalId, ttl: 60000});
 
     const {tokens: tks} = await tokens.create(
       {internalId, attributes, tokenCount});
@@ -387,7 +387,7 @@ describe('Tokens', function() {
       let result;
 
       // upsert mock entity the token is for
-      await entities.upsert({internalId, ttl: 60000});
+      await entities._upsert({internalId, ttl: 60000});
 
       const {tokens: tks} = await tokens.create(
         {internalId, attributes, tokenCount});
@@ -415,7 +415,7 @@ describe('Tokens', function() {
       let result;
 
       // upsert mock entity the token is for
-      await entities.upsert({internalId, ttl: 60000});
+      await entities._upsert({internalId, ttl: 60000});
 
       const {tokens: tks} = await tokens.create(
         {internalId, attributes, tokenCount});
@@ -522,7 +522,7 @@ describe('Tokens', function() {
       let result;
 
       // upsert mock entity the token is for
-      await entities.upsert({internalId, ttl: 60000});
+      const {entity} = await entities._upsert({internalId, ttl: 60000});
 
       const tks = await tokens.create(
         {internalId, attributes, tokenCount});
@@ -530,7 +530,7 @@ describe('Tokens', function() {
       const token = tks.tokens[0];
       // expire tokens
       const invalidateResult = await tokens.invalidateTokenBatches(
-        {internalId});
+        {entity});
       invalidateResult.should.equal(true);
       try {
         result = await tokens.resolve({requester, token});
@@ -578,7 +578,7 @@ describe('TokensDuplicateError', function() {
       let result2;
 
       // upsert mock entity the token is for
-      await entities.upsert({internalId, ttl: 60000});
+      await entities._upsert({internalId, ttl: 60000});
 
       const result1 = await tokens.create({internalId, attributes, tokenCount});
       try {
