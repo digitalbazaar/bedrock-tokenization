@@ -525,7 +525,7 @@ describe('Tokens', function() {
       const {entity} = await entities._upsert({internalId, ttl: 60000});
 
       const tks = await tokens.create(
-        {internalId, attributes, tokenCount});
+        {internalId, attributes, tokenCount, minAssuranceForResolution: -1});
       areTokens(tks);
       const token = tks.tokens[0];
       // expire tokens
