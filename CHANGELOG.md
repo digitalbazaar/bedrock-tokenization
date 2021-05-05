@@ -1,6 +1,6 @@
 # bedrock-tokenization ChangeLog
 
-## 5.0.0 - 2021-05-xx
+## 5.0.0 - 2021-05-05
 
 ### Added
 - **BREAKING**: Implement new required field `levelOfAssurance` in resolve
