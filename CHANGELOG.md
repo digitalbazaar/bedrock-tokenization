@@ -3,7 +3,9 @@
 ## 5.1.0 - 2021-xx-xx
 
 ### Added
-- `tokens.resolve` now returns `internalId` along with existing `pairwiseToken`.
+- `tokens.resolve` now returns `internalId` along with existing `pairwiseToken`. While this is
+  a backwards-compatible change, callers should ensure that `internalId` is not leaked beyond
+  any important trust boundaries (e.g., not to the party that requested resolution).
   While this is a backwards-compatible change, callers should ensure that
   `internalId` is not leaked beyond any important trust boundaries (e.g., not
   to the party that requested resolution).
