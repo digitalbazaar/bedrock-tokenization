@@ -1,6 +1,6 @@
 # bedrock-tokenization ChangeLog
 
-## 5.1.0 - 2021-xx-xx
+## 5.1.0 - 2021-05-1
 
 ### Added
 - `tokens.resolve` now returns `internalId` along with existing `pairwiseToken`. While this is
