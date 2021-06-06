@@ -8,6 +8,8 @@ const canonicalize = require('canonicalize');
 const crypto = require('crypto');
 const sinon = require('sinon');
 const MAX_UINT32 = 4294967295;
+const pMap = require('p-map');
+const shuffle = require('lodash.shuffle');
 
 describe('Tokens', function() {
   it('should create a token with attributes', async function() {
@@ -471,8 +473,9 @@ describe('Tokens', function() {
     assertNoError(err);
     should.exist(tokenResult);
   });
-  it('should register duplicate and create token concurrently',
+  it.only('should register duplicate and create token concurrently',
     async function() {
+      this.timeout(0);
       const dateOfBirth = '2000-05-01';
       const expires = '2021-05-01';
       const identifier = 'T99991234';
@@ -510,6 +513,57 @@ describe('Tokens', function() {
       }
       assertNoError(err);
       should.exist(tokenResult);
+
+      const tokensArray = [];
+      for(let i = 0; i < 105; ++i) {
+        const p = [];
+        for(let n = 0; n < 50; ++n) {
+          p.push(tokens.registerDocumentAndCreate({
+            registerOptions: {
+              externalId,
+              document: {dateOfBirth, expires, identifier, issuer, type},
+              recipients,
+              ttl: 1209600000
+            },
+            tokenCount
+          }));
+        }
+        let tokenResult;
+        let err;
+        try {
+          tokenResult = await Promise.all(p);
+        } catch(e) {
+          err = e;
+        }
+        assertNoError(err);
+        should.exist(tokenResult);
+        for(const r of tokenResult) {
+          tokensArray.push(r.tokens[0]);
+        }
+        // const token = encode(r.tokens[0]);
+        // console.log('TTTTTTTTTT', tokenResult.tokens[0].toString('base64'));
+      }
+      const mySet = new Set(tokensArray);
+      tokensArray.length.should.equal(mySet.size);
+
+      const resolver = async token => tokens.resolve({
+        token,
+        requester: 'x',
+      });
+
+      const shuffledTokens = shuffle(tokensArray);
+
+      let r1;
+      let err2;
+      try {
+        r1 = await pMap(shuffledTokens, resolver, {
+          concurrency: 20
+        });
+      } catch(e) {
+        err2 = e;
+      }
+      assertNoError(err2);
+      r1.should.have.length(tokensArray.length);
     });
   it('should not resolve token from invalidated batch',
     async function() {
