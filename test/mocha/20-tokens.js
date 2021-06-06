@@ -496,17 +496,21 @@ describe('Tokens', function() {
         .update(canonicalize({dateOfBirth, identifier, issuer}))
         .digest());
 
+      const registrationRecord = await documents.register({
+        externalId,
+        document: {dateOfBirth, expires, identifier, issuer, type},
+        recipients,
+        ttl: 1209600000
+      });
+
+      const {internalId} = registrationRecord.registration;
+
       let tokenResult;
       let err;
       try {
-        tokenResult = await tokens.registerDocumentAndCreate({
-          registerOptions: {
-            externalId,
-            document: {dateOfBirth, expires, identifier, issuer, type},
-            recipients,
-            ttl: 1209600000
-          },
-          tokenCount
+        tokenResult = await tokens.create({
+          internalId,
+          tokenCount,
         });
       } catch(e) {
         err = e;
@@ -515,17 +519,13 @@ describe('Tokens', function() {
       should.exist(tokenResult);
 
       const tokensArray = [];
-      for(let i = 0; i < 105; ++i) {
+      for(let i = 0; i < 305; ++i) {
         const p = [];
         for(let n = 0; n < 50; ++n) {
-          p.push(tokens.registerDocumentAndCreate({
-            registerOptions: {
-              externalId,
-              document: {dateOfBirth, expires, identifier, issuer, type},
-              recipients,
-              ttl: 1209600000
-            },
-            tokenCount
+          p.push(tokens.create({
+            attributes: new Uint8Array([1, 2, 3, 4]),
+            internalId,
+            tokenCount,
           }));
         }
         let tokenResult;
