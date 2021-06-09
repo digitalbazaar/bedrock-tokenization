@@ -1,5 +1,11 @@
 # bedrock-tokenization ChangeLog
 
+## 5.2.0 - 2021-xx-xx
+
+### Fixed
+- Added a fix to create entities for existing registrations. This only applies to
+  versions prior to 5.0.0, since new entities are automatically created.
+
 ## 5.1.0 - 2021-05-1
 
 ### Added
