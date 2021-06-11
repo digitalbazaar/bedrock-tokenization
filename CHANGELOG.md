@@ -21,7 +21,9 @@
 ### Removed
 - **BREAKING**: Remove now unnecessary index on `tokenBatch.internalId`. This
   index was used to mark unpinned token batches as invalid and another simpler
-  and more robust mechanism is now used instead.
+  and more robust mechanism is now used instead. The presence of this index
+  in upgraded systems should not create a logic problem, however, it does
+  degrade performance and take up space, so it should be removed.
 - **BREAKING**: Remove `invalid` flag on token batches and replace it with the
   `batchInvalidationCount` flag copied from the entity at record creation time.
 
