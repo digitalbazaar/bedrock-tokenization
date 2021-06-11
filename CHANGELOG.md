@@ -1,6 +1,6 @@
 # bedrock-tokenization ChangeLog
 
-## 6.0.0 - 2021-06-xx
+## 6.0.0 - 2021-06-11
 
 ### Fixed
 - Fix case where an entity could be updated to invalidate unpinned token
