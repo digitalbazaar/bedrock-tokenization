@@ -1,5 +1,30 @@
 # bedrock-tokenization ChangeLog
 
+## 6.0.0 - 2021-06-xx
+
+### Fixed
+- Fix case where an entity could be updated to invalidate unpinned token
+  batches but the process may crash prior (or while) updating unpinned token
+  batch records to mark them as invalid. Now, unpinned token batches are
+  immediately invalidated when the entity record is updated, without needing
+  to update their records. The invalidation state is determined by comparing
+  the monotonically increasing `batchInvalidationCount` on both the token
+  batch record and the entity record, both of which always have to be
+  retrieved when resolving an unpinned token anyway. So, there is no
+  degradation to performance with this patch. In fact, since token batches
+  no longer need to be updated with an `invalid` flag, performance is
+  significantly improved in the case that batches must be invalidated because
+  only one record is ever needed to be updated (the entity record). Updating
+  token batch records to mark them invalid also involved a scatter-gather
+  approach before so it was especially taxing; this has all been removed.
+
+### Removed
+- **BREAKING**: Remove now unnecessary index on `tokenBatch.internalId`. This
+  index was used to mark unpinned token batches as invalid and another simpler
+  and more robust mechanism is now used instead.
+- **BREAKING**: Remove `invalid` flag on token batches and replace it with the
+  `batchInvalidationCount` flag copied from the entity at record creation time.
+
 ## 5.1.1 - 2021-06-10
 
 ### Fixed

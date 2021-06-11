@@ -528,7 +528,7 @@ describe('Tokens', function() {
         {internalId, attributes, tokenCount, minAssuranceForResolution: -1});
       areTokens(tks);
       const token = tks.tokens[0];
-      // expire tokens
+      // invalidate tokens
       const invalidateResult = await tokens.invalidateTokenBatches(
         {entity});
       invalidateResult.should.equal(true);
@@ -538,8 +538,8 @@ describe('Tokens', function() {
         err = e;
       }
       should.not.exist(result);
-      err.name.should.equal('NotFoundError');
-      err.message.should.equal('Token not found.');
+      err.name.should.equal('NotAllowedError');
+      err.message.should.equal('Token has been invalidated.');
     });
 });
 
