@@ -35,7 +35,7 @@ const key2 = new X25519KeyAgreementKey2020({
 }
 );
 
-describe.only('documents.getRegistration()', () => {
+describe('documents.getRegistration()', () => {
   it('should retrieve a registration for an internalId', async () => {
     const recipients = [
       {header: {kid: key1.id, alg: 'ECDH-ES+A256KW'}}
