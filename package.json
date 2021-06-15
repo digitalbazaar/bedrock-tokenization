@@ -40,10 +40,9 @@
   },
   "peerDependencies": {
     "bedrock": "3.x",
-    "bedrock-did-io": "^1.0.0",
+    "bedrock-did-io": "^3.0.0",
     "bedrock-https-agent": "^2.0.0",
-    "bedrock-mongodb": "^8.0.1",
-    "bedrock-tokenizer": "digitalbazaar/bedrock-tokenizer#v2.x"
+    "bedrock-mongodb": "^8.0.1"
   },
   "devDependencies": {
     "eslint": "^7.4.0",
