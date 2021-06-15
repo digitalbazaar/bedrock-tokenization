@@ -28,7 +28,7 @@
     "bedrock-ssm-mongodb": "^3.0.0",
     "bedrock-test": "^5.3.0",
     "bedrock-tokenization": "file://..",
-    "bedrock-tokenizer": "^1.0.0",
+    "bedrock-tokenizer": "^1.1.0",
     "bedrock-validation": "^4.4.0",
     "bedrock-veres-one-context": "^10.0.1",
     "bedrock-zcap-storage": "^3.0.0",
