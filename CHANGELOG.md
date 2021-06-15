@@ -1,5 +1,11 @@
 # bedrock-tokenization ChangeLog
 
+## 7.0.0 - 2021-06-15
+
+### Changed
+- **BREAKING**: Use latest [`cborld` v4](https://github.com/digitalbazaar/cborld/blob/main/CHANGELOG.md#420---2021-04-22)
+  and `cit-context` v2.
+
 ## 6.0.0 - 2021-06-11
 
 ### Fixed
