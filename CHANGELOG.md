@@ -1,5 +1,10 @@
 # bedrock-tokenization ChangeLog
 
+## 7.1.0 - 2021-xx-xx
+
+### Changed
+- Set `batchInvalidationCount` to 0 when created.
+
 ## 7.0.0 - 2021-06-15
 
 ### Changed
