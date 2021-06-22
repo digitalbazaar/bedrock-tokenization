@@ -48,6 +48,13 @@ exports.areTokens = result => {
   });
 };
 
+exports.getTokenBatch = async ({internalId}) => {
+  const query = {
+    'tokenBatch.internalId': internalId
+  };
+  return database.collections['tokenization-tokenBatch'].findOne(query);
+};
+
 // we need to reset the module for most tests
 exports.requireUncached = module => {
   delete require.cache[require.resolve(module)];

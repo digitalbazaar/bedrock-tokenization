@@ -1,7 +1,8 @@
 /*!
  * Copyright (c) 2020-2021 Digital Bazaar, Inc. All rights reserved.
  */
-const {requireUncached, areTokens, cleanBatchDB} = require('./helpers');
+const {requireUncached, areTokens, cleanBatchDB, getTokenBatch} =
+  require('./helpers');
 const {tokens, documents, entities} = requireUncached('bedrock-tokenization');
 const {encode} = require('base58-universal');
 const canonicalize = require('canonicalize');
@@ -540,6 +541,28 @@ describe('Tokens', function() {
       should.not.exist(result);
       err.name.should.equal('NotAllowedError');
       err.message.should.equal('Token has been invalidated.');
+    });
+  it('batchInvalidationCount should not be null',
+    async function() {
+      // create tokens
+      const tokenCount = 10;
+      const internalId = await documents._generateInternalId();
+      const attributes = new Uint8Array([1]);
+      // upsert mock entity the token is for
+      await entities._upsert({internalId, ttl: 60000});
+      const tks = await tokens.create(
+        {internalId, attributes, tokenCount, minAssuranceForResolution: -1});
+      areTokens(tks);
+      let err;
+      let result;
+      try {
+        result = await getTokenBatch({internalId});
+      } catch(e) {
+        err = e;
+      }
+      should.not.exist(err);
+      result.tokenBatch.batchInvalidationCount.should.not.equal(null);
+      result.tokenBatch.batchInvalidationCount.should.equal(0);
     });
 });
 
