@@ -9,6 +9,7 @@
     "coverage-report": "nyc report"
   },
   "dependencies": {
+    "@digitalbazaar/minimal-cipher": "^3.0.0",
     "base58-universal": "^1.0.0",
     "bedrock": "^3.1.1",
     "bedrock-account": "^4.1.0",
@@ -34,7 +35,6 @@
     "bedrock-zcap-storage": "^3.0.0",
     "canonicalize": "^1.0.1",
     "cross-env": "^7.0.2",
-    "minimal-cipher": "^1.4.0",
     "nyc": "^15.0.1",
     "sinon": "^9.0.2",
     "x25519-key-pair": "^3.1.0"
