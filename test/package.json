@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@digitalbazaar/minimal-cipher": "^3.0.0",
+    "@digitalbazaar/x25519-key-agreement-key-2020": "^2.0.0",
     "base58-universal": "^1.0.0",
     "bedrock": "^3.1.1",
     "bedrock-account": "^4.1.0",
@@ -36,8 +37,7 @@
     "canonicalize": "^1.0.1",
     "cross-env": "^7.0.2",
     "nyc": "^15.0.1",
-    "sinon": "^9.0.2",
-    "x25519-key-pair": "^3.1.0"
+    "sinon": "^9.0.2"
   },
   "nyc": {
     "excludeNodeModules": false,
