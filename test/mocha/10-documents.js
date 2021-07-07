@@ -1,36 +1,20 @@
 const {requireUncached, isRegistration} = require('./helpers');
 const {documents} = requireUncached('bedrock-tokenization');
-const {X25519KeyPair} = require('x25519-key-pair');
+const {X25519KeyAgreementKey2020} =
+  require('@digitalbazaar/x25519-key-agreement-key-2020');
 const {Cipher} = require('@digitalbazaar/minimal-cipher');
 const cipher = new Cipher();
 
-// this is test data borrowed from minimal-cipher
-const recipients = [
-  {
-    header: {
-      kid: 'did:key:z6MkpTHR8VNsBxYAAWHut2Geadd9jSwuBV8xRoA' +
-        'nwWsdvktH#z6LSbysY2xFMRpGMhb7tFTLMpeuPRaqaWM1yECx2AtzE3KCc',
-      alg: 'ECDH-ES+A256KW',
-    }
-  }
-];
+let key1;
+let key2;
 
-const key1 = new X25519KeyPair({
-  id: 'did:key:z6MkgDEDniwkugeRADbi5CmHFB2eFdFKh6gSCYHFUeHXaV2x' +
-    '#z6LScXou54NfzNThVwG1aF85TCuFbVPmKuKspufF7eVmHW7G',
-  controller: 'did:key:z6MkgDEDniwkugeRADbi5CmHFB2eFdFKh6gSCYHFUeHXaV2x',
-  type: 'X25519KeyAgreementKey2020',
-  publicKeyBase58: 'rdjYkZotujxQYtF3bc88cgmkLredJ9iwvwZdBrEa8LW',
-  privateKeyBase58: '4HKArAGZaGzwutAEjsbTSjbKDLrQJAP3zLPoZQtHxeuh'
-});
-
-const key2 = new X25519KeyPair({
-  id: 'did:key:z6MkrefS4sDAGNBdo7CeXKh52sBfK94NGMANfHKfbYpvPz8S' +
-    '#z6LScKCBLkDApcTvYPbjQi6EDKgpYwWiM9Ppd6X1PbjXF2dg',
-  controller: 'did:key:z6MkrefS4sDAGNBdo7CeXKh52sBfK94NGMANfHKfbYpvPz8S',
-  type: 'X25519KeyAgreementKey2020',
-  publicKeyBase58: 'e21pSQJj9kBT1Dxt4aGtjULhnybeYDfk7oKu95zXerv',
-  privateKeyBase58: 'bcB3uZng7RPz7VSEJSid54cyiU2STGHk4Ub91VEenPP'
+before(async () => {
+  key1 = await X25519KeyAgreementKey2020.generate({
+    controller: 'did:key:z6MkrefS4sDAGNBdo7CeXKh52sBfK94NGMANfHKfbYpvPz8S'
+  });
+  key2 = await X25519KeyAgreementKey2020.generate({
+    controller: 'did:key:z6MkrefS4sDAGNBdo7CeXKh52sBfK94NGMANfHKfbYpvPz8S'
+  });
 });
 
 describe('documents.getRegistration()', () => {
@@ -56,6 +40,15 @@ describe('documents.getRegistration()', () => {
 
 describe('documents.register()', () => {
   it('should register a document without creator', async () => {
+    const recipients = [
+      {
+        header: {
+          kid: 'did:key:z6MkpTHR8VNsBxYAAWHut2Geadd9jSwuBV8xRoA' +
+            'nwWsdvktH#z6LSbysY2xFMRpGMhb7tFTLMpeuPRaqaWM1yECx2AtzE3KCc',
+          alg: 'ECDH-ES+A256KW',
+        }
+      }
+    ];
     const result = await documents.register({
       externalId: 'did:test:register',
       document: {},
