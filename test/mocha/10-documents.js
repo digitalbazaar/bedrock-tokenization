@@ -9,11 +9,12 @@ let key1;
 let key2;
 
 before(async () => {
+  // the controller is test data borrowed from minimal-cipher
   key1 = await X25519KeyAgreementKey2020.generate({
-    controller: 'did:key:z6MkrefS4sDAGNBdo7CeXKh52sBfK94NGMANfHKfbYpvPz8S'
+    controller: 'did:key:z6MkwLz9d2sa3FJjni9A7rXmicf9NN3e5xgJPUmdqaFMTgoE'
   });
   key2 = await X25519KeyAgreementKey2020.generate({
-    controller: 'did:key:z6MkrefS4sDAGNBdo7CeXKh52sBfK94NGMANfHKfbYpvPz8S'
+    controller: 'did:key:z6MkttYcTAeZbVsBiAmxFj2LNSgNzj5gAdb3hbE4QwmFTK4Z'
   });
 });
 
