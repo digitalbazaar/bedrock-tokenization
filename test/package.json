@@ -9,7 +9,7 @@
     "coverage-report": "nyc report"
   },
   "dependencies": {
-    "@digitalbazaar/minimal-cipher": "^3.0.0",
+    "@digitalbazaar/minimal-cipher": "^4.0.0",
     "@digitalbazaar/x25519-key-agreement-key-2020": "^2.0.0",
     "base58-universal": "^1.0.0",
     "bedrock": "^3.1.1",
