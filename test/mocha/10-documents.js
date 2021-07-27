@@ -5,7 +5,7 @@ const {X25519KeyAgreementKey2020} =
 const {Cipher} = require('@digitalbazaar/minimal-cipher');
 const cipher = new Cipher();
 
-// the controller is test data borrowed from minimal-cipher
+// this is test data borrowed from minimal-cipher
 const key1 = new X25519KeyAgreementKey2020({
   id: 'did:key:z6MkwLz9d2sa3FJjni9A7rXmicf9NN3e5xgJPUmdqaFMTgoE#' +
   'z6LSmgLugoC8vUoK1ouCTGKdqFdpg5jb3H193L6wFJucX14U',
