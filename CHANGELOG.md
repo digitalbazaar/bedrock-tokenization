@@ -3,8 +3,8 @@
 ## 7.1.0 - 2021-xx-xx
 
 ### Changed
-- Updated `minimal-cipher` to `4.0.0` and changed `@digitalbazaar/did-io` to
-  `bedrock-did-io`.
+- Updated `minimal-cipher` to `4.0.0`, changed `@digitalbazaar/did-io` to
+  `bedrock-did-io`, and removed `@digitalbazaar/did-method-key`.
 
 ## 7.0.2 - 2021-06-22
 
