@@ -5,17 +5,22 @@ const {X25519KeyAgreementKey2020} =
 const {Cipher} = require('@digitalbazaar/minimal-cipher');
 const cipher = new Cipher();
 
-let key1;
-let key2;
-
-before(async () => {
-  // the controller is test data borrowed from minimal-cipher
-  key1 = await X25519KeyAgreementKey2020.generate({
-    controller: 'did:key:z6MkwLz9d2sa3FJjni9A7rXmicf9NN3e5xgJPUmdqaFMTgoE'
-  });
-  key2 = await X25519KeyAgreementKey2020.generate({
-    controller: 'did:key:z6MkttYcTAeZbVsBiAmxFj2LNSgNzj5gAdb3hbE4QwmFTK4Z'
-  });
+// the controller is test data borrowed from minimal-cipher
+const key1 = new X25519KeyAgreementKey2020({
+  id: 'did:key:z6MkwLz9d2sa3FJjni9A7rXmicf9NN3e5xgJPUmdqaFMTgoE#' +
+  'z6LSmgLugoC8vUoK1ouCTGKdqFdpg5jb3H193L6wFJucX14U',
+  controller: 'did:key:z6MkwLz9d2sa3FJjni9A7rXmicf9NN3e5xgJPUmdqaFMTgoE',
+  type: 'X25519KeyAgreementKey2020',
+  publicKeyMultibase: 'z6LSmgLugoC8vUoK1ouCTGKdqFdpg5jb3H193L6wFJucX14U',
+  privateKeyMultibase: 'z3wedGgRfySXFenmev8caU3eqBeDXrzDsdi21ofMZN8s8Exm'
+});
+const key2 = new X25519KeyAgreementKey2020({
+  id: 'did:key:z6MkttYcTAeZbVsBiAmxFj2LNSgNzj5gAdb3hbE4QwmFTK4Z#z6LSjPQz' +
+    '1GARHBL7vnMW8XiH3UYVkgETpyk8oKhXeeFRGpQh',
+  controller: 'did:key:z6MkttYcTAeZbVsBiAmxFj2LNSgNzj5gAdb3hbE4QwmFTK4Z',
+  type: 'X25519KeyAgreementKey2020',
+  publicKeyMultibase: 'z6LSjPQz1GARHBL7vnMW8XiH3UYVkgETpyk8oKhXeeFRGpQh',
+  privateKeyMultibase: 'z3web9AUP49zFCBVEdQ4ksbSmzgi6JqNCA84XNxUAcMDZgZc'
 });
 
 describe('documents.getRegistration()', () => {
