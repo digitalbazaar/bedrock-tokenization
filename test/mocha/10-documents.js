@@ -8,7 +8,7 @@ const cipher = new Cipher();
 // this is test data borrowed from minimal-cipher
 const key1 = new X25519KeyAgreementKey2020({
   id: 'did:key:z6MkwLz9d2sa3FJjni9A7rXmicf9NN3e5xgJPUmdqaFMTgoE#' +
-  'z6LSmgLugoC8vUoK1ouCTGKdqFdpg5jb3H193L6wFJucX14U',
+    'z6LSmgLugoC8vUoK1ouCTGKdqFdpg5jb3H193L6wFJucX14U',
   controller: 'did:key:z6MkwLz9d2sa3FJjni9A7rXmicf9NN3e5xgJPUmdqaFMTgoE',
   type: 'X25519KeyAgreementKey2020',
   publicKeyMultibase: 'z6LSmgLugoC8vUoK1ouCTGKdqFdpg5jb3H193L6wFJucX14U',
@@ -46,15 +46,13 @@ describe('documents.getRegistration()', () => {
 
 describe('documents.register()', () => {
   it('should register a document without creator', async () => {
-    const recipients = [
-      {
-        header: {
-          kid: 'did:key:z6MkpTHR8VNsBxYAAWHut2Geadd9jSwuBV8xRoA' +
+    const recipients = [{
+      header: {
+        kid: 'did:key:z6MkpTHR8VNsBxYAAWHut2Geadd9jSwuBV8xRoA' +
             'nwWsdvktH#z6LSbysY2xFMRpGMhb7tFTLMpeuPRaqaWM1yECx2AtzE3KCc',
-          alg: 'ECDH-ES+A256KW',
-        }
+        alg: 'ECDH-ES+A256KW',
       }
-    ];
+    }];
     const result = await documents.register({
       externalId: 'did:test:register',
       document: {},
