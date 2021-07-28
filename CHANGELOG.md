@@ -1,10 +1,11 @@
 # bedrock-tokenization ChangeLog
 
-## 7.1.0 - 2021-xx-xx
+## 8.0.0 - 2021-xx-xx
 
 ### Changed
-- Updated `minimal-cipher` to `4.0.0`, changed `@digitalbazaar/did-io` to
-  `bedrock-did-io`, and removed `@digitalbazaar/did-method-key`.
+- **BREAKING**: Updated `minimal-cipher` to `v4.0.0` which now uses
+  `@digitalbazaar/x25519-verification-key-2020`, changed `@digitalbazaar/did-io`
+  to `bedrock-did-io`, and removed `@digitalbazaar/did-method-key`.
 
 ## 7.0.2 - 2021-06-22
 
