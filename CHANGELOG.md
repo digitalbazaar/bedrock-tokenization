@@ -1,5 +1,15 @@
 # bedrock-tokenization ChangeLog
 
+## 9.0.0 - 2021-xx-xx
+
+### Changed
+- **BREAKING**: Added default `false` flag `allowInvalidTokens` flag to
+  `resolve`. If the same requester tries to resolve a previously resolved token,
+  it will now throw an error.
+
+### Fixed
+- Added missing return value `internalId` from `resolve`.
+
 ## 8.0.0 - 2021-xx-xx
 
 ### Changed
