@@ -210,36 +210,8 @@ describe('Tokens', function() {
       areTokens(tks);
       should.exist(result1.pairwiseToken);
       should.exist(result2.pairwiseToken);
-      result1.pairwiseToken.should.deep.equal(result2.pairwiseToken);
-    });
-  it('should throw error when called twice by "requester" with no allow flag',
-    async function() {
-      const tokenCount = 1;
-      const internalId = await documents._generateInternalId();
-      const attributes = new Uint8Array([1]);
-      const requester = 'requester';
-      let err;
-      let result2;
-
-      // upsert mock entity the token is for
-      await entities._upsert({internalId, ttl: 60000});
-
-      const tks = await tokens.create(
-        {internalId, attributes, tokenCount});
-      const token = tks.tokens[0];
-      const result1 = await tokens.resolve({requester, token});
-      try {
-        // resolve token with same requester again
-        result2 = await tokens.resolve({requester, token});
-      } catch(e) {
-        err = e;
-      }
-      should.exist(err);
-      areTokens(tks);
-      should.exist(result1.pairwiseToken);
-      should.not.exist(result2);
-      err.name.should.equal('NotAllowedError');
-      err.message.should.equal('Token already used.');
+      result1.pairwiseToken.should.eql(result2.pairwiseToken);
+      result2.internalId.should.eql(internalId);
     });
   it('should throw error when token is resolved with different "requester"',
     async function() {
@@ -407,7 +379,7 @@ describe('Tokens', function() {
     assertNoError(err);
     should.exist(result);
     result.should.be.an('object');
-    result.should.deep.equal({internalId});
+    result.should.eql({internalId});
   });
   it('should throw error when wrapped value fails to get decrypted',
     async function() {
