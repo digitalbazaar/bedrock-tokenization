@@ -1,6 +1,11 @@
 # bedrock-tokenization ChangeLog
 
-## 8.1.0 - 2021-xx-xx
+## 9.0.0 - 2021-xx-xx
+
+### Changed
+- **BREAKING**: Added default `false` flag `allowResolvedInvalidatedTokens` to
+  `resolve`. Setting this flag to true will allow already resolved but
+  subsequently invalidated tokens to be resolved again.
 
 ### Fixed
 - Added missing return value `internalId` from `resolve`.
