@@ -200,9 +200,7 @@ describe('Tokens', function() {
       const result1 = await tokens.resolve({requester, token});
       try {
         // resolve token with same requester again
-        result2 = await tokens.resolve({
-          requester, token, allowInvalidTokens: true
-        });
+        result2 = await tokens.resolve({requester, token});
       } catch(e) {
         err = e;
       }
@@ -242,6 +240,76 @@ describe('Tokens', function() {
       should.not.exist(result2);
       err.name.should.equal('NotAllowedError');
       err.message.should.equal('Token already used.');
+    });
+  it('should not resolve invalid resolved token', async function() {
+    const tokenCount = 1;
+    const internalId = await documents._generateInternalId();
+    const attributes = new Uint8Array([1]);
+    const requester = 'requester';
+    let err;
+    let result2;
+
+    // upsert mock entity the token is for
+    const {entity} = await entities._upsert({
+      internalId, ttl: 60000, minAssuranceForResolution: -1
+    });
+
+    const tks = await tokens.create({
+      internalId, attributes, tokenCount, minAssuranceForResolution: -1
+    });
+
+    const token = tks.tokens[0];
+    await tokens.resolve({requester, token});
+    // invalidate token
+    const invalidateResult = await tokens.invalidateTokenBatches({entity});
+    invalidateResult.should.equal(true);
+    try {
+      // resolve token with same requester again
+      result2 = await tokens.resolve({requester, token});
+    } catch(e) {
+      err = e;
+    }
+    should.not.exist(result2);
+    err.name.should.equal('NotAllowedError');
+    err.message.should.equal('Token has been invalidated.');
+  });
+  it('should return invalid resolved token with allowResolvedInvalidatedTokens',
+    async function() {
+      const tokenCount = 1;
+      const internalId = await documents._generateInternalId();
+      const attributes = new Uint8Array([1]);
+      const requester = 'requester';
+      let err;
+      let result2;
+
+      // upsert mock entity the token is for
+      const {entity} = await entities._upsert({
+        internalId, ttl: 60000, minAssuranceForResolution: -1
+      });
+
+      const tks = await tokens.create({
+        internalId, attributes, tokenCount, minAssuranceForResolution: -1
+      });
+
+      const token = tks.tokens[0];
+      const result1 = await tokens.resolve({requester, token});
+      // invalidate tokens
+      const invalidateResult = await tokens.invalidateTokenBatches({entity});
+      invalidateResult.should.equal(true);
+      try {
+        // resolve token with same requester again
+        result2 = await tokens.resolve({
+          requester, token, allowResolvedInvalidatedTokens: true
+        });
+      } catch(e) {
+        err = e;
+      }
+      assertNoError(err);
+      areTokens(tks);
+      should.exist(result1.pairwiseToken);
+      should.exist(result2.pairwiseToken);
+      result1.pairwiseToken.should.eql(result2.pairwiseToken);
+      result2.internalId.should.eql(internalId);
     });
   it('should throw error when tokenCount is greater than 100 or less than 0',
     async function() {
