@@ -1,6 +1,6 @@
 # bedrock-tokenization ChangeLog
 
-## 8.0.0 - 2021-xx-xx
+## 8.0.0 - 2021-09-09
 
 ### Changed
 - **BREAKING**: Updated `bedrock-tokenizer` to `v2.0.0` which nows requires a
