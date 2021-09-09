@@ -1,21 +1,19 @@
 # bedrock-tokenization ChangeLog
 
-## 9.0.0 - 2021-xx-xx
-
-### Changed
-- **BREAKING**: Added default `false` flag `allowResolvedInvalidatedTokens` to
-  `resolve`. Setting this flag to true will allow already resolved but
-  subsequently invalidated tokens to be resolved again.
-
-### Fixed
-- Added missing return value `internalId` from `resolve`.
-
 ## 8.0.0 - 2021-xx-xx
 
 ### Changed
+- **BREAKING**: Updated `bedrock-tokenizer` to `v2.0.0` which nows requires a
+  meter to be configured for use with the WebKMS Service.
+- **BREAKING**: Added default `false` flag `allowResolvedInvalidatedTokens` to
+  `resolve`. Setting this flag to true will allow already resolved but
+  subsequently invalidated tokens to be resolved again.
 - **BREAKING**: Updated `minimal-cipher` to `v4.0.0` which now uses
   `@digitalbazaar/x25519-verification-key-2020`, changed `@digitalbazaar/did-io`
   to `bedrock-did-io`, and removed `@digitalbazaar/did-method-key`.
+
+### Fixed
+- Added missing return value `internalId` from `resolve`.
 
 ## 7.0.2 - 2021-06-22
 
