@@ -1,6 +1,6 @@
 {
   "name": "bedrock-tokenization",
-  "version": "7.0.3-0",
+  "version": "8.0.0",
   "description": "Bedrock Tokenization Engine",
   "main": "./lib",
   "scripts": {
