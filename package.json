@@ -41,7 +41,7 @@
     "bedrock": "3.x",
     "bedrock-https-agent": "^2.0.0",
     "bedrock-mongodb": "^8.0.1",
-    "bedrock-tokenizer": "^1.0.0"
+    "bedrock-tokenizer": "digitalbazaar/bedrock-tokenizer#main"
   },
   "devDependencies": {
     "eslint": "^7.4.0",
