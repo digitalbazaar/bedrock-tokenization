@@ -20,10 +20,5 @@ config.mongodb.dropCollections.collections = [];
 // HTTPS Agent
 config['https-agent'].rejectUnauthorized = false;
 
-// KMS
-config.kms.allowedHost = config.server.host;
-
-// KMS HTTPS API
-// optionally require an authenticated session
-// this option may be set to false when operating behind an authenticated proxy
-config['kms-http'].requireAuthentication = false;
+config.tokenizer.kms.baseUrl = `${config.server.baseUri}/kms`;
+config.tokenizer.kms.ipAllowList = ['127.0.0.1/32'];
