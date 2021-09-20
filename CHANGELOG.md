@@ -1,5 +1,10 @@
 # bedrock-tokenization ChangeLog
 
+## 8.0.1 - 2021-09-xx
+
+### Changed
+- Simplify configuration of test suite.
+
 ## 8.0.0 - 2021-09-09
 
 ### Changed
