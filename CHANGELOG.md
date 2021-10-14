@@ -1,6 +1,6 @@
 # bedrock-tokenization ChangeLog
 
-## 8.0.2 - 2021-10-xx
+## 8.0.2 - 2021-10-14
 
 ### Changed
 - Improve internal type checking in API.
