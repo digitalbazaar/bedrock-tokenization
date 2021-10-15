@@ -6,6 +6,9 @@
 - Do not base64url-decode `hmac.sign` result, the API now returns a Uint8Array
   already.
 
+### Added
+- Add tests for `documents._hmacString`.
+
 ## 8.0.2 - 2021-10-14
 
 ### Changed
