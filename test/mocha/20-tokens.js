@@ -1,6 +1,8 @@
 /*!
  * Copyright (c) 2020-2021 Digital Bazaar, Inc. All rights reserved.
  */
+'use strict';
+
 const {requireUncached, areTokens, cleanBatchDB, getTokenBatch} =
   require('./helpers');
 const {tokens, documents, entities} = requireUncached('bedrock-tokenization');
