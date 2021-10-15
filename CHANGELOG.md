@@ -1,6 +1,6 @@
 # bedrock-tokenization ChangeLog
 
-## 8.0.3 - 2021-10-xx
+## 8.0.3 - 2021-10-15
 
 ### Fixed
 - Do not base64url-decode `hmac.sign` result, the API now returns a Uint8Array
