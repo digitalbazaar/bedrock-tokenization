@@ -1,5 +1,12 @@
+/*!
+ * Copyright (c) 2020-2021 Digital Bazaar, Inc. All rights reserved.
+ */
+'use strict';
+
+const crypto = require('crypto');
 const {requireUncached, isRegistration} = require('./helpers');
 const {documents} = requireUncached('bedrock-tokenization');
+const {tokenizers} = require('bedrock-tokenizer');
 const {X25519KeyAgreementKey2020} =
   require('@digitalbazaar/x25519-key-agreement-key-2020');
 const {Cipher} = require('@digitalbazaar/minimal-cipher');
@@ -172,5 +179,91 @@ describe('documents._encrypt()', () => {
     });
 
     decrypted.should.have.property('example', 'document');
+  });
+});
+
+describe('documents._hmacString()', () => {
+  let hmac;
+  before(async () => {
+    ({hmac} = await tokenizers.getCurrent());
+  });
+
+  it('should produce a 34 byte Buffer give a small value', async () => {
+    let result;
+    let error;
+    const value = '670dbcb1-164a-4d47-8d54-e3e89f5831f9';
+    try {
+      result = await documents._hmacString({hmac, value});
+    } catch(e) {
+      error = e;
+    }
+    assertNoError(error);
+    result.should.be.instanceOf(Buffer);
+    result.should.have.length(34);
+  });
+
+  it('should produce a 34 byte Buffer given a large value', async () => {
+    let result;
+    let error;
+    const value = crypto.randomBytes(4096).toString('hex');
+    try {
+      result = await documents._hmacString({hmac, value});
+    } catch(e) {
+      error = e;
+    }
+    assertNoError(error);
+    result.should.be.instanceOf(Buffer);
+    result.should.have.length(34);
+  });
+
+  it('should produce the same output given the same value', async () => {
+    let result1;
+    let error;
+    const value = '294c9caa-707a-4758-ae5c-fe7306c25cc2';
+    try {
+      result1 = await documents._hmacString({hmac, value});
+    } catch(e) {
+      error = e;
+    }
+    assertNoError(error);
+
+    let result2;
+    error = undefined;
+    try {
+      result2 = await documents._hmacString({hmac, value});
+    } catch(e) {
+      error = e;
+    }
+    assertNoError(error);
+
+    result1.should.eql(result2);
+  });
+
+  it('should produce different output given different values', async () => {
+    let result1;
+    let error;
+    try {
+      result1 = await documents._hmacString({
+        hmac,
+        value: '294c9caa-707a-4758-ae5c-fe7306c25cc2'
+      });
+    } catch(e) {
+      error = e;
+    }
+    assertNoError(error);
+
+    let result2;
+    error = undefined;
+    try {
+      result2 = await documents._hmacString({
+        hmac,
+        value: '0e26c923-84e6-4918-9337-f82c56951007'
+      });
+    } catch(e) {
+      error = e;
+    }
+    assertNoError(error);
+
+    result1.should.not.eql(result2);
   });
 });
