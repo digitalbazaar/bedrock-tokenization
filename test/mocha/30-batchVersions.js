@@ -1,3 +1,8 @@
+/*!
+ * Copyright (c) 2020-2021 Digital Bazaar, Inc. All rights reserved.
+ */
+'use strict';
+
 const {requireUncached, isBatchVersion} = require('./helpers');
 const {tokenizers} = requireUncached('bedrock-tokenizer');
 const {batchVersions} = requireUncached('bedrock-tokenization');
