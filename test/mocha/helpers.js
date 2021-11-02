@@ -6,6 +6,7 @@
 const database = require('bedrock-mongodb');
 
 exports.isRegistration = result => {
+  // FIXME: add proper result checking instead of a console log.
   console.log('isRegistration', {result});
 };
 
@@ -28,17 +29,13 @@ exports.isBatchVersion = (possibleBatchVersion, expectedOptions) => {
   }
 };
 
-exports.cleanDB = async () => {
-  await database.collections['tokenizer-tokenizer'].deleteMany({});
-  await database.collections['tokenization-document'].deleteMany({});
-  await database.collections['tokenization-pairwiseToken'].deleteMany({});
-  await database.collections['tokenization-batchVersion'].deleteMany({});
-  await database.collections['tokenization-batchVersionOptions'].deleteMany({});
-  await database.collections['tokenization-tokenBatch'].deleteMany({});
+exports.cleanDB = async ({collectionName}) => {
+  await database.collections[collectionName].deleteMany({});
 };
 
-exports.cleanBatchDB = async () => {
-  await database.collections['tokenization-tokenBatch'].deleteMany({});
+exports.insertRecord = async ({record, collectionName}) => {
+  const collection = database.collections[collectionName];
+  await collection.insertOne(record, database.writeOptions);
 };
 
 exports.areTokens = result => {

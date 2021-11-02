@@ -3,14 +3,16 @@
  */
 'use strict';
 
-const {requireUncached, areTokens, cleanBatchDB, getTokenBatch} =
-  require('./helpers');
+const {
+  requireUncached, areTokens, cleanDB, getTokenBatch, insertRecord
+} = require('./helpers');
 const {tokens, documents, entities} = requireUncached('bedrock-tokenization');
 const {encode} = require('base58-universal');
 const canonicalize = require('canonicalize');
 const crypto = require('crypto');
 const sinon = require('sinon');
 const MAX_UINT32 = 4294967295;
+const {mockTokenBatch, mockPairwise} = require('./mock.data.js');
 
 describe('Tokens', function() {
   it('should create a token with attributes', async function() {
@@ -149,7 +151,8 @@ describe('Tokens', function() {
         {internalId, attributes, tokenCount});
       const token = tks[0];
       // intentionally clear tokenBatch database to remove token created
-      await cleanBatchDB();
+      const collectionName = 'tokenization-tokenBatch';
+      await cleanDB({collectionName});
       try {
         result = await tokens.resolve({requester, token});
       } catch(e) {
@@ -689,4 +692,78 @@ describe('TokensDuplicateError', function() {
       err.name.should.equal('DuplicateError');
       err.message.should.equal('Duplicate token batch.');
     });
+});
+
+describe('Tokens Database Tests', function() {
+  describe('Indexes', function() {
+    beforeEach(async () => {
+      const collectionNames = [
+        'tokenization-tokenBatch', 'tokenization-pairwiseToken'
+      ];
+      for(const collectionName of collectionNames) {
+        await cleanDB({collectionName});
+      }
+    });
+    it(`is properly indexed for 'tokenBatch.id in _getBatch()`,
+      async function() {
+        const collectionName = 'tokenization-tokenBatch';
+        await insertRecord({record: mockTokenBatch, collectionName});
+
+        const {id} = mockTokenBatch.tokenBatch;
+        const {executionStats} = await tokens._getBatch({id, explain: true});
+        executionStats.nReturned.should.equal(1);
+        executionStats.totalKeysExamined.should.equal(1);
+        executionStats.totalDocsExamined.should.equal(1);
+        executionStats.executionStages.inputStage.inputStage.inputStage.stage
+          .should.equal('IXSCAN');
+      });
+    it(`is properly indexed for compound query of 'tokenBatch.id' and ` +
+    `'tokenBatch.resolvedList' in _updateTokenBatch()`, async function() {
+      const collectionName = 'tokenization-tokenBatch';
+      await insertRecord({record: mockTokenBatch, collectionName});
+
+      const {id, resolvedList} = mockTokenBatch.tokenBatch;
+      const batchId = id;
+      const compressed = resolvedList;
+      const {executionStats} = await tokens._updateTokenBatch({
+        batchId, compressed, explain: true
+      });
+      executionStats.nReturned.should.equal(1);
+      executionStats.totalKeysExamined.should.equal(1);
+      executionStats.totalDocsExamined.should.equal(1);
+      executionStats.executionStages.inputStage.inputStage.stage.should
+        .equal('IXSCAN');
+    });
+    it(`is properly indexed for compound query of 'tokenBatch.id', ` +
+    `'tokenBatch.internalId' and 'tokenBatch.remainingTokenCount' in ` +
+    `_claimTokens()`, async function() {
+      const collectionName = 'tokenization-tokenBatch';
+      await insertRecord({record: mockTokenBatch, collectionName});
+
+      const {tokenBatch} = mockTokenBatch;
+      const {executionStats} = await tokens._claimTokens({
+        tokenBatch, explain: true
+      });
+      executionStats.nReturned.should.equal(1);
+      executionStats.totalKeysExamined.should.equal(1);
+      executionStats.totalDocsExamined.should.equal(1);
+      executionStats.executionStages.inputStage.inputStage.stage.should
+        .equal('IXSCAN');
+    });
+    it(`is properly indexed for compound query of 'pairwiseToken.internalId' ` +
+    `and 'pairwiseToken.requester' in _getPairwiseToken()`, async function() {
+      const collectionName = 'tokenization-pairwiseToken';
+      await insertRecord({record: mockPairwise, collectionName});
+
+      const {internalId, requester} = mockPairwise.pairwiseToken;
+      const {executionStats} = await tokens._getPairwiseToken({
+        internalId, requester, explain: true
+      });
+      executionStats.nReturned.should.equal(1);
+      executionStats.totalKeysExamined.should.equal(1);
+      executionStats.totalDocsExamined.should.equal(1);
+      executionStats.executionStages.inputStage.inputStage.inputStage.stage
+        .should.equal('IXSCAN');
+    });
+  });
 });
