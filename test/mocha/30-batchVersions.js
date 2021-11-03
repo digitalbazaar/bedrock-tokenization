@@ -19,7 +19,7 @@ describe('BatchVersions', function() {
   });
   it('should create a BatchVersion with an id', async function() {
     const options = {batchIdSize: 16, batchSaltSize: 99};
-    const id = 'test-token-version-id';
+    const id = 0;
     await batchVersions.create({id, options});
   });
   it('should ensureBatchVersion when no existing version', async function() {
