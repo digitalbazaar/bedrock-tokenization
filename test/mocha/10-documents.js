@@ -287,8 +287,11 @@ describe('Documents Database Tests', function() {
       const collectionName = 'tokenization-registration';
       await cleanDB({collectionName});
     });
-    it(`is properly indexed for 'registration.internalId' in getRegistration()`,
+    it(`is NOT indexed for 'registration.internalId' in getRegistration()`,
       async function() {
+        // an index is not created for registration.internalId due to
+        // performance issues related to sharding. Therefore, the query in
+        // getRegitration() should do a full collection scan.
         const collectionName = 'tokenization-registration';
         await insertRecord({record: mockDocument, collectionName});
 
@@ -297,10 +300,9 @@ describe('Documents Database Tests', function() {
           internalId, explain: true
         });
         executionStats.nReturned.should.equal(1);
-        executionStats.totalKeysExamined.should.equal(1);
-        executionStats.totalDocsExamined.should.equal(1);
-        executionStats.executionStages.inputStage.inputStage.stage.should
-          .equal('IXSCAN');
+        executionStats.totalKeysExamined.should.equal(0);
+        executionStats.executionStages.inputStage.stage.should
+          .equal('COLLSCAN');
       });
     it(`is properly indexed for compound query of ` +
     `'registration.externalIdHash' and 'registration.documentHash' in ` +
