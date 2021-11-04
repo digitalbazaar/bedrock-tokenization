@@ -718,7 +718,7 @@ describe('Tokens Database Tests', function() {
           .should.equal('IXSCAN');
       });
     it(`is properly indexed for compound query of 'tokenBatch.id' and ` +
-    `'tokenBatch.resolvedList' in _updateTokenBatch()`, async function() {
+      `'tokenBatch.resolvedList' in _updateTokenBatch()`, async function() {
       const collectionName = 'tokenization-tokenBatch';
       await insertRecord({record: mockTokenBatch, collectionName});
 
@@ -735,8 +735,8 @@ describe('Tokens Database Tests', function() {
         .equal('IXSCAN');
     });
     it(`is properly indexed for compound query of 'tokenBatch.id', ` +
-    `'tokenBatch.internalId' and 'tokenBatch.remainingTokenCount' in ` +
-    `_claimTokens()`, async function() {
+      `'tokenBatch.internalId' and 'tokenBatch.remainingTokenCount' in ` +
+      '_claimTokens()', async function() {
       const collectionName = 'tokenization-tokenBatch';
       await insertRecord({record: mockTokenBatch, collectionName});
 
@@ -751,7 +751,7 @@ describe('Tokens Database Tests', function() {
         .equal('IXSCAN');
     });
     it(`is properly indexed for compound query of 'pairwiseToken.internalId' ` +
-    `and 'pairwiseToken.requester' in _getPairwiseToken()`, async function() {
+      `and 'pairwiseToken.requester' in _getPairwiseToken()`, async function() {
       const collectionName = 'tokenization-pairwiseToken';
       await insertRecord({record: mockPairwise, collectionName});
 

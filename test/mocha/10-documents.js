@@ -289,10 +289,10 @@ describe('Documents Database Tests', function() {
     });
     it(`is NOT indexed for 'registration.internalId' in getRegistration()`,
       async function() {
-      // Note: an index is not created for `registration.internalId` because
-      // queries based on that field alone are rare; they are not run in hot
-      // code paths nor do they need to run quickly -- so the index cost is not
-      // justified. Therefore, a collection scan should be done.
+        // Note: an index is not created for `registration.internalId` because
+        // queries based on that field alone are rare; they are not run in hot
+        // code paths nor do they need to run quickly -- so the index cost is
+        // not justified. Therefore, a collection scan should be done.
         const collectionName = 'tokenization-registration';
         await insertRecord({record: mockDocument, collectionName});
 
@@ -305,9 +305,9 @@ describe('Documents Database Tests', function() {
         executionStats.executionStages.inputStage.stage.should
           .equal('COLLSCAN');
       });
-    it(`is properly indexed for compound query of ` +
-    `'registration.externalIdHash' and 'registration.documentHash' in ` +
-    `_getRegistrationRecord()`, async function() {
+    it('is properly indexed for compound query of ' +
+      `'registration.externalIdHash' and 'registration.documentHash' in ` +
+      '_getRegistrationRecord()', async function() {
       const collectionName = 'tokenization-registration';
       await insertRecord({record: mockDocument, collectionName});
 
@@ -321,9 +321,9 @@ describe('Documents Database Tests', function() {
       executionStats.executionStages.inputStage.inputStage.inputStage.stage
         .should.equal('IXSCAN');
     });
-    it(`is properly indexed for compound query of ` +
-    `'registration.externalIdHash' and 'registration.documentHash' in ` +
-    `_refresh()`, async function() {
+    it('is properly indexed for compound query of ' +
+      `'registration.externalIdHash' and 'registration.documentHash' in ` +
+      '_refresh()', async function() {
       const collectionName = 'tokenization-registration';
       await insertRecord({record: mockDocument, collectionName});
 
