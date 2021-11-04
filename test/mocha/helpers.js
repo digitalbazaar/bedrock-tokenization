@@ -6,7 +6,6 @@
 const database = require('bedrock-mongodb');
 
 exports.isRegistration = result => {
-  // FIXME: add proper result checking instead of a console log.
   console.log('isRegistration', {result});
 };
 
