@@ -5,6 +5,13 @@
 ### Fixed
 - Fixed bug with `sort` in the `_getNextVersionId()` helper function.
 
+### Added
+- Added optional `explain` param to get more details about database performance.
+- Added database tests in order to check database performance.
+
+### Changed
+- Exposed helper functions in order to properly test database calls.
+
 ## 8.0.3 - 2021-10-15
 
 ### Fixed
