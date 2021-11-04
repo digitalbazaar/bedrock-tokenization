@@ -133,7 +133,7 @@ describe('BatchVersions Database Tests', function() {
         .should.equal('IXSCAN');
     });
     it(`is properly indexed for compound query of 'batchVersion.id' and ` +
-    `'batchVersion.tokenizerId' in get()`, async function() {
+      `'batchVersion.tokenizerId' in get()`, async function() {
       const collectionName = 'tokenization-batchVersion';
       await insertRecord({record: mockBatchVersion, collectionName});
 
