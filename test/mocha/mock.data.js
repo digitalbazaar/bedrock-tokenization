@@ -37,7 +37,7 @@ const mockDocument = {
     tokenizerId: 'did:key:z6MkugLpCsat2iV8Xb3Y9kwUf3bMFFexXr4jUbs75grMkofo',
     jwe: {
       protected: 'eyJlbmMiOiJYQzIwUCJ9',
-      recipients: [Array],
+      recipients: ['060ae942-2494-483f-a104-ac345ee6a39d'],
       iv: 'DzkPhy3BVsuEzS-mZunwvorO2rWpov8h',
       ciphertext: `4hPSBaWQ-X5n_78nVOx4b1X4XGiAsOBF0AZDmdWUuLj4c0IslBWMWmtb0bx
         A-6EU4YQg3j3XK-7JZ-5oiiNAVOqHrqj-f9VuJTcLUR0UWdbAe82rCTCJJhZCZG8BsrVhf

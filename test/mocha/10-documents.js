@@ -289,9 +289,10 @@ describe('Documents Database Tests', function() {
     });
     it(`is NOT indexed for 'registration.internalId' in getRegistration()`,
       async function() {
-        // an index is not created for registration.internalId due to
-        // performance issues related to sharding. Therefore, the query in
-        // getRegitration() should do a full collection scan.
+      // Note: an index is not created for `registration.internalId` because
+      // queries based on that field alone are rare; they are not run in hot
+      // code paths nor do they need to run quickly -- so the index cost is not
+      // justified. Therefore, a collection scan should be done.
         const collectionName = 'tokenization-registration';
         await insertRecord({record: mockDocument, collectionName});
 
