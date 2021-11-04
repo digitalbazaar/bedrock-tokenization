@@ -1,6 +1,6 @@
 # bedrock-tokenization ChangeLog
 
-## 8.0.4 - TBD
+## 8.1.0 - 2021-11-04
 
 ### Fixed
 - Fixed bug with `sort` in the `_getNextVersionId()` helper function.
