@@ -48,6 +48,29 @@ const mockDocument = {
   }
 };
 
+const mockDocument2 = {
+  meta: {
+    created: now,
+    updated: now
+  },
+  registration: {
+    internalId: '448de567-5e19-4a54-8b0e-1d0e2128f13d',
+    externalIdHash: 'bcface6c-9775-415a-b822-29e1c55a5317',
+    documentHash: '67dd35e3-32bb-4176-8b05-30a14ca925d9',
+    tokenizerId: 'did:key:z6Mkeo5B5FK7vPf2DCZwvMqP1y46bEb7RMFWDXiUHZ6iFz53',
+    jwe: {
+      protected: 'eyJlbmMiOiJYQzIwUCJ9',
+      recipients: ['060ae942-2494-483f-a104-ac345ee6a39d'],
+      iv: 'DzkPhy3BVsuEzS-mZunwvorO2rWpov8h',
+      ciphertext: `4hPSBaWQ-X5n_78nVOx4b1X4XGiAsOBF0AZDmdWUuLj4c0IslBWMWmtb0bx
+        A-6EU4YQg3j3XK-7JZ-5oiiNAVOqHrqj-f9VuJTcLUR0UWdbAe82rCTCJJhZCZG8BsrVhf
+        opWYqE3VizpxxJyD7ho-z-4`,
+      tag: 'XpQYDgltbuFoRQTQWN6Nlw'
+    },
+    expires: new Date(now + 3000)
+  }
+};
+
 const mockTokenBatch = {
   meta: {
     created: now,
@@ -58,6 +81,24 @@ const mockTokenBatch = {
     internalId: '8389ca52-3b52-11ec-8d3d-0242ac130003',
     batchVersion: 0,
     resolvedList: '8a64e5e6-3b52-11ec-8d3d-0242ac130003',
+    maxTokenCount: 100,
+    remainingTokenCount: 99,
+    expires: new Date(now + 3000),
+    batchInvalidationCount: 0,
+    minAssuranceForResolution: 2
+  }
+};
+
+const mockTokenBatch2 = {
+  meta: {
+    created: now,
+    updated: now
+  },
+  tokenBatch: {
+    id: '6682e906-8251-4500-87b8-6359ad8af5bc',
+    internalId: '7d12a5a3-faa0-4b2b-ae4e-453039c3bf94',
+    batchVersion: 0,
+    resolvedList: 'ad433952-f48c-4af4-8555-11967c938c01',
     maxTokenCount: 100,
     remainingTokenCount: 99,
     expires: new Date(now + 3000),
@@ -78,6 +119,18 @@ const mockPairwise = {
   }
 };
 
+const mockPairwise2 = {
+  meta: {
+    created: now,
+    updated: now
+  },
+  pairwiseToken: {
+    internalId: 'aabc85a8-119f-4eca-b853-c8a3eaf0cbe7',
+    requester: 'requester',
+    value: '7279827a-a20a-4c0b-96d7-dfc5912576fb'
+  }
+};
+
 const mockBatchVersion = {
   meta: {
     created: now,
@@ -86,6 +139,23 @@ const mockBatchVersion = {
   batchVersion: {
     id: 1234,
     tokenizerId: 'did:key:z6MknCLT249QPKfJZQqDJpQhhMPeHWiBUnYRNHfzfm37G6UK',
+    options: {
+      batchIdSize: 16,
+      batchSaltSize: 16,
+      batchTokenCount: 100,
+      ttl: 5184000000
+    }
+  }
+};
+
+const mockBatchVersion2 = {
+  meta: {
+    created: now,
+    updated: now
+  },
+  batchVersion: {
+    id: 2345,
+    tokenizerId: 'did:key:z6Mkeo5B5FK7vPf2DCZwvMqP1y46bEb7RMFWDXiUHZ6iFz53',
     options: {
       batchIdSize: 16,
       batchSaltSize: 16,
@@ -111,11 +181,24 @@ const mockBatchVersionOptions = {
   }
 };
 
+const mockBatchVersionOptions2 = {
+  meta: {
+    created: now,
+    updated: now
+  },
+  batchVersionOptions: {
+    id: 'MOCK_OPTIONS',
+    options: {
+      batchIdSize: 16,
+      batchSaltSize: 16,
+      batchTokenCount: 100,
+      ttl: 5184000000
+    }
+  }
+};
+
 module.exports = {
-  data,
-  mockDocument,
-  mockTokenBatch,
-  mockPairwise,
-  mockBatchVersion,
-  mockBatchVersionOptions
+  data, mockDocument, mockDocument2, mockTokenBatch, mockTokenBatch2,
+  mockPairwise, mockPairwise2, mockBatchVersion, mockBatchVersion2,
+  mockBatchVersionOptions, mockBatchVersionOptions2
 };

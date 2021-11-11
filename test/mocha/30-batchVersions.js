@@ -8,7 +8,10 @@ const {
 } = require('./helpers');
 const {tokenizers} = requireUncached('bedrock-tokenizer');
 const {batchVersions} = requireUncached('bedrock-tokenization');
-const {mockBatchVersion, mockBatchVersionOptions} = require('./mock.data.js');
+const {
+  mockBatchVersion, mockBatchVersion2, mockBatchVersionOptions,
+  mockBatchVersionOptions2
+} = require('./mock.data.js');
 
 describe('BatchVersions', function() {
   let tokenizer = null;
@@ -85,17 +88,30 @@ describe('BatchVersions', function() {
 describe('BatchVersions Database Tests', function() {
   describe('Indexes', function() {
     beforeEach(async () => {
-      const collectionNames = [
-        'tokenization-batchVersion', 'tokenization-batchVersionOptions'
+      const collections = [
+        {
+          collectionName: 'tokenization-batchVersion',
+          records: [mockBatchVersion, mockBatchVersion2]
+        },
+        {
+          collectionName: 'tokenization-batchVersionOptions',
+          records: [mockBatchVersionOptions, mockBatchVersionOptions2]
+        }
       ];
-      for(const collectionName of collectionNames) {
+      for(const collection of collections) {
+        const {collectionName} = collection;
         await cleanDB({collectionName});
+
+        for(const record of collection.records) {
+          // mutliple records are inserted here in order to do proper assertions
+          // for 'nReturned', 'totalKeysExamined' and 'totalDocsExamined'.
+          await insertRecord({
+            record, collectionName
+          });
+        }
       }
     });
     it(`is properly indexed for 'batchVersion.id' in get()`, async function() {
-      const collectionName = 'tokenization-batchVersion';
-      await insertRecord({record: mockBatchVersion, collectionName});
-
       const {id} = mockBatchVersion.batchVersion;
       const {executionStats} = await batchVersions.get({id, explain: true});
       executionStats.nReturned.should.equal(1);
@@ -106,9 +122,6 @@ describe('BatchVersions Database Tests', function() {
     });
     it(`is properly indexed for 'batchVersion.tokenizerId' in get()`,
       async function() {
-        const collectionName = 'tokenization-batchVersion';
-        await insertRecord({record: mockBatchVersion, collectionName});
-
         const {tokenizerId} = mockBatchVersion.batchVersion;
         const {executionStats} = await batchVersions.get({
           tokenizerId, explain: true
@@ -120,9 +133,6 @@ describe('BatchVersions Database Tests', function() {
           .should.equal('IXSCAN');
       });
     it(`is properly indexed in _getNextVersionId()`, async function() {
-      const collectionName = 'tokenization-batchVersion';
-      await insertRecord({record: mockBatchVersion, collectionName});
-
       const {executionStats} = await batchVersions._getNextVersionId({
         explain: true
       });
@@ -134,9 +144,6 @@ describe('BatchVersions Database Tests', function() {
     });
     it(`is properly indexed for compound query of 'batchVersion.id' and ` +
       `'batchVersion.tokenizerId' in get()`, async function() {
-      const collectionName = 'tokenization-batchVersion';
-      await insertRecord({record: mockBatchVersion, collectionName});
-
       const {id, tokenizerId} = mockBatchVersion.batchVersion;
       const {executionStats} = await batchVersions.get({
         id, tokenizerId, explain: true
@@ -149,9 +156,6 @@ describe('BatchVersions Database Tests', function() {
     });
     it(`is properly indexed for 'batchVersionOptions.id' in setOptions()`,
       async function() {
-        const collectionName = 'tokenization-batchVersionOptions';
-        await insertRecord({record: mockBatchVersionOptions, collectionName});
-
         const {options} = mockBatchVersionOptions.batchVersionOptions;
         const {executionStats} = await batchVersions.setOptions({
           options, explain: true
@@ -164,9 +168,6 @@ describe('BatchVersions Database Tests', function() {
       });
     it(`is properly indexed for 'batchVersionOptions.id' in getOptions()`,
       async function() {
-        const collectionName = 'tokenization-batchVersionOptions';
-        await insertRecord({record: mockBatchVersionOptions, collectionName});
-
         const {executionStats} = await batchVersions.getOptions({
           explain: true
         });
