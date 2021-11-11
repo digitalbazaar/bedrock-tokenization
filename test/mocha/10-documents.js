@@ -16,7 +16,7 @@ const {X25519KeyAgreementKey2020} =
   require('@digitalbazaar/x25519-key-agreement-key-2020');
 const {Cipher} = require('@digitalbazaar/minimal-cipher');
 const cipher = new Cipher();
-const {mockDocument} = require('./mock.data.js');
+const {mockDocument, mockDocument2} = require('./mock.data.js');
 
 // this is test data borrowed from minimal-cipher
 const key1 = new X25519KeyAgreementKey2020({
@@ -286,6 +286,11 @@ describe('Documents Database Tests', function() {
     beforeEach(async () => {
       const collectionName = 'tokenization-registration';
       await cleanDB({collectionName});
+
+      await insertRecord({record: mockDocument, collectionName});
+      // second record is inserted here in order to do proper assertions for
+      // 'nReturned', 'totalKeysExamined' and 'totalDocsExamined'.
+      await insertRecord({record: mockDocument2, collectionName});
     });
     it(`is NOT indexed for 'registration.internalId' in getRegistration()`,
       async function() {
@@ -293,9 +298,6 @@ describe('Documents Database Tests', function() {
         // queries based on that field alone are rare; they are not run in hot
         // code paths nor do they need to run quickly -- so the index cost is
         // not justified. Therefore, a collection scan should be done.
-        const collectionName = 'tokenization-registration';
-        await insertRecord({record: mockDocument, collectionName});
-
         const {internalId} = mockDocument.registration;
         const {executionStats} = await documents.getRegistration({
           internalId, explain: true
@@ -308,9 +310,6 @@ describe('Documents Database Tests', function() {
     it('is properly indexed for compound query of ' +
       `'registration.externalIdHash' and 'registration.documentHash' in ` +
       '_getRegistrationRecord()', async function() {
-      const collectionName = 'tokenization-registration';
-      await insertRecord({record: mockDocument, collectionName});
-
       const {externalIdHash, documentHash} = mockDocument.registration;
       const {executionStats} = await documents._getRegistrationRecord({
         externalIdHash, documentHash, explain: true
@@ -324,9 +323,6 @@ describe('Documents Database Tests', function() {
     it('is properly indexed for compound query of ' +
       `'registration.externalIdHash' and 'registration.documentHash' in ` +
       '_refresh()', async function() {
-      const collectionName = 'tokenization-registration';
-      await insertRecord({record: mockDocument, collectionName});
-
       const {externalIdHash, documentHash} = mockDocument.registration;
       const ttl = 3000;
       const creatorHash = '6efaeca4-10fa-40f2-a5bf-7a3e1314eaf0';

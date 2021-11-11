@@ -12,7 +12,9 @@ const canonicalize = require('canonicalize');
 const crypto = require('crypto');
 const sinon = require('sinon');
 const MAX_UINT32 = 4294967295;
-const {mockTokenBatch, mockPairwise} = require('./mock.data.js');
+const {
+  mockTokenBatch, mockTokenBatch2, mockPairwise, mockPairwise2
+} = require('./mock.data.js');
 
 describe('Tokens', function() {
   it('should create a token with attributes', async function() {
@@ -697,18 +699,31 @@ describe('TokensDuplicateError', function() {
 describe('Tokens Database Tests', function() {
   describe('Indexes', function() {
     beforeEach(async () => {
-      const collectionNames = [
-        'tokenization-tokenBatch', 'tokenization-pairwiseToken'
+      const collections = [
+        {
+          collectionName: 'tokenization-tokenBatch',
+          records: [mockTokenBatch, mockTokenBatch2]
+        },
+        {
+          collectionName: 'tokenization-pairwiseToken',
+          records: [mockPairwise, mockPairwise2]
+        }
       ];
-      for(const collectionName of collectionNames) {
+      for(const collection of collections) {
+        const {collectionName} = collection;
         await cleanDB({collectionName});
+
+        for(const record of collection.records) {
+          // mutliple records are inserted here in order to do proper assertions
+          // for 'nReturned', 'totalKeysExamined' and 'totalDocsExamined'.
+          await insertRecord({
+            record, collectionName
+          });
+        }
       }
     });
     it(`is properly indexed for 'tokenBatch.id in _getBatch()`,
       async function() {
-        const collectionName = 'tokenization-tokenBatch';
-        await insertRecord({record: mockTokenBatch, collectionName});
-
         const {id} = mockTokenBatch.tokenBatch;
         const {executionStats} = await tokens._getBatch({id, explain: true});
         executionStats.nReturned.should.equal(1);
@@ -719,9 +734,6 @@ describe('Tokens Database Tests', function() {
       });
     it(`is properly indexed for compound query of 'tokenBatch.id' and ` +
       `'tokenBatch.resolvedList' in _updateTokenBatch()`, async function() {
-      const collectionName = 'tokenization-tokenBatch';
-      await insertRecord({record: mockTokenBatch, collectionName});
-
       const {id, resolvedList} = mockTokenBatch.tokenBatch;
       const batchId = id;
       const compressed = resolvedList;
@@ -737,9 +749,6 @@ describe('Tokens Database Tests', function() {
     it(`is properly indexed for compound query of 'tokenBatch.id', ` +
       `'tokenBatch.internalId' and 'tokenBatch.remainingTokenCount' in ` +
       '_claimTokens()', async function() {
-      const collectionName = 'tokenization-tokenBatch';
-      await insertRecord({record: mockTokenBatch, collectionName});
-
       const {tokenBatch} = mockTokenBatch;
       const {executionStats} = await tokens._claimTokens({
         tokenBatch, explain: true
@@ -752,9 +761,6 @@ describe('Tokens Database Tests', function() {
     });
     it(`is properly indexed for compound query of 'pairwiseToken.internalId' ` +
       `and 'pairwiseToken.requester' in _getPairwiseToken()`, async function() {
-      const collectionName = 'tokenization-pairwiseToken';
-      await insertRecord({record: mockPairwise, collectionName});
-
       const {internalId, requester} = mockPairwise.pairwiseToken;
       const {executionStats} = await tokens._getPairwiseToken({
         internalId, requester, explain: true
