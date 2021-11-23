@@ -119,6 +119,8 @@ describe('BatchVersions Database Tests', function() {
       executionStats.totalDocsExamined.should.equal(1);
       executionStats.executionStages.inputStage.inputStage.inputStage.stage
         .should.equal('IXSCAN');
+      executionStats.executionStages.inputStage.inputStage.inputStage
+        .keyPattern.should.eql({'batchVersion.id': 1});
     });
     it(`is properly indexed for 'batchVersion.tokenizerId' in get()`,
       async function() {
@@ -131,8 +133,11 @@ describe('BatchVersions Database Tests', function() {
         executionStats.totalDocsExamined.should.equal(1);
         executionStats.executionStages.inputStage.inputStage.inputStage.stage
           .should.equal('IXSCAN');
+        executionStats.executionStages.inputStage.inputStage.inputStage
+          .keyPattern.should.eql({'batchVersion.tokenizerId': 1});
       });
-    it(`is properly indexed in _getNextVersionId()`, async function() {
+    it(`is properly indexed for sort of 'batchVersion.id' in ` +
+      '_getNextVersionId()', async function() {
       const {executionStats} = await batchVersions._getNextVersionId({
         explain: true
       });
@@ -141,6 +146,8 @@ describe('BatchVersions Database Tests', function() {
       executionStats.totalDocsExamined.should.equal(0);
       executionStats.executionStages.inputStage.inputStage.stage
         .should.equal('IXSCAN');
+      executionStats.executionStages.inputStage.inputStage.keyPattern
+        .should.eql({'batchVersion.id': 1});
     });
     it(`is properly indexed for compound query of 'batchVersion.id' and ` +
       `'batchVersion.tokenizerId' in get()`, async function() {
@@ -153,6 +160,12 @@ describe('BatchVersions Database Tests', function() {
       executionStats.totalDocsExamined.should.equal(1);
       executionStats.executionStages.inputStage.inputStage.inputStage.stage
         .should.equal('IXSCAN');
+      // winning query plan could be either {'batchVersion.id': 1} or
+      // {'batchVersion.tokenizerId': 1} in this case.
+      executionStats.executionStages.inputStage.inputStage.inputStage
+        .keyPattern.should.be.deep.oneOf([
+          {'batchVersion.id': 1}, {'batchVersion.tokenizerId': 1}
+        ]);
     });
     it(`is properly indexed for 'batchVersionOptions.id' in setOptions()`,
       async function() {
@@ -165,6 +178,8 @@ describe('BatchVersions Database Tests', function() {
         executionStats.totalDocsExamined.should.equal(1);
         executionStats.executionStages.inputStage.inputStage.stage
           .should.equal('IXSCAN');
+        executionStats.executionStages.inputStage.inputStage.keyPattern
+          .should.eql({'batchVersionOptions.id': 1});
       });
     it(`is properly indexed for 'batchVersionOptions.id' in getOptions()`,
       async function() {
@@ -176,6 +191,8 @@ describe('BatchVersions Database Tests', function() {
         executionStats.totalDocsExamined.should.equal(1);
         executionStats.executionStages.inputStage.inputStage.inputStage.stage
           .should.equal('IXSCAN');
+        executionStats.executionStages.inputStage.inputStage.inputStage
+          .keyPattern.should.eql({'batchVersionOptions.id': 1});
       });
   });
 });

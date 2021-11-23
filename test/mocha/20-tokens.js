@@ -12,9 +12,7 @@ const canonicalize = require('canonicalize');
 const crypto = require('crypto');
 const sinon = require('sinon');
 const MAX_UINT32 = 4294967295;
-const {
-  mockTokenBatch, mockTokenBatch2, mockPairwise, mockPairwise2
-} = require('./mock.data.js');
+const mockData = require('./mock.data.js');
 
 describe('Tokens', function() {
   it('should create a token with attributes', async function() {
@@ -702,11 +700,11 @@ describe('Tokens Database Tests', function() {
       const collections = [
         {
           collectionName: 'tokenization-tokenBatch',
-          records: [mockTokenBatch, mockTokenBatch2]
+          records: [mockData.mockTokenBatch, mockData.mockTokenBatch2]
         },
         {
           collectionName: 'tokenization-pairwiseToken',
-          records: [mockPairwise, mockPairwise2]
+          records: [mockData.mockPairwise, mockData.mockPairwise2]
         }
       ];
       for(const collection of collections) {
@@ -724,17 +722,19 @@ describe('Tokens Database Tests', function() {
     });
     it(`is properly indexed for 'tokenBatch.id in _getBatch()`,
       async function() {
-        const {id} = mockTokenBatch.tokenBatch;
+        const {id} = mockData.mockTokenBatch.tokenBatch;
         const {executionStats} = await tokens._getBatch({id, explain: true});
         executionStats.nReturned.should.equal(1);
         executionStats.totalKeysExamined.should.equal(1);
         executionStats.totalDocsExamined.should.equal(1);
         executionStats.executionStages.inputStage.inputStage.inputStage.stage
           .should.equal('IXSCAN');
+        executionStats.executionStages.inputStage.inputStage.inputStage
+          .keyPattern.should.eql({'tokenBatch.id': 1});
       });
     it(`is properly indexed for compound query of 'tokenBatch.id' and ` +
       `'tokenBatch.resolvedList' in _updateTokenBatch()`, async function() {
-      const {id, resolvedList} = mockTokenBatch.tokenBatch;
+      const {id, resolvedList} = mockData.mockTokenBatch.tokenBatch;
       const batchId = id;
       const compressed = resolvedList;
       const {executionStats} = await tokens._updateTokenBatch({
@@ -745,11 +745,13 @@ describe('Tokens Database Tests', function() {
       executionStats.totalDocsExamined.should.equal(1);
       executionStats.executionStages.inputStage.inputStage.stage.should
         .equal('IXSCAN');
+      executionStats.executionStages.inputStage.inputStage.keyPattern
+        .should.eql({'tokenBatch.id': 1});
     });
     it(`is properly indexed for compound query of 'tokenBatch.id', ` +
       `'tokenBatch.internalId' and 'tokenBatch.remainingTokenCount' in ` +
       '_claimTokens()', async function() {
-      const {tokenBatch} = mockTokenBatch;
+      const {tokenBatch} = mockData.mockTokenBatch;
       const {executionStats} = await tokens._claimTokens({
         tokenBatch, explain: true
       });
@@ -758,10 +760,12 @@ describe('Tokens Database Tests', function() {
       executionStats.totalDocsExamined.should.equal(1);
       executionStats.executionStages.inputStage.inputStage.stage.should
         .equal('IXSCAN');
+      executionStats.executionStages.inputStage.inputStage.keyPattern
+        .should.eql({'tokenBatch.id': 1});
     });
     it(`is properly indexed for compound query of 'pairwiseToken.internalId' ` +
       `and 'pairwiseToken.requester' in _getPairwiseToken()`, async function() {
-      const {internalId, requester} = mockPairwise.pairwiseToken;
+      const {internalId, requester} = mockData.mockPairwise.pairwiseToken;
       const {executionStats} = await tokens._getPairwiseToken({
         internalId, requester, explain: true
       });
@@ -770,6 +774,135 @@ describe('Tokens Database Tests', function() {
       executionStats.totalDocsExamined.should.equal(1);
       executionStats.executionStages.inputStage.inputStage.inputStage.stage
         .should.equal('IXSCAN');
+      executionStats.executionStages.inputStage.inputStage.inputStage.keyPattern
+        .should.eql({
+          'pairwiseToken.internalId': 1, 'pairwiseToken.requester': 1
+        });
     });
+  });
+});
+
+describe('Entities Database Tests', function() {
+  describe('Indexes', function() {
+    beforeEach(async () => {
+      const collectionName = 'tokenization-entity';
+      await cleanDB({collectionName});
+      // mutliple records are inserted here in order to do proper assertions
+      // for 'nReturned', 'totalKeysExamined' and 'totalDocsExamined'.
+      await insertRecord({
+        record: mockData.mockEntity1, collectionName
+      });
+      await insertRecord({
+        record: mockData.mockEntity2, collectionName
+      });
+    });
+    it(`is properly indexed for 'entity.internalId' in get()`,
+      async function() {
+        const {internalId} = mockData.mockEntity1.entity;
+        const {executionStats} = await entities.get({
+          internalId, explain: true
+        });
+        executionStats.nReturned.should.equal(1);
+        executionStats.totalKeysExamined.should.equal(1);
+        executionStats.totalDocsExamined.should.equal(1);
+        executionStats.executionStages.inputStage.inputStage.inputStage.stage
+          .should.equal('IXSCAN');
+        executionStats.executionStages.inputStage.inputStage.inputStage
+          .keyPattern.should.eql({'entity.internalId': 1});
+      });
+    it(`is properly indexed for 'entity.internalId' in ` +
+      'setMinAssuranceForResolution()', async function() {
+      const {internalId} = mockData.mockEntity1.entity;
+      const minAssuranceForResolution = 1;
+      const {executionStats} = await entities.setMinAssuranceForResolution({
+        internalId, minAssuranceForResolution, explain: true
+      });
+      executionStats.nReturned.should.equal(1);
+      executionStats.totalKeysExamined.should.equal(1);
+      executionStats.totalDocsExamined.should.equal(1);
+      executionStats.executionStages.inputStage.inputStage.stage
+        .should.equal('IXSCAN');
+      executionStats.executionStages.inputStage.inputStage.keyPattern
+        .should.eql({'entity.internalId': 1});
+    });
+    it(`is properly indexed for 'entity.internalId' and` +
+      `'entity.batchInvalidationCount' in ` +
+      '_incrementBatchInvalidationCount()', async function() {
+      const {entity} = mockData.mockEntity1;
+      const {executionStats} = await entities
+        ._incrementBatchInvalidationCount({entity, explain: true});
+      executionStats.nReturned.should.equal(1);
+      executionStats.totalKeysExamined.should.equal(1);
+      executionStats.totalDocsExamined.should.equal(1);
+      executionStats.executionStages.inputStage.inputStage.stage
+        .should.equal('IXSCAN');
+      executionStats.executionStages.inputStage.inputStage.keyPattern
+        .should.eql({'entity.internalId': 1});
+    });
+    it(`is properly indexed for 'entity.internalId' in _remove()`,
+      async function() {
+        const {internalId} = mockData.mockEntity1.entity;
+        const {executionStats} = await entities._remove({
+          internalId, explain: true
+        });
+        executionStats.nReturned.should.equal(1);
+        executionStats.totalKeysExamined.should.equal(1);
+        executionStats.totalDocsExamined.should.equal(1);
+        executionStats.executionStages.inputStage.inputStage.stage
+          .should.equal('IXSCAN');
+        executionStats.executionStages.inputStage.inputStage.keyPattern
+          .should.eql({'entity.internalId': 1});
+      });
+    it(`is properly indexed for 'entity.internalId' and ` +
+      `'entity.batchInvalidationCount' in ` +
+      '_setOpenTokenBatchId()', async function() {
+      const {internalId} = mockData.mockEntity1.entity;
+      const batchId = Buffer.from('558fa903-f0b5-4d1c-9d4c-035bfb0d81f9');
+      const batchInvalidationCount = 0;
+      const {executionStats} = await entities._setOpenTokenBatchId({
+        internalId, batchId, batchInvalidationCount, explain: true
+      });
+      executionStats.nReturned.should.equal(1);
+      executionStats.totalKeysExamined.should.equal(1);
+      executionStats.totalDocsExamined.should.equal(1);
+      executionStats.executionStages.inputStage.inputStage.stage
+        .should.equal('IXSCAN');
+      executionStats.executionStages.inputStage.inputStage.keyPattern
+        .should.eql({'entity.internalId': 1});
+    });
+    it(`is properly indexed for 'entity.internalId' and ` +
+      `'entity.openBatch.{minAssuranceForResolution}' in ` +
+      '_setOpenTokenBatchId()', async function() {
+      const {internalId, openBatch} = mockData.mockEntity1.entity;
+      const oldBatchId = openBatch[2];
+      const batchId = Buffer.from('558fa903-f0b5-4d1c-9d4c-035bfb0d81f9');
+      const batchInvalidationCount = 0;
+      const {executionStats} = await entities._setOpenTokenBatchId({
+        internalId, batchId, oldBatchId, batchInvalidationCount,
+        minAssuranceForResolution: 2, explain: true
+      });
+      executionStats.nReturned.should.equal(1);
+      executionStats.totalKeysExamined.should.equal(1);
+      executionStats.totalDocsExamined.should.equal(1);
+      executionStats.executionStages.inputStage.inputStage.stage
+        .should.equal('IXSCAN');
+      executionStats.executionStages.inputStage.inputStage.keyPattern
+        .should.eql({'entity.internalId': 1});
+    });
+    it(`is properly indexed for 'entity.internalId' in _upsert()`,
+      async function() {
+        const {internalId} = mockData.mockEntity1.entity;
+        const ttl = 3000;
+        const {executionStats} = await entities._upsert({
+          internalId, ttl, minAssuranceForResolution: 2, explain: true
+        });
+        executionStats.nReturned.should.equal(1);
+        executionStats.totalKeysExamined.should.equal(1);
+        executionStats.totalDocsExamined.should.equal(1);
+        executionStats.executionStages.inputStage.inputStage.stage
+          .should.equal('IXSCAN');
+        executionStats.executionStages.inputStage.inputStage.keyPattern
+          .should.eql({'entity.internalId': 1});
+      });
   });
 });

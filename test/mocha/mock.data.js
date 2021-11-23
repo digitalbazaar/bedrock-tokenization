@@ -25,6 +25,9 @@ for(const product of products) {
 }
 
 const now = Date.now();
+const tomorrow = new Date();
+tomorrow.setDate(tomorrow.getDate() + 1);
+
 const mockDocument = {
   meta: {
     created: now,
@@ -44,7 +47,7 @@ const mockDocument = {
         opWYqE3VizpxxJyD7ho-z-4`,
       tag: 'XpQYDgltbuFoRQTQWN6Nlw'
     },
-    expires: new Date(now + 3000)
+    expires: tomorrow
   }
 };
 
@@ -83,7 +86,7 @@ const mockTokenBatch = {
     resolvedList: '8a64e5e6-3b52-11ec-8d3d-0242ac130003',
     maxTokenCount: 100,
     remainingTokenCount: 99,
-    expires: new Date(now + 3000),
+    expires: tomorrow,
     batchInvalidationCount: 0,
     minAssuranceForResolution: 2
   }
@@ -101,7 +104,7 @@ const mockTokenBatch2 = {
     resolvedList: 'ad433952-f48c-4af4-8555-11967c938c01',
     maxTokenCount: 100,
     remainingTokenCount: 99,
-    expires: new Date(now + 3000),
+    expires: tomorrow,
     batchInvalidationCount: 0,
     minAssuranceForResolution: 2
   }
@@ -197,8 +200,38 @@ const mockBatchVersionOptions2 = {
   }
 };
 
+const mockEntity1 = {
+  meta: {
+    created: now,
+    updated: now
+  },
+  entity: {
+    internalId: Buffer.from('a197712a-ffa0-4fe7-b094-790df2b6a67e'),
+    batchInvalidationCount: 0,
+    openBatch: {
+      2: Buffer.from('02a8c891-6170-4741-88db-46420b3b5f87')
+    },
+    minAssuranceForResolution: 2,
+    expires: tomorrow
+  }
+};
+
+const mockEntity2 = {
+  meta: {
+    created: now,
+    updated: now
+  },
+  entity: {
+    internalId: Buffer.from('e90450b1-ed33-4b41-bf9f-14188800fc28'),
+    batchInvalidationCount: 0,
+    openBatch: {},
+    minAssuranceForResolution: 2,
+    expires: tomorrow
+  }
+};
+
 module.exports = {
   data, mockDocument, mockDocument2, mockTokenBatch, mockTokenBatch2,
   mockPairwise, mockPairwise2, mockBatchVersion, mockBatchVersion2,
-  mockBatchVersionOptions, mockBatchVersionOptions2
+  mockBatchVersionOptions, mockBatchVersionOptions2, mockEntity1, mockEntity2
 };

@@ -319,6 +319,10 @@ describe('Documents Database Tests', function() {
       executionStats.totalDocsExamined.should.equal(1);
       executionStats.executionStages.inputStage.inputStage.inputStage.stage
         .should.equal('IXSCAN');
+      executionStats.executionStages.inputStage.inputStage.inputStage
+        .keyPattern.should.eql({
+          'registration.externalIdHash': 1, 'registration.documentHash': 1
+        });
     });
     it('is properly indexed for compound query of ' +
       `'registration.externalIdHash' and 'registration.documentHash' in ` +
@@ -334,6 +338,10 @@ describe('Documents Database Tests', function() {
       executionStats.totalDocsExamined.should.equal(1);
       executionStats.executionStages.inputStage.inputStage.inputStage.stage
         .should.equal('IXSCAN');
+      executionStats.executionStages.inputStage.inputStage.inputStage
+        .keyPattern.should.eql({
+          'registration.externalIdHash': 1, 'registration.documentHash': 1
+        });
     });
   });
 });
