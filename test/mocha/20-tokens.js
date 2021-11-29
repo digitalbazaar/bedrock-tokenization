@@ -4,8 +4,7 @@
 'use strict';
 
 const {
-  requireUncached, areTokens, cleanDB, getTokenBatch, insertRecord,
-  generateBufferIds
+  requireUncached, areTokens, cleanDB, getTokenBatch, insertRecord
 } = require('./helpers');
 const {tokens, documents, entities} = requireUncached('bedrock-tokenization');
 const {encode} = require('base58-universal');
@@ -14,6 +13,7 @@ const crypto = require('crypto');
 const sinon = require('sinon');
 const MAX_UINT32 = 4294967295;
 const mockData = require('./mock.data.js');
+const {generateId} = require('bnid');
 
 describe('Tokens', function() {
   it('should create a token with attributes', async function() {
@@ -789,10 +789,10 @@ describe('Entities Database Tests', function() {
       const collectionName = 'tokenization-entity';
       await cleanDB({collectionName});
 
-      const bufferIds = await generateBufferIds(3);
-      mockData.mockEntity1.entity.internalId = bufferIds[0];
-      mockData.mockEntity1.entity.openBatch[2] = bufferIds[1];
-      mockData.mockEntity2.entity.internalId = bufferIds[2];
+      mockData.mockEntity1.entity.internalId = Buffer.from(await generateId());
+      mockData.mockEntity1.entity.openBatch[2] = Buffer.from(
+        await generateId());
+      mockData.mockEntity2.entity.internalId = Buffer.from(await generateId());
 
       // mutliple records are inserted here in order to do proper assertions
       // for 'nReturned', 'totalKeysExamined' and 'totalDocsExamined'.
