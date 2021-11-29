@@ -206,10 +206,10 @@ const mockEntity1 = {
     updated: now
   },
   entity: {
-    internalId: Buffer.from('a197712a-ffa0-4fe7-b094-790df2b6a67e'),
+    // internalId is generated in tests.
     batchInvalidationCount: 0,
     openBatch: {
-      2: Buffer.from('02a8c891-6170-4741-88db-46420b3b5f87')
+      // openBatch[2] is generated in tests.
     },
     minAssuranceForResolution: 2,
     expires: tomorrow
@@ -222,7 +222,7 @@ const mockEntity2 = {
     updated: now
   },
   entity: {
-    internalId: Buffer.from('e90450b1-ed33-4b41-bf9f-14188800fc28'),
+    // internalId is generated in tests.
     batchInvalidationCount: 0,
     openBatch: {},
     minAssuranceForResolution: 2,

@@ -4,6 +4,7 @@
 'use strict';
 
 const database = require('bedrock-mongodb');
+const {generateId} = require('bnid');
 
 exports.isRegistration = result => {
   console.log('isRegistration', {result});
@@ -60,4 +61,17 @@ exports.getTokenBatch = async ({internalId}) => {
 exports.requireUncached = module => {
   delete require.cache[require.resolve(module)];
   return require(module);
+};
+
+exports.generateBufferIds = async function(number) {
+  const ids = [];
+  for(let i = 0; i < number; i++) {
+    const bnid = await generateId({
+      fixedLength: true
+    });
+    const base64 = Buffer.from(bnid).toString('base64');
+    const id = Buffer.from(base64);
+    ids.push(id);
+  }
+  return ids;
 };

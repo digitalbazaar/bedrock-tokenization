@@ -4,7 +4,8 @@
 'use strict';
 
 const {
-  requireUncached, areTokens, cleanDB, getTokenBatch, insertRecord
+  requireUncached, areTokens, cleanDB, getTokenBatch, insertRecord,
+  generateBufferIds
 } = require('./helpers');
 const {tokens, documents, entities} = requireUncached('bedrock-tokenization');
 const {encode} = require('base58-universal');
@@ -787,6 +788,12 @@ describe('Entities Database Tests', function() {
     beforeEach(async () => {
       const collectionName = 'tokenization-entity';
       await cleanDB({collectionName});
+
+      const bufferIds = await generateBufferIds(3);
+      mockData.mockEntity1.entity.internalId = bufferIds[0];
+      mockData.mockEntity1.entity.openBatch[2] = bufferIds[1];
+      mockData.mockEntity2.entity.internalId = bufferIds[2];
+
       // mutliple records are inserted here in order to do proper assertions
       // for 'nReturned', 'totalKeysExamined' and 'totalDocsExamined'.
       await insertRecord({

@@ -36,6 +36,7 @@
     "bedrock-validation": "^5.2.0",
     "bedrock-veres-one-context": "^11.0.0",
     "bedrock-zcap-storage": "^3.0.0",
+    "bnid": "^2.1.0",
     "canonicalize": "^1.0.1",
     "cross-env": "^7.0.2",
     "nyc": "^15.0.1",
