@@ -13,7 +13,7 @@ const crypto = require('crypto');
 const sinon = require('sinon');
 const MAX_UINT32 = 4294967295;
 const mockData = require('./mock.data.js');
-const {generateId} = require('bnid');
+const {IdGenerator} = require('bnid');
 
 describe('Tokens', function() {
   it('should create a token with attributes', async function() {
@@ -789,10 +789,13 @@ describe('Entities Database Tests', function() {
       const collectionName = 'tokenization-entity';
       await cleanDB({collectionName});
 
-      mockData.mockEntity1.entity.internalId = Buffer.from(await generateId());
+      const idGenerator = new IdGenerator();
+      mockData.mockEntity1.entity.internalId = Buffer.from(
+        await idGenerator.generate());
       mockData.mockEntity1.entity.openBatch[2] = Buffer.from(
-        await generateId());
-      mockData.mockEntity2.entity.internalId = Buffer.from(await generateId());
+        await idGenerator.generate());
+      mockData.mockEntity2.entity.internalId = Buffer.from(
+        await idGenerator.generate());
 
       // mutliple records are inserted here in order to do proper assertions
       // for 'nReturned', 'totalKeysExamined' and 'totalDocsExamined'.
