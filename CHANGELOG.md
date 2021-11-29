@@ -1,5 +1,12 @@
 # bedrock-tokenization ChangeLog
 
+## 8.2.0 - TBD
+
+### Added
+- Added optional `explain` param to get more details about database performance
+  for entities.
+- Added database tests in order to check database performance for entities.
+
 ## 8.1.0 - 2021-11-04
 
 ### Fixed
