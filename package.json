@@ -41,7 +41,7 @@
   "peerDependencies": {
     "bedrock": "^4.4.3",
     "bedrock-https-agent": "^2.0.0",
-    "bedrock-mongodb": "^8.0.1",
+    "bedrock-mongodb": "^8.4.1",
     "bedrock-tokenizer": "digitalbazaar/bedrock-tokenizer#update-deps"
   },
   "devDependencies": {

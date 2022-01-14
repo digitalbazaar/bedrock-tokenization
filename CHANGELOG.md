@@ -1,11 +1,14 @@
 # bedrock-tokenization ChangeLog
 
-## 8.3.0 - 2022-TBD
+## 9.0.0 - 2022-TBD
 
 ### Changed
+- **BREAKING**: Update peer dependencies.
+  - Update `bedrock-tokenizer` to `v3.0`.
+  - Update `bedrock` to `v4.4.3`.
+  - Update `bedrock-mongodb` to `v8.4.1`.
 - Use `bedrock-did-io@5.0` which uses `did-veres-one@14.0.0-beta.4`.
 - Remove unused package `pako`.
-- Update peer dependencies.
 - Update test dependencies.
 
 ### Added
