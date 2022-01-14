@@ -1,6 +1,6 @@
 # bedrock-tokenization ChangeLog
 
-## 9.0.0 - 2022-TBD
+## 9.0.0 - 2022-01-14
 
 ### Changed
 - **BREAKING**: Update peer dependencies.
