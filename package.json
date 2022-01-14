@@ -30,7 +30,7 @@
     "assert-plus": "^1.0.0",
     "base58-universal": "^1.0.0",
     "base64url-universal": "^1.1.0",
-    "bedrock-did-io": "^4.0.0",
+    "bedrock-did-io": "^5.0.0",
     "bnid": "^2.0.0",
     "canonicalize": "^1.0.1",
     "cit-context": "^2.0.0",
@@ -39,10 +39,10 @@
     "p-limit": "^3.0.1"
   },
   "peerDependencies": {
-    "bedrock": "3.x",
+    "bedrock": "^4.4.3",
     "bedrock-https-agent": "^2.0.0",
     "bedrock-mongodb": "^8.0.1",
-    "bedrock-tokenizer": "^2.1.0"
+    "bedrock-tokenizer": "digitalbazaar/bedrock-tokenizer#update-deps"
   },
   "devDependencies": {
     "eslint": "^7.4.0",
