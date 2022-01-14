@@ -1,5 +1,16 @@
 # bedrock-tokenization ChangeLog
 
+## 8.3.0 - 2022-TBD
+
+### Changed
+- Use `bedrock-did-io@5.0` which uses `did-veres-one@14.0.0-beta.4`.
+- Remove unused package `pako`.
+- Update peer dependencies.
+- Update test dependencies.
+
+### Added
+- Add missing packages `base64url-universal` and `esm`.
+
 ## 8.2.0 - 2021-11-29
 
 ### Added
