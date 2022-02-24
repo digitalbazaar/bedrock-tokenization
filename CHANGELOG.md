@@ -1,6 +1,6 @@
 # bedrock-tokenization ChangeLog
 
-## 9.1.0 - 2022-02-xx
+## 9.1.0 - 2022-02-24
 
 ### Fixed
 - This module was erroneously requiring `bedrock-did-io` as a
