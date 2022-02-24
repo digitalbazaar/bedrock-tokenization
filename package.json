@@ -30,7 +30,6 @@
     "assert-plus": "^1.0.0",
     "base58-universal": "^1.0.0",
     "base64url-universal": "^1.1.0",
-    "bedrock-did-io": "^5.0.0",
     "bnid": "^2.0.0",
     "canonicalize": "^1.0.1",
     "cit-context": "^2.0.0",
@@ -40,6 +39,7 @@
   },
   "peerDependencies": {
     "bedrock": "^4.4.3",
+    "bedrock-did-io": "^6.0.0",
     "bedrock-https-agent": "^2.0.0",
     "bedrock-mongodb": "^8.4.1",
     "bedrock-tokenizer": "^3.0.0"

@@ -1,5 +1,19 @@
 # bedrock-tokenization ChangeLog
 
+## 9.1.0 - 2022-02-xx
+
+### Fixed
+- This module was erroneously requiring `bedrock-did-io` as a
+  regular dependency instead of a peer dependency which can lead
+  to broken behavior in some installs. This has been fixed and
+  the version bumped (but both versions are compatible as long
+  as they are installed as peer dependencies).
+
+### Changed
+- Use `bedrock-did-io@6` as a peer dependency. This module is still
+  compatible with version 5, so this is not a breaking change, just
+  a recommendation for using version 6.
+
 ## 9.0.0 - 2022-01-14
 
 ### Changed
