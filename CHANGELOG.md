@@ -1,6 +1,6 @@
 # bedrock-tokenization ChangeLog
 
-## 9.2.0 - TBD
+## 9.2.0 - 2022-03-01
 
 ### Added
 - Improve error messages in `_parseToken` helper function.
