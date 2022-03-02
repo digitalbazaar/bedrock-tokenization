@@ -1,6 +1,6 @@
 # bedrock-tokenization ChangeLog
 
-## 10.0.0 - 2022-03-xx
+## 10.0.0 - 2022-03-01
 
 ### Changed
 - **BREAKING**: Update peer dependencies:
