@@ -483,7 +483,7 @@ describe('Tokens', function() {
       err.message.should.equal('Invalid token.');
       err.cause.message.should.equal('Decryption failed.');
     });
-  it('should throw error when attributes is incorrect.',
+  it('should throw error when attributes are incorrect.',
     async function() {
       const tokenCount = 1;
       const attributes = new Uint8Array([1]);
