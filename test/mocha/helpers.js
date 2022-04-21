@@ -32,7 +32,7 @@ export async function cleanDB({collectionName}) {
 
 export async function insertRecord({record, collectionName}) {
   const collection = database.collections[collectionName];
-  await collection.insertOne(record, database.writeOptions);
+  await collection.insertOne(record);
 }
 
 export function areTokens(result) {
