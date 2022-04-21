@@ -1,12 +1,10 @@
 /*!
- * Copyright (c) 2021 Digital Bazaar, Inc. All rights reserved.
+ * Copyright (c) 2021-2022 Digital Bazaar, Inc. All rights reserved.
  */
-'use strict';
-
-const data = {};
+export const mockData = {};
 
 // mock product IDs and reverse lookup for webkms/edv/etc service products
-data.productIdMap = new Map();
+mockData.productIdMap = new Map();
 
 const products = [{
   // Use default webkms dev `id` and `serviceId`
@@ -20,15 +18,15 @@ const products = [{
 }];
 
 for(const product of products) {
-  data.productIdMap.set(product.id, product);
-  data.productIdMap.set(product.name, product);
+  mockData.productIdMap.set(product.id, product);
+  mockData.productIdMap.set(product.name, product);
 }
 
 const now = Date.now();
 const tomorrow = new Date();
 tomorrow.setDate(tomorrow.getDate() + 1);
 
-const mockDocument = {
+export const mockDocument = {
   meta: {
     created: now,
     updated: now
@@ -51,7 +49,7 @@ const mockDocument = {
   }
 };
 
-const mockDocument2 = {
+export const mockDocument2 = {
   meta: {
     created: now,
     updated: now
@@ -74,7 +72,7 @@ const mockDocument2 = {
   }
 };
 
-const mockTokenBatch = {
+export const mockTokenBatch = {
   meta: {
     created: now,
     updated: now
@@ -92,7 +90,7 @@ const mockTokenBatch = {
   }
 };
 
-const mockTokenBatch2 = {
+export const mockTokenBatch2 = {
   meta: {
     created: now,
     updated: now
@@ -110,7 +108,7 @@ const mockTokenBatch2 = {
   }
 };
 
-const mockPairwise = {
+export const mockPairwise = {
   meta: {
     created: now,
     updated: now
@@ -122,7 +120,7 @@ const mockPairwise = {
   }
 };
 
-const mockPairwise2 = {
+export const mockPairwise2 = {
   meta: {
     created: now,
     updated: now
@@ -134,7 +132,7 @@ const mockPairwise2 = {
   }
 };
 
-const mockBatchVersion = {
+export const mockBatchVersion = {
   meta: {
     created: now,
     updated: now
@@ -151,7 +149,7 @@ const mockBatchVersion = {
   }
 };
 
-const mockBatchVersion2 = {
+export const mockBatchVersion2 = {
   meta: {
     created: now,
     updated: now
@@ -168,7 +166,7 @@ const mockBatchVersion2 = {
   }
 };
 
-const mockBatchVersionOptions = {
+export const mockBatchVersionOptions = {
   meta: {
     created: now,
     updated: now
@@ -184,7 +182,7 @@ const mockBatchVersionOptions = {
   }
 };
 
-const mockBatchVersionOptions2 = {
+export const mockBatchVersionOptions2 = {
   meta: {
     created: now,
     updated: now
@@ -200,7 +198,7 @@ const mockBatchVersionOptions2 = {
   }
 };
 
-const mockEntity1 = {
+export const mockEntity1 = {
   meta: {
     created: now,
     updated: now
@@ -216,7 +214,7 @@ const mockEntity1 = {
   }
 };
 
-const mockEntity2 = {
+export const mockEntity2 = {
   meta: {
     created: now,
     updated: now
@@ -228,10 +226,4 @@ const mockEntity2 = {
     minAssuranceForResolution: 2,
     expires: tomorrow
   }
-};
-
-module.exports = {
-  data, mockDocument, mockDocument2, mockTokenBatch, mockTokenBatch2,
-  mockPairwise, mockPairwise2, mockBatchVersion, mockBatchVersion2,
-  mockBatchVersionOptions, mockBatchVersionOptions2, mockEntity1, mockEntity2
 };

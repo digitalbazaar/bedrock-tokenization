@@ -1,17 +1,13 @@
 /*!
- * Copyright (c) 2020-2021 Digital Bazaar, Inc. All rights reserved.
+ * Copyright (c) 2020-2022 Digital Bazaar, Inc. All rights reserved.
  */
-'use strict';
-
-const {
-  requireUncached, isBatchVersion, cleanDB, insertRecord
-} = require('./helpers');
-const {tokenizers} = requireUncached('bedrock-tokenizer');
-const {batchVersions} = requireUncached('bedrock-tokenization');
-const {
+import {batchVersions} from '@bedrock/tokenization';
+import {isBatchVersion, cleanDB, insertRecord} from './helpers.js';
+import {tokenizers} from '@bedrock/tokenizer';
+import {
   mockBatchVersion, mockBatchVersion2, mockBatchVersionOptions,
   mockBatchVersionOptions2
-} = require('./mock.data.js');
+} from './mock.data.js';
 
 describe('BatchVersions', function() {
   let tokenizer = null;

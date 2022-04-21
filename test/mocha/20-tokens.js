@@ -1,19 +1,22 @@
 /*!
- * Copyright (c) 2020-2021 Digital Bazaar, Inc. All rights reserved.
+ * Copyright (c) 2020-2022 Digital Bazaar, Inc. All rights reserved.
  */
-'use strict';
-
-const {
-  requireUncached, areTokens, cleanDB, getTokenBatch, insertRecord
-} = require('./helpers');
-const {tokens, documents, entities} = requireUncached('bedrock-tokenization');
+import {areTokens, cleanDB, getTokenBatch, insertRecord} from './helpers.js';
+import canonicalize from 'canonicalize';
+import {createRequire} from 'module';
+import crypto from 'crypto';
+import {
+  mockTokenBatch, mockTokenBatch2,
+  mockPairwise, mockPairwise2,
+  mockEntity1, mockEntity2
+} from './mock.data.js';
+import sinon from 'sinon';
+import {tokens, documents, entities} from '@bedrock/tokenization';
+const require = createRequire(import.meta.url);
 const {encode} = require('base58-universal');
-const canonicalize = require('canonicalize');
-const crypto = require('crypto');
-const sinon = require('sinon');
-const MAX_UINT32 = 4294967295;
-const mockData = require('./mock.data.js');
 const {IdGenerator} = require('bnid');
+
+const MAX_UINT32 = 4294967295;
 
 describe('Tokens', function() {
   it('should create a token with attributes', async function() {
@@ -701,11 +704,11 @@ describe('Tokens Database Tests', function() {
       const collections = [
         {
           collectionName: 'tokenization-tokenBatch',
-          records: [mockData.mockTokenBatch, mockData.mockTokenBatch2]
+          records: [mockTokenBatch, mockTokenBatch2]
         },
         {
           collectionName: 'tokenization-pairwiseToken',
-          records: [mockData.mockPairwise, mockData.mockPairwise2]
+          records: [mockPairwise, mockPairwise2]
         }
       ];
       for(const collection of collections) {
@@ -723,7 +726,7 @@ describe('Tokens Database Tests', function() {
     });
     it(`is properly indexed for 'tokenBatch.id in _getBatch()`,
       async function() {
-        const {id} = mockData.mockTokenBatch.tokenBatch;
+        const {id} = mockTokenBatch.tokenBatch;
         const {executionStats} = await tokens._getBatch({id, explain: true});
         executionStats.nReturned.should.equal(1);
         executionStats.totalKeysExamined.should.equal(1);
@@ -735,7 +738,7 @@ describe('Tokens Database Tests', function() {
       });
     it(`is properly indexed for compound query of 'tokenBatch.id' and ` +
       `'tokenBatch.resolvedList' in _updateTokenBatch()`, async function() {
-      const {id, resolvedList} = mockData.mockTokenBatch.tokenBatch;
+      const {id, resolvedList} = mockTokenBatch.tokenBatch;
       const batchId = id;
       const compressed = resolvedList;
       const {executionStats} = await tokens._updateTokenBatch({
@@ -752,7 +755,7 @@ describe('Tokens Database Tests', function() {
     it(`is properly indexed for compound query of 'tokenBatch.id', ` +
       `'tokenBatch.internalId' and 'tokenBatch.remainingTokenCount' in ` +
       '_claimTokens()', async function() {
-      const {tokenBatch} = mockData.mockTokenBatch;
+      const {tokenBatch} = mockTokenBatch;
       const {executionStats} = await tokens._claimTokens({
         tokenBatch, explain: true
       });
@@ -766,7 +769,7 @@ describe('Tokens Database Tests', function() {
     });
     it(`is properly indexed for compound query of 'pairwiseToken.internalId' ` +
       `and 'pairwiseToken.requester' in _getPairwiseToken()`, async function() {
-      const {internalId, requester} = mockData.mockPairwise.pairwiseToken;
+      const {internalId, requester} = mockPairwise.pairwiseToken;
       const {executionStats} = await tokens._getPairwiseToken({
         internalId, requester, explain: true
       });
@@ -790,25 +793,25 @@ describe('Entities Database Tests', function() {
       await cleanDB({collectionName});
 
       const idGenerator = new IdGenerator();
-      mockData.mockEntity1.entity.internalId = Buffer.from(
+      mockEntity1.entity.internalId = Buffer.from(
         await idGenerator.generate());
-      mockData.mockEntity1.entity.openBatch[2] = Buffer.from(
+      mockEntity1.entity.openBatch[2] = Buffer.from(
         await idGenerator.generate());
-      mockData.mockEntity2.entity.internalId = Buffer.from(
+      mockEntity2.entity.internalId = Buffer.from(
         await idGenerator.generate());
 
       // mutliple records are inserted here in order to do proper assertions
       // for 'nReturned', 'totalKeysExamined' and 'totalDocsExamined'.
       await insertRecord({
-        record: mockData.mockEntity1, collectionName
+        record: mockEntity1, collectionName
       });
       await insertRecord({
-        record: mockData.mockEntity2, collectionName
+        record: mockEntity2, collectionName
       });
     });
     it(`is properly indexed for 'entity.internalId' in get()`,
       async function() {
-        const {internalId} = mockData.mockEntity1.entity;
+        const {internalId} = mockEntity1.entity;
         const {executionStats} = await entities.get({
           internalId, explain: true
         });
@@ -822,7 +825,7 @@ describe('Entities Database Tests', function() {
       });
     it(`is properly indexed for 'entity.internalId' in ` +
       'setMinAssuranceForResolution()', async function() {
-      const {internalId} = mockData.mockEntity1.entity;
+      const {internalId} = mockEntity1.entity;
       const minAssuranceForResolution = 1;
       const {executionStats} = await entities.setMinAssuranceForResolution({
         internalId, minAssuranceForResolution, explain: true
@@ -838,7 +841,7 @@ describe('Entities Database Tests', function() {
     it(`is properly indexed for 'entity.internalId' and` +
       `'entity.batchInvalidationCount' in ` +
       '_incrementBatchInvalidationCount()', async function() {
-      const {entity} = mockData.mockEntity1;
+      const {entity} = mockEntity1;
       const {executionStats} = await entities
         ._incrementBatchInvalidationCount({entity, explain: true});
       executionStats.nReturned.should.equal(1);
@@ -851,7 +854,7 @@ describe('Entities Database Tests', function() {
     });
     it(`is properly indexed for 'entity.internalId' in _remove()`,
       async function() {
-        const {internalId} = mockData.mockEntity1.entity;
+        const {internalId} = mockEntity1.entity;
         const {executionStats} = await entities._remove({
           internalId, explain: true
         });
@@ -866,7 +869,7 @@ describe('Entities Database Tests', function() {
     it(`is properly indexed for 'entity.internalId' and ` +
       `'entity.batchInvalidationCount' in ` +
       '_setOpenTokenBatchId()', async function() {
-      const {internalId} = mockData.mockEntity1.entity;
+      const {internalId} = mockEntity1.entity;
       const batchId = Buffer.from('558fa903-f0b5-4d1c-9d4c-035bfb0d81f9');
       const batchInvalidationCount = 0;
       const {executionStats} = await entities._setOpenTokenBatchId({
@@ -883,7 +886,7 @@ describe('Entities Database Tests', function() {
     it(`is properly indexed for 'entity.internalId' and ` +
       `'entity.openBatch.{minAssuranceForResolution}' in ` +
       '_setOpenTokenBatchId()', async function() {
-      const {internalId, openBatch} = mockData.mockEntity1.entity;
+      const {internalId, openBatch} = mockEntity1.entity;
       const oldBatchId = openBatch[2];
       const batchId = Buffer.from('558fa903-f0b5-4d1c-9d4c-035bfb0d81f9');
       const batchInvalidationCount = 0;
@@ -901,7 +904,7 @@ describe('Entities Database Tests', function() {
     });
     it(`is properly indexed for 'entity.internalId' in _upsert()`,
       async function() {
-        const {internalId} = mockData.mockEntity1.entity;
+        const {internalId} = mockEntity1.entity;
         const ttl = 3000;
         const {executionStats} = await entities._upsert({
           internalId, ttl, minAssuranceForResolution: 2, explain: true

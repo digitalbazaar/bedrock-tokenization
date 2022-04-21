@@ -1,8 +1,9 @@
 {
-  "name": "bedrock-tokenization",
+  "name": "@bedrock/tokenization",
   "version": "12.0.1-0",
+  "type": "module",
   "description": "Bedrock Tokenization Engine",
-  "main": "./lib",
+  "main": "./lib/index.js",
   "scripts": {
     "lint": "eslint ."
   },
@@ -33,20 +34,21 @@
     "bnid": "^2.0.0",
     "canonicalize": "^1.0.1",
     "cit-context": "^2.0.0",
-    "esm": "^3.2.25",
     "lru-cache": "^6.0.0",
     "p-limit": "^3.0.1"
   },
   "peerDependencies": {
-    "bedrock": "^4.4.3",
-    "bedrock-did-io": "^6.1.0",
-    "bedrock-https-agent": "^2.0.0",
-    "bedrock-mongodb": "^8.4.1",
-    "bedrock-tokenizer": "^6.0.0"
+    "@bedrock/core": "^5.0.0",
+    "@bedrock/did-io": "^7.0.0",
+    "@bedrock/https-agent": "^3.0.0",
+    "@bedrock/mongodb": "^9.0.0",
+    "@bedrock/tokenizer": "^7.0.0"
   },
   "devDependencies": {
-    "eslint": "^7.4.0",
-    "eslint-config-digitalbazaar": "^2.5.0"
+    "eslint": "^7.32.0",
+    "eslint-config-digitalbazaar": "^2.8.0",
+    "eslint-plugin-jsdoc": "^37.9.7",
+    "jsdoc-to-markdown": "^7.1.1"
   },
   "directories": {
     "lib": "./lib"

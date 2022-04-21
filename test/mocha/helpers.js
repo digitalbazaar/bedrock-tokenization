@@ -1,15 +1,13 @@
 /*!
- * Copyright (c) 2020-2021 Digital Bazaar, Inc. All rights reserved.
+ * Copyright (c) 2020-2022 Digital Bazaar, Inc. All rights reserved.
  */
-'use strict';
+import * as database from '@bedrock/mongodb';
 
-const database = require('bedrock-mongodb');
-
-exports.isRegistration = result => {
+export function isRegistration(result) {
   console.log('isRegistration', {result});
-};
+}
 
-exports.isBatchVersion = (possibleBatchVersion, expectedOptions) => {
+export function isBatchVersion(possibleBatchVersion, expectedOptions) {
   should.exist(possibleBatchVersion);
   possibleBatchVersion.should.be.an('object');
   possibleBatchVersion.should.have.property('meta');
@@ -26,18 +24,18 @@ exports.isBatchVersion = (possibleBatchVersion, expectedOptions) => {
   if(expectedOptions) {
     batchVersion.options.should.deep.equal(expectedOptions);
   }
-};
+}
 
-exports.cleanDB = async ({collectionName}) => {
+export async function cleanDB({collectionName}) {
   await database.collections[collectionName].deleteMany({});
-};
+}
 
-exports.insertRecord = async ({record, collectionName}) => {
+export async function insertRecord({record, collectionName}) {
   const collection = database.collections[collectionName];
   await collection.insertOne(record, database.writeOptions);
-};
+}
 
-exports.areTokens = result => {
+export function areTokens(result) {
   should.exist(result);
   result.should.be.an('object');
   result.should.have.property('tokens');
@@ -47,17 +45,11 @@ exports.areTokens = result => {
     should.exist(token);
     token.should.be.an('Uint8Array');
   });
-};
+}
 
-exports.getTokenBatch = async ({internalId}) => {
+export async function getTokenBatch({internalId}) {
   const query = {
     'tokenBatch.internalId': internalId
   };
   return database.collections['tokenization-tokenBatch'].findOne(query);
-};
-
-// we need to reset the module for most tests
-exports.requireUncached = module => {
-  delete require.cache[require.resolve(module)];
-  return require(module);
-};
+}

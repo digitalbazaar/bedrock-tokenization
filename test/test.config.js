@@ -1,10 +1,14 @@
 /*!
- * Copyright (c) 2020-2021 Digital Bazaar, Inc. All rights reserved.
+ * Copyright (c) 2020-2022 Digital Bazaar, Inc. All rights reserved.
  */
-'use strict';
+import {config} from '@bedrock/core';
+import {fileURLToPath} from 'url';
+import path from 'path';
+import '@bedrock/https-agent';
+import '@bedrock/mongodb';
+import '@bedrock/tokenizer';
 
-const {config} = require('bedrock');
-const path = require('path');
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 config.mocha.tests.push(path.join(__dirname, 'mocha'));
 
