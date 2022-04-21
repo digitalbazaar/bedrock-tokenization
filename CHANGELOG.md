@@ -1,6 +1,6 @@
 # bedrock-tokenization ChangeLog
 
-## 13.0.1 - 2022-04-xx
+## 13.0.1 - 2022-04-21
 
 ### Fixed
 - Do not pass database write options from config unless database
