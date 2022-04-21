@@ -1,5 +1,13 @@
 # bedrock-tokenization ChangeLog
 
+## 13.0.0 - 2022-04-xx
+
+### Changed
+- **BREAKING**: Rename package to `@bedrock/tokenization`.
+- **BREAKING**: Convert to module (ESM).
+- **BREAKING**: Remove default export.
+- **BREAKING**: Require node 14.x.
+
 ## 12.0.0 - 2022-03-17
 
 ### Changed

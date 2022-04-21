@@ -1,26 +1,20 @@
 /*!
- * Copyright (c) 2020-2021 Digital Bazaar, Inc. All rights reserved.
+ * Copyright (c) 2020-2022 Digital Bazaar, Inc. All rights reserved.
  */
-'use strict';
+import * as bedrock from '@bedrock/core';
+import '@bedrock/https-agent';
+import '@bedrock/kms';
+import '@bedrock/kms-http';
+import '@bedrock/meter';
+import {handlers} from '@bedrock/meter-http';
+import '@bedrock/meter-usage-reporter';
+import '@bedrock/tokenizer';
+import '@bedrock/tokenization';
+import '@bedrock/security-context';
+import '@bedrock/ssm-mongodb';
+import '@bedrock/test';
 
-const bedrock = require('bedrock');
-require('bedrock-app-identity');
-require('bedrock-express');
-require('bedrock-jsonld-document-loader');
-require('bedrock-mongodb');
-require('bedrock-tokenizer');
-require('bedrock-tokenization');
-require('bedrock-https-agent');
-require('bedrock-kms');
-require('bedrock-kms-http');
-require('bedrock-meter');
-require('bedrock-meter-usage-reporter');
-const {handlers} = require('bedrock-meter-http');
-require('bedrock-ssm-mongodb');
-
-require('bedrock-test');
-
-const mockData = require('./mocha/mock.data');
+import {mockData} from './mocha/mock.data.js';
 
 bedrock.events.on('bedrock.init', async () => {
   /* Handlers need to be added before `bedrock.start` is called. These are

@@ -1,22 +1,18 @@
 /*!
- * Copyright (c) 2020-2021 Digital Bazaar, Inc. All rights reserved.
+ * Copyright (c) 2020-2022 Digital Bazaar, Inc. All rights reserved.
  */
-'use strict';
-
-const crypto = require('crypto');
-const {
-  requireUncached,
-  isRegistration,
-  cleanDB,
-  insertRecord
-} = require('./helpers');
-const {documents} = requireUncached('bedrock-tokenization');
-const {tokenizers} = require('bedrock-tokenizer');
+import crypto from 'crypto';
+import {isRegistration, cleanDB, insertRecord} from './helpers.js';
+import {createRequire} from 'module';
+import {documents} from '@bedrock/tokenization';
+import {mockDocument, mockDocument2} from './mock.data.js';
+import {tokenizers} from '@bedrock/tokenizer';
+const require = createRequire(import.meta.url);
 const {X25519KeyAgreementKey2020} =
   require('@digitalbazaar/x25519-key-agreement-key-2020');
 const {Cipher} = require('@digitalbazaar/minimal-cipher');
+
 const cipher = new Cipher();
-const {mockDocument, mockDocument2} = require('./mock.data.js');
 
 // this is test data borrowed from minimal-cipher
 const key1 = new X25519KeyAgreementKey2020({
