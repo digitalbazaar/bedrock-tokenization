@@ -3,33 +3,9 @@ name: Bedrock Node.js CI
 on: [push]
 
 jobs:
-  test-node:
-    runs-on: ubuntu-latest
-    services:
-      mongodb:
-        image: mongo:4.2
-        ports:
-          - 27017:27017
-    strategy:
-      matrix:
-        node-version: [14.x]
-    steps:
-    - uses: actions/checkout@v2
-    - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v1
-      with:
-        node-version: ${{ matrix.node-version }}
-    - run: |
-        cd test
-        npm install
-    - name: Run test with Node.js ${{ matrix.node-version }}
-      run: |
-        cd test
-        npm test
-      env:
-        CI: true
   lint:
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     strategy:
       matrix:
         node-version: [14.x]
@@ -42,9 +18,10 @@ jobs:
     - run: npm install
     - name: Run eslint
       run: npm run lint
-  coverage:
-    needs: [test-node]
+  test-node:
+    needs: [lint]
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     services:
       mongodb:
         image: mongo:4.2
@@ -60,16 +37,41 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
     - run: |
+        npm install
+        cd test
+        npm install
+    - name: Run test with Node.js ${{ matrix.node-version }}
+      run: |
+        cd test
+        npm test
+  coverage:
+    needs: [test-node]
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    services:
+      mongodb:
+        image: mongo:4.2
+        ports:
+          - 27017:27017
+    strategy:
+      matrix:
+        node-version: [14.x]
+    steps:
+    - uses: actions/checkout@v2
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v1
+      with:
+        node-version: ${{ matrix.node-version }}
+    - run: |
+        npm install
         cd test
         npm install
     - name: Generate coverage report
       run: |
         cd test
         npm run coverage-ci
-      env:
-        CI: true
     - name: Upload coverage to Codecov
-      uses: codecov/codecov-action@v1
+      uses: codecov/codecov-action@v2
       with:
         file: ./test/coverage/lcov.info
         fail_ci_if_error: true
