@@ -1,6 +1,6 @@
 # bedrock-tokenization ChangeLog
 
-## 13.0.2 - 2022-04-xx
+## 13.0.2 - 2022-04-27
 
 ### Fixed
 - Ensure that the level of assurance for already-resolved, unpinned tokens
