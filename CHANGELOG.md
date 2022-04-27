@@ -1,5 +1,11 @@
 # bedrock-tokenization ChangeLog
 
+## 13.0.2 - 2022-04-xx
+
+### Fixed
+- Ensure that the level of assurance for already-resolved, unpinned tokens
+  is still checked before returning the associated pairwise token.
+
 ## 13.0.1 - 2022-04-21
 
 ### Fixed
