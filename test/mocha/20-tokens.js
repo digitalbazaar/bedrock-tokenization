@@ -220,6 +220,47 @@ describe('Tokens', function() {
       result1.pairwiseToken.should.eql(result2.pairwiseToken);
       result2.internalId.should.eql(internalId);
     });
+  it('should not resolve unpinned token when called twice with same ' +
+    '"requester" if level of assurance is too low', async function() {
+    const tokenCount = 1;
+    const internalId = await documents._generateInternalId();
+    const attributes = new Uint8Array([1]);
+    const requester = 'requester';
+    let err;
+    let result2;
+
+    // upsert mock entity the token is for
+    await entities._upsert({internalId, ttl: 60000});
+
+    const tks = await tokens.create(
+      {internalId, attributes, tokenCount, minAssuranceForResolution: -1});
+    const token = tks.tokens[0];
+    // should succeed, level of assurance of `2` is high enough
+    const result1 = await tokens.resolve(
+      {requester, token, levelOfAssurance: 2});
+    try {
+      // resolve token with same requester again, but insufficient
+      // level of assurance
+      result2 = await tokens.resolve(
+        {requester, token, levelOfAssurance: 1});
+    } catch(e) {
+      err = e;
+    }
+    should.exist(err);
+    err.name.should.equal('NotAllowedError');
+    err.message.should.include(
+      'Could not resolve token; minimum level of assurance not met.');
+
+    // now ensure same pairwise token is resolved when LOA is high enough
+    result2 = await tokens.resolve(
+      {requester, token, levelOfAssurance: 2});
+    should.exist(result2);
+    areTokens(tks);
+    should.exist(result1.pairwiseToken);
+    should.exist(result2.pairwiseToken);
+    result1.pairwiseToken.should.eql(result2.pairwiseToken);
+    result2.internalId.should.eql(internalId);
+  });
   it('should throw error when token is resolved with different "requester"',
     async function() {
       const tokenCount = 1;
