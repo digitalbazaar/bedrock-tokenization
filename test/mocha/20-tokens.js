@@ -3,8 +3,8 @@
  */
 import {areTokens, cleanDB, getTokenBatch, insertRecord} from './helpers.js';
 import canonicalize from 'canonicalize';
-import {createRequire} from 'module';
-import crypto from 'crypto';
+import {createRequire} from 'node:module';
+import crypto from 'node:crypto';
 import {
   mockTokenBatch, mockTokenBatch2,
   mockPairwise, mockPairwise2,

@@ -1,9 +1,9 @@
 /*!
  * Copyright (c) 2020-2022 Digital Bazaar, Inc. All rights reserved.
  */
-import crypto from 'crypto';
+import crypto from 'node:crypto';
 import {isRegistration, cleanDB, insertRecord} from './helpers.js';
-import {createRequire} from 'module';
+import {createRequire} from 'node:module';
 import {documents} from '@bedrock/tokenization';
 import {mockDocument, mockDocument2} from './mock.data.js';
 import {tokenizers} from '@bedrock/tokenizer';
