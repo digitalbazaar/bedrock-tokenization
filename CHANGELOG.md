@@ -1,6 +1,6 @@
 # bedrock-tokenization ChangeLog
 
-## 14.1.0 - 2022-05-xx
+## 14.1.0 - 2022-05-10
 
 ### Added
 - Return additional meta information about a resolved token from `resolve()`
