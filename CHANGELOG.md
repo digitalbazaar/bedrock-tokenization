@@ -1,5 +1,12 @@
 # bedrock-tokenization ChangeLog
 
+## 14.1.0 - 2022-05-xx
+
+### Added
+- Return additional meta information about a resolved token from `resolve()`
+  including whether it is unpinned and its `minAssuranceForResolution` at
+  resolution time.
+
 ## 14.0.0 - 2022-04-29
 
 ### Changed
