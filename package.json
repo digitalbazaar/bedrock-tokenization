@@ -32,22 +32,22 @@
     "base58-universal": "^2.0.0",
     "base64url-universal": "^2.0.0",
     "bnid": "^3.0.0",
-    "canonicalize": "^1.0.1",
+    "canonicalize": "^1.0.8",
     "cit-context": "^2.0.0",
     "lru-cache": "^6.0.0",
     "p-limit": "^4.0.0"
   },
   "peerDependencies": {
-    "@bedrock/core": "^6.0.0",
-    "@bedrock/did-io": "^8.0.0",
+    "@bedrock/core": "^6.0.1",
+    "@bedrock/did-io": "^9.0.1",
     "@bedrock/https-agent": "^4.0.0",
     "@bedrock/mongodb": "^10.0.0",
     "@bedrock/tokenizer": "^8.0.0"
   },
   "devDependencies": {
-    "eslint": "^7.32.0",
-    "eslint-config-digitalbazaar": "^2.8.0",
-    "eslint-plugin-jsdoc": "^37.9.7",
+    "eslint": "^8.18.0",
+    "eslint-config-digitalbazaar": "^4.0.1",
+    "eslint-plugin-jsdoc": "^39.3.3",
     "jsdoc-to-markdown": "^7.1.1"
   },
   "directories": {
