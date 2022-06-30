@@ -10,12 +10,9 @@ import {
 } from './mock.data.js';
 import canonicalize from 'canonicalize';
 import crypto from 'node:crypto';
+import {encode} from 'base58-universal';
+import {IdGenerator} from 'bnid';
 import sinon from 'sinon';
-
-import {createRequire} from 'node:module';
-const require = createRequire(import.meta.url);
-const {encode} = require('base58-universal');
-const {IdGenerator} = require('bnid');
 
 const MAX_UINT32 = 4294967295;
 
