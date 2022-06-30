@@ -2,16 +2,17 @@
  * Copyright (c) 2020-2022 Digital Bazaar, Inc. All rights reserved.
  */
 import {areTokens, cleanDB, getTokenBatch, insertRecord} from './helpers.js';
-import canonicalize from 'canonicalize';
-import {createRequire} from 'node:module';
-import crypto from 'node:crypto';
+import {documents, entities, tokens} from '@bedrock/tokenization';
 import {
-  mockTokenBatch, mockTokenBatch2,
+  mockEntity1, mockEntity2,
   mockPairwise, mockPairwise2,
-  mockEntity1, mockEntity2
+  mockTokenBatch, mockTokenBatch2
 } from './mock.data.js';
+import canonicalize from 'canonicalize';
+import crypto from 'node:crypto';
 import sinon from 'sinon';
-import {tokens, documents, entities} from '@bedrock/tokenization';
+
+import {createRequire} from 'node:module';
 const require = createRequire(import.meta.url);
 const {encode} = require('base58-universal');
 const {IdGenerator} = require('bnid');

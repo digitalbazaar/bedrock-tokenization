@@ -1,12 +1,13 @@
 /*!
  * Copyright (c) 2020-2022 Digital Bazaar, Inc. All rights reserved.
  */
-import crypto from 'node:crypto';
-import {isRegistration, cleanDB, insertRecord} from './helpers.js';
-import {createRequire} from 'node:module';
-import {documents} from '@bedrock/tokenization';
+import {cleanDB, insertRecord, isRegistration} from './helpers.js';
 import {mockDocument, mockDocument2} from './mock.data.js';
+import crypto from 'node:crypto';
+import {documents} from '@bedrock/tokenization';
 import {tokenizers} from '@bedrock/tokenizer';
+
+import {createRequire} from 'node:module';
 const require = createRequire(import.meta.url);
 const {X25519KeyAgreementKey2020} =
   require('@digitalbazaar/x25519-key-agreement-key-2020');
