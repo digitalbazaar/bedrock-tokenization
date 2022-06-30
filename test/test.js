@@ -2,11 +2,11 @@
  * Copyright (c) 2020-2022 Digital Bazaar, Inc. All rights reserved.
  */
 import * as bedrock from '@bedrock/core';
+import {handlers} from '@bedrock/meter-http';
 import '@bedrock/https-agent';
 import '@bedrock/kms';
 import '@bedrock/kms-http';
 import '@bedrock/meter';
-import {handlers} from '@bedrock/meter-http';
 import '@bedrock/meter-usage-reporter';
 import '@bedrock/tokenizer';
 import '@bedrock/tokenization';
