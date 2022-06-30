@@ -1,5 +1,11 @@
 # bedrock-tokenization ChangeLog
 
+## 15.0.0 - TBD
+
+### Changed
+- **BREAKING**: Drop support for Node.js < 16. This is in accordance with the
+  requirements of `@digitalbazaar/minimal-cipher@5`.
+
 ## 14.1.0 - 2022-05-10
 
 ### Added
