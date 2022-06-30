@@ -1,13 +1,13 @@
 /*!
  * Copyright (c) 2020-2022 Digital Bazaar, Inc. All rights reserved.
  */
-import {batchVersions} from '@bedrock/tokenization';
-import {isBatchVersion, cleanDB, insertRecord} from './helpers.js';
-import {tokenizers} from '@bedrock/tokenizer';
+import {cleanDB, insertRecord, isBatchVersion} from './helpers.js';
 import {
   mockBatchVersion, mockBatchVersion2, mockBatchVersionOptions,
   mockBatchVersionOptions2
 } from './mock.data.js';
+import {batchVersions} from '@bedrock/tokenization';
+import {tokenizers} from '@bedrock/tokenizer';
 
 describe('BatchVersions', function() {
   let tokenizer = null;
