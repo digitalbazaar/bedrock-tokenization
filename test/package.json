@@ -30,7 +30,7 @@
     "@bedrock/ssm-mongodb": "^10.0.0",
     "@bedrock/test": "^8.0.5",
     "@bedrock/tokenization": "file:..",
-    "@bedrock/tokenizer": "^9.0.0",
+    "@bedrock/tokenizer": "^9.0.1",
     "@bedrock/validation": "^7.0.0",
     "@bedrock/veres-one-context": "^14.0.1",
     "@bedrock/zcap-storage": "^8.0.0",
