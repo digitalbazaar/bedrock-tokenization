@@ -1,6 +1,6 @@
 # bedrock-tokenization ChangeLog
 
-## 15.0.0 - TBD
+## 15.0.0 - 2022-08-01
 
 ### Changed
 - **BREAKING**: Drop support for Node.js < 16. This is in accordance with the
