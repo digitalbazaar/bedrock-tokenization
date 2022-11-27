@@ -4,7 +4,8 @@
 import * as database from '@bedrock/mongodb';
 
 export function isRegistration(result) {
-  console.log('isRegistration', {result});
+  //console.log('isRegistration', {result});
+  should.exist(result);
 }
 
 export function isBatchVersion(possibleBatchVersion, expectedOptions) {
