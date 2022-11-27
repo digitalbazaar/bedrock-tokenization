@@ -79,7 +79,12 @@ describe('Documents', function() {
       const document = {example: 'document'};
       let err;
       try {
-        await documents.register({externalId, document, recipients});
+        await documents.register({
+          externalId,
+          document,
+          recipients,
+          ttl: 30000
+        });
       } catch(e) {
         err = e;
       }
@@ -93,7 +98,12 @@ describe('Documents', function() {
         const document = {example: 'document'};
         let err;
         try {
-          await documents.register({externalId, document, recipientChain});
+          await documents.register({
+            externalId,
+            document,
+            recipientChain,
+            ttl: 30000
+          });
         } catch(e) {
           err = e;
         }
@@ -106,11 +116,33 @@ describe('Documents', function() {
       const document = {example: 'document'};
       let err;
       try {
-        await documents.register({externalId, document, recipientChain});
+        await documents.register({
+          externalId,
+          document,
+          recipientChain,
+          ttl: 30000
+        });
       } catch(e) {
         err = e;
       }
       err.message.should.equal('"recipients" must be a non-empty array.');
+    });
+
+    it('should error when no TTL is passed', async () => {
+      const recipients = [
+        {header: {kid: key1.id, alg: 'ECDH-ES+A256KW'}}
+      ];
+      let err;
+      try {
+        await documents.register({
+          externalId: 'did:test:register:with:data',
+          document: {},
+          recipients
+        });
+      } catch(e) {
+        err = e;
+      }
+      err.message.should.include('ttl (number) is required');
     });
 
     it('should register a document with creator', async () => {
