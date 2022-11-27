@@ -16,6 +16,8 @@ import sinon from 'sinon';
 
 const MAX_UINT32 = 4294967295;
 
+// FIXME: insert `externalIdHash` into entity records here?
+
 describe('Tokens', function() {
   it('should create a token with attributes', async function() {
     const tokenCount = 5;
@@ -683,6 +685,13 @@ describe('Tokens', function() {
       result.tokenBatch.batchInvalidationCount.should.not.equal(null);
       result.tokenBatch.batchInvalidationCount.should.equal(0);
     });
+  it('should reset `minAssuranceForResolution` when all token batches expire',
+    async function() {
+      // FIXME: create entity, create unpinned token batch, set
+      // `minAssuranceForResolution`, resolve token w/min assurance,
+      // delete token batch, resolve token w/min assurance (should fail)
+      // check entity `minAssuranceForResolution` (should be reset)
+    });
 });
 
 describe('TokensDuplicateError', function() {
@@ -941,7 +950,7 @@ describe('Entities Database Tests', function() {
       executionStats.executionStages.inputStage.inputStage.keyPattern
         .should.eql({'entity.internalId': 1});
     });
-    it(`is properly indexed for 'entity.internalId' in _upsert()`,
+    it(`is properly indexed for 'entity.internalId' in upsert()`,
       async function() {
         const {internalId} = mockEntity1.entity;
         const ttl = 3000;
