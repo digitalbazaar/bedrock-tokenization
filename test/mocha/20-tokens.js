@@ -785,11 +785,11 @@ describe('Tokens Database Tests', function() {
           .keyPattern.should.eql({'tokenBatch.id': 1});
       });
     it(`is properly indexed for compound query of 'tokenBatch.id' and ` +
-      `'tokenBatch.resolvedList' in _updateTokenBatch()`, async function() {
+      `'tokenBatch.resolvedList' in _updateBatch()`, async function() {
       const {id, resolvedList} = mockTokenBatch.tokenBatch;
       const batchId = id;
       const compressed = resolvedList;
-      const {executionStats} = await tokens._updateTokenBatch({
+      const {executionStats} = await tokens._updateBatch({
         batchId, compressed, explain: true
       });
       executionStats.nReturned.should.equal(1);
