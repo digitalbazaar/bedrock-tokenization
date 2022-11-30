@@ -10,6 +10,13 @@
   `tokenizerId`. It was invalid to create such batch versions before, but now
   the API enforces it.
 
+### Fixed
+- **BREAKING**: Prevent unpinned token batch invalidation via calls to
+  `invalidateTokenBatches` from taking effect if the `entity` passed has
+  a value for `minAssuranceForResolution` that does not match the value in
+  the database. This ensures that concurrent changes to that value and
+  to `batchInvalidationCount` are bound together and detectable.
+
 ## 15.0.1 - 2022-08-14
 
 ### Fixed
