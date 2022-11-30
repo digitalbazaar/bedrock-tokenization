@@ -1,5 +1,15 @@
 # bedrock-tokenization ChangeLog
 
+## 16.0.0 - 2022-mm-dd
+
+### Changed
+- **BREAKING**: Default batch version option `ttl` has been changed from 60
+  to 120 days. This change will not take affect in existing deployments unless
+  active batch versions are updated in the database.
+- **BREAKING**: Ensure batch versions cannot be created without an associated
+  `tokenizerId`. It was invalid to create such batch versions before, but now
+  the API enforces it.
+
 ## 15.0.1 - 2022-08-14
 
 ### Fixed
