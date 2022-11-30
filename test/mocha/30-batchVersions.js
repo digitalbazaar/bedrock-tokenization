@@ -14,15 +14,24 @@ describe('BatchVersions', function() {
   before(async function() {
     tokenizer = await tokenizers.getCurrent();
   });
-  it.skip('should create a BatchVersion with out an id', async function() {
-    const options = {batchIdSize: 16, batchSaltSize: 99};
-    const {id: tokenizerId} = tokenizer;
-    await batchVersions.create({tokenizerId, options});
-  });
-  it('should create a BatchVersion with an id', async function() {
+  it('should create a BatchVersion', async function() {
     const options = {batchIdSize: 16, batchSaltSize: 99};
     const id = 0;
-    await batchVersions.create({id, options});
+    const tokenizerId = 'some-tokenizerId';
+    await batchVersions.create({id, tokenizerId, options});
+  });
+  it('should fail to create a BatchVersion', async function() {
+    let err;
+    try {
+      const options = {batchIdSize: 16, batchSaltSize: 99};
+      const id = 0;
+      // missing `tokenizerId`
+      await batchVersions.create({id, options});
+    } catch(e) {
+      err = e;
+    }
+    should.exist(err);
+    err.message.should.include('tokenizerId (string) is required');
   });
   it('should ensureBatchVersion when no existing version', async function() {
     const tokenizerId = 'no-existing-version';
@@ -31,8 +40,12 @@ describe('BatchVersions', function() {
   });
   it('should ensureBatchVersion with an existing version', async function() {
     const {id: tokenizerId} = tokenizer;
-    const result = await batchVersions.ensureBatchVersion({tokenizerId});
-    isBatchVersion(result);
+    const result1 = await batchVersions.ensureBatchVersion({tokenizerId});
+    isBatchVersion(result1);
+
+    const result2 = await batchVersions.ensureBatchVersion({tokenizerId});
+    isBatchVersion(result2);
+    result1.should.deep.equal(result2);
   });
   it('should set options for BatchVersion', async function() {
     const options = {batchIdSize: 16, batchSaltSize: 99};
