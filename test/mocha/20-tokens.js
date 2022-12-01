@@ -150,7 +150,7 @@ describe('Tokens', function() {
             externalId,
             document: {dateOfBirth, expires, identifier, issuer, type},
             recipients,
-            ttl: 1209600000
+            ttl: 60000
           },
           tokenCount
         });
@@ -160,6 +160,12 @@ describe('Tokens', function() {
       assertNoError(err);
       should.exist(result);
       result.should.include.keys(['registrationRecord', 'tokens']);
+
+      // registration record expiration should the same as the token batch
+      const {registrationRecord} = result;
+      const {registration: {internalId, expires: expiry}} = registrationRecord;
+      const {tokenBatch} = await getTokenBatch({internalId});
+      tokenBatch.expires.should.deep.equal(expiry);
     }
   );
   it('should extend expiration periods with new token batches',
