@@ -162,6 +162,74 @@ describe('Tokens', function() {
       result.should.include.keys(['registrationRecord', 'tokens']);
     }
   );
+  it('should extend expiration periods with new token batches',
+    async function() {
+      const dateOfBirth = '1990-05-01';
+      const expires = '2021-05-01';
+      const identifier = 'T65851256';
+      const issuer = 'VA';
+      const type = 'DriversLicense';
+      const recipients = [
+        {
+          header: {
+            kid: 'did:key:z6MkpTHR8VNsBxYAAWHut2Geadd9jSwuBV8xRoA' +
+              'nwWsdvktH#z6LSbysY2xFMRpGMhb7tFTLMpeuPRaqaWM1yECx2AtzE3KCc',
+            alg: 'ECDH-ES+A256KW',
+          }
+        }
+      ];
+      const tokenCount = 99;
+      // canonicalize object then hash it then base58 encode it
+      const externalId = encode(crypto.createHash('sha256')
+        .update(canonicalize({dateOfBirth, identifier, issuer}))
+        .digest());
+
+      const registrationRecord = await documents.register({
+        externalId,
+        document: {dateOfBirth, expires, identifier, issuer, type},
+        recipients,
+        ttl: 60000
+      });
+
+      const {internalId} = registrationRecord.registration;
+      await tokens.create({internalId, tokenCount});
+
+      // entity should have `externalIdHash` that matches registered doc
+      const {entity} = await entities.get({internalId});
+      should.exist(entity.externalIdHash);
+      entity.externalIdHash.should.deep.equal(
+        registrationRecord.registration.externalIdHash);
+
+      // entity's expiration should equal the new token batch
+      const {tokenBatch} = await getTokenBatch({internalId});
+      entity.expires.should.deep.equal(tokenBatch.expires);
+
+      const registrationRecord2 = await documents.getRegistration({internalId});
+      registrationRecord2.registration.expires.should.deep.equal(
+        tokenBatch.expires);
+
+      // creating a new batch should extend the expiration period on the
+      // entity and the registration records after waiting a bit
+      await new Promise(r => setTimeout(r, 10));
+      await tokens.create({internalId, tokenCount});
+
+      const {entity: entity2} = await entities.get({internalId});
+
+      // entity's expiration should equal the new token batch
+      const {tokenBatch: tokenBatch2} = await getTokenBatch({
+        batchId: entity2.openBatch['2']});
+      entity2.expires.should.deep.equal(tokenBatch2.expires);
+
+      // expires should be greater than `entity2.expires`
+      entity2.expires.should.be.greaterThan(entity.expires);
+
+      const registrationRecord3 = await documents.getRegistration({internalId});
+      registrationRecord3.registration.expires.should.deep.equal(
+        tokenBatch2.expires);
+      registrationRecord3.registration.expires.should.be.greaterThan(
+        registrationRecord2.registration.expires);
+    }
+  );
   it('should throw error if attributes is not uint8Array', async function() {
     const tokenCount = 5;
     const internalId = await documents._generateInternalId();

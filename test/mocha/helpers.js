@@ -48,9 +48,13 @@ export function areTokens(result) {
   });
 }
 
-export async function getTokenBatch({internalId}) {
-  const query = {
-    'tokenBatch.internalId': internalId
-  };
+export async function getTokenBatch({internalId, batchId}) {
+  const query = {};
+  if(internalId !== undefined) {
+    query['tokenBatch.internalId'] = internalId;
+  }
+  if(batchId !== undefined) {
+    query['tokenBatch.id'] = batchId;
+  }
   return database.collections['tokenization-tokenBatch'].findOne(query);
 }
