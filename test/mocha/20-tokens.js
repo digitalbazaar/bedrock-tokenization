@@ -1,6 +1,7 @@
 /*!
  * Copyright (c) 2020-2022 Digital Bazaar, Inc. All rights reserved.
  */
+import * as database from '@bedrock/mongodb';
 import {areTokens, cleanDB, getTokenBatch, insertRecord} from './helpers.js';
 import {documents, entities, tokens} from '@bedrock/tokenization';
 import {
@@ -727,12 +728,105 @@ describe('Tokens', function() {
       result.tokenBatch.batchInvalidationCount.should.not.equal(null);
       result.tokenBatch.batchInvalidationCount.should.equal(0);
     });
-  it('should reset `minAssuranceForResolution` when all token batches expire',
+  it('should ensure `updateEntityWithNoValidTokenBatches` checks batches',
     async function() {
-      // FIXME: create entity, create unpinned token batch, set
-      // `minAssuranceForResolution`, resolve token w/min assurance,
-      // delete token batch, resolve token w/min assurance (should fail)
-      // check entity `minAssuranceForResolution` (should be reset)
+      // create tokens
+      const tokenCount = 10;
+      const internalId = await documents._generateInternalId();
+      const attributes = new Uint8Array([1]);
+      // upsert mock entity the token is for
+      let {entity} = await entities._upsert({
+        // init `minAssuranceForResolution` to allow it to be set to `2` below
+        internalId, ttl: 60000, minAssuranceForResolution: 1
+      });
+
+      // update entity `minAssuranceForResolution` should succeed because there
+      // is no unpinned token batch
+      let updated = await tokens.updateEntityWithNoValidTokenBatches(
+        {entity, minAssuranceForResolution: 2});
+      updated.should.equal(true);
+
+      // create an unpinned token batch
+      await tokens.create(
+        {internalId, attributes, tokenCount, minAssuranceForResolution: -1});
+
+      await entities._upsert({
+        // set `minAssuranceForResolution` to allow it to be set to `2` below
+        internalId, ttl: 60000, minAssuranceForResolution: 1
+      });
+      ({entity} = await entities.get({internalId}));
+
+      // update entity `minAssuranceForResolution` should fail because a valid
+      // unpinned token batch exists
+      updated = await tokens.updateEntityWithNoValidTokenBatches(
+        {entity, minAssuranceForResolution: 2});
+      updated.should.equal(false);
+
+      // invalidate token batches and refresh entity record
+      await tokens.invalidateTokenBatches({entity});
+      ({entity} = await entities.get({internalId}));
+
+      // update entity `minAssuranceForResolution` should now succeed because
+      // there are no valid open unpinned token batches
+      updated = await tokens.updateEntityWithNoValidTokenBatches(
+        {entity, minAssuranceForResolution: 2});
+      updated.should.equal(true);
+
+      // create new unpinned token batches
+      await tokens.create(
+        {internalId, attributes, tokenCount, minAssuranceForResolution: -1});
+
+      // set `minAssuranceForResolution` back to `1` and refresh entity record
+      await entities._upsert({
+        internalId, ttl: 60000, minAssuranceForResolution: 1
+      });
+      ({entity} = await entities.get({internalId}));
+
+      // update entity `minAssuranceForResolution` should fail because a valid
+      // unpinned token batch exists
+      updated = await tokens.updateEntityWithNoValidTokenBatches(
+        {entity, minAssuranceForResolution: 2});
+      updated.should.equal(false);
+
+      // manually delete token batch
+      const collection = database.collections['tokenization-tokenBatch'];
+      await collection.deleteMany({});
+
+      // update entity `minAssuranceForResolution` should now succeed because
+      // there are no valid open unpinned token batches
+      updated = await tokens.updateEntityWithNoValidTokenBatches(
+        {entity, minAssuranceForResolution: 2});
+      updated.should.equal(true);
+    });
+  it(
+    'should ensure `updateEntityWithNoValidTokenBatches` throws on entity ' +
+    'state change', async function() {
+      const internalId = await documents._generateInternalId();
+      // upsert mock entity the token is for
+      const {entity} = await entities._upsert({
+        // init `minAssuranceForResolution` to allow it to be set to `2` below
+        internalId, ttl: 60000, minAssuranceForResolution: 1
+      });
+
+      // update entity `minAssuranceForResolution` should throw because the
+      // entity record `minAssuranceForResolution` does not match
+      entity.minAssuranceForResolution = 5;
+      let err;
+      try {
+        await tokens.updateEntityWithNoValidTokenBatches(
+          {entity, minAssuranceForResolution: 2});
+      } catch(e) {
+        err = e;
+      }
+      should.exist(err);
+      err.name.should.equal('InvalidStateError');
+      entity.minAssuranceForResolution = 1;
+
+      // update entity `minAssuranceForResolution` should now succeed because
+      // there are no valid open unpinned token batches
+      const updated = await tokens.updateEntityWithNoValidTokenBatches(
+        {entity, minAssuranceForResolution: 2});
+      updated.should.equal(true);
     });
 });
 

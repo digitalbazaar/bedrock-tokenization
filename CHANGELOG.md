@@ -2,6 +2,17 @@
 
 ## 16.0.0 - 2022-mm-dd
 
+### Added
+- Add `tokens.updateEntityWithNoValidTokenBatches` to enable setting an
+  entity's `minAssuranceForResolution` and invalidating unpinned token
+  batches that are in the process of being created -- if and only if the
+  entity has no current valid unpinned token batches. This method provides a
+  safe mechanism for updating this value only when no valid unpinned token
+  batches exist even if concurrent other processes are making changes to the
+  entity, including adding new unpinned token batches. The method will throw
+  if the entity's state is modified from the current state and will fail
+  (return `false`) if the entity has any valid unpinned token batches.
+
 ### Changed
 - **BREAKING**: Default batch version option `ttl` has been changed from 60
   to 120 days. This change will not take affect in existing deployments unless
