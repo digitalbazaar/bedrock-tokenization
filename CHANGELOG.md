@@ -38,6 +38,14 @@
   a value for `minAssuranceForResolution` that does not match the value in
   the database. This ensures that concurrent changes to that value and
   to `batchInvalidationCount` are bound together and detectable.
+- **BREAKING**: Ensure that entity and document registration records are
+  updated (expiration period extended) when new token batches are created.
+  This involves storing `externalIdHash` in entity records -- where it
+  was not previously stored. Existing deployments would need users to
+  resubmit document registrations to add these values to entity records
+  to ensure that the new expiration extension code runs and preserves
+  document registration records at least as long as the token batches
+  associated with them.
 
 ## 15.0.1 - 2022-08-14
 
