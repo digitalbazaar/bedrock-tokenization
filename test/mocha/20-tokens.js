@@ -17,8 +17,6 @@ import sinon from 'sinon';
 
 const MAX_UINT32 = 4294967295;
 
-// FIXME: insert `externalIdHash` into entity records here?
-
 describe('Tokens', function() {
   it('should create a token with attributes', async function() {
     const tokenCount = 5;
