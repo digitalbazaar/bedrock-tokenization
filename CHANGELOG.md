@@ -9,6 +9,17 @@
 - **BREAKING**: Ensure batch versions cannot be created without an associated
   `tokenizerId`. It was invalid to create such batch versions before, but now
   the API enforces it.
+- **BREAKING**: The default grace period for removing records that match a
+  TTL index value (controlled by the option `expireAfterSeconds`) has been
+  changed from `0` to 24 hours. Existing deployments must manually modify
+  the registration, entity, and token batch collection TTL indexes to use
+  this new value or else a conflicting index error will be thrown on startup.
+- **BREAKING**: Pairwise tokens are now auto-expired via a TTL index. They
+  will expire based on the TTL associated with the token (more specifically
+  with that token's batch) that was most recently resolved. If a pairwise
+  token already existed for a new token resolution (to the same entity and
+  for the same requester but for a new token batch), then its expiration period
+  will be extended to be at least as long as that new token's TTL.
 
 ### Fixed
 - **BREAKING**: Prevent unpinned token batch invalidation via calls to
