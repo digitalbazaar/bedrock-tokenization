@@ -30,7 +30,7 @@
     "@bedrock/ssm-mongodb": "github:digitalbazaar/bedrock-ssm-mongodb#use-mongo-driver-4-rc",
     "@bedrock/test": "^8.0.5",
     "@bedrock/tokenization": "file:..",
-    "@bedrock/tokenizer": "^9.1.0",
+    "@bedrock/tokenizer": "github:digitalbazaar/bedrock-tokenizer#use-mongo-driver-4-rc",
     "@bedrock/validation": "^7.0.0",
     "@bedrock/veres-one-context": "^14.0.1",
     "@bedrock/zcap-storage": "github:digitalbazaar/bedrock-zcap-storage#use-mongo-driver-4-rc",
