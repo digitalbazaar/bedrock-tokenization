@@ -1,6 +1,6 @@
 # bedrock-tokenization ChangeLog
 
-## 16.0.0 - 2022-mm-dd
+## 16.0.0 - 2022-11-02
 
 ### Added
 - Add `tokens.updateEntityWithNoValidTokenBatches` to enable setting an
