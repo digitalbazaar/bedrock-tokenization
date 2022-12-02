@@ -47,6 +47,24 @@ describe('BatchVersions', function() {
     isBatchVersion(result2);
     result1.should.deep.equal(result2);
   });
+  it('should test ensureBatchVersion concurrency', async function() {
+    const tokenizerId = 'test-concurrency';
+    const promises = [];
+    for(let i = 0; i < 10; ++i) {
+      promises.push(batchVersions.ensureBatchVersion({tokenizerId}));
+    }
+    let batchId;
+    const results = await Promise.all(promises);
+    for(const result of results) {
+      isBatchVersion(result);
+      if(batchId === undefined) {
+        batchId = result.batchVersion.id;
+      } else {
+        batchId.should.equal(result.batchVersion.id);
+      }
+    }
+    batchId.should.be.a('number');
+  });
   it('should set options for BatchVersion', async function() {
     const options = {batchIdSize: 16, batchSaltSize: 99};
     const result = await batchVersions.setOptions({options});
@@ -143,11 +161,28 @@ describe('BatchVersions Database Tests', function() {
         executionStats.executionStages.inputStage.inputStage.inputStage.stage
           .should.equal('IXSCAN');
         executionStats.executionStages.inputStage.inputStage.inputStage
-          .keyPattern.should.eql({'batchVersion.tokenizerId': 1});
+          .keyPattern.should.eql(
+            {'batchVersion.tokenizerId': 1, 'batchVersion.id': -1});
       });
     it(`is properly indexed for sort of 'batchVersion.id' in ` +
-      '_getNextVersionId()', async function() {
-      const {executionStats} = await batchVersions._getNextVersionId({
+      '_getLastVersion()', async function() {
+      const {executionStats} = await batchVersions._getLastVersion({
+        explain: true
+      });
+      executionStats.nReturned.should.equal(1);
+      executionStats.totalKeysExamined.should.equal(1);
+      executionStats.totalDocsExamined.should.equal(1);
+      executionStats.executionStages.inputStage.inputStage.stage
+        .should.equal('FETCH');
+      executionStats.executionStages.inputStage.inputStage.inputStage.stage
+        .should.equal('IXSCAN');
+      executionStats.executionStages.inputStage.inputStage.inputStage.keyPattern
+        .should.eql({'batchVersion.id': 1});
+    });
+    it(`is properly indexed for sort of 'batchVersion.id' in ` +
+      '_getLastVersion() when passing `tokenizerId`', async function() {
+      const {executionStats} = await batchVersions._getLastVersion({
+        tokenizerId: 'foo',
         explain: true
       });
       executionStats.nReturned.should.equal(1);
@@ -156,7 +191,7 @@ describe('BatchVersions Database Tests', function() {
       executionStats.executionStages.inputStage.inputStage.stage
         .should.equal('IXSCAN');
       executionStats.executionStages.inputStage.inputStage.keyPattern
-        .should.eql({'batchVersion.id': 1});
+        .should.eql({'batchVersion.tokenizerId': 1, 'batchVersion.id': -1});
     });
     it(`is properly indexed for compound query of 'batchVersion.id' and ` +
       `'batchVersion.tokenizerId' in get()`, async function() {
@@ -173,7 +208,8 @@ describe('BatchVersions Database Tests', function() {
       // {'batchVersion.tokenizerId': 1} in this case.
       executionStats.executionStages.inputStage.inputStage.inputStage
         .keyPattern.should.be.deep.oneOf([
-          {'batchVersion.id': 1}, {'batchVersion.tokenizerId': 1}
+          {'batchVersion.id': 1},
+          {'batchVersion.tokenizerId': 1, 'batchVersion.id': -1}
         ]);
     });
     it(`is properly indexed for 'batchVersionOptions.id' in setOptions()`,
