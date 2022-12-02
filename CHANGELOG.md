@@ -20,6 +20,11 @@
 - **BREAKING**: Ensure batch versions cannot be created without an associated
   `tokenizerId`. It was invalid to create such batch versions before, but now
   the API enforces it.
+- **BREAKING**: Allow multiple batch versions to be associated with the same
+  tokenizer ID, without preventing auto-creation of a new batch version when
+  tokenizer auto-rotation occurs. Existing deployments will have to manually
+  remove the unique `batchVersion.tokenizerId` index to make it run properly
+  with this new version.
 - **BREAKING**: The default grace period for removing records that match a
   TTL index value (controlled by the option `expireAfterSeconds`) has been
   changed from `0` to 24 hours. Existing deployments must manually modify
