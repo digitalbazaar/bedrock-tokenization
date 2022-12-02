@@ -165,7 +165,9 @@ describe('Tokens', function() {
       const {registrationRecord} = result;
       const {registration: {internalId, expires: expiry}} = registrationRecord;
       const {tokenBatch} = await getTokenBatch({internalId});
-      tokenBatch.expires.should.deep.equal(expiry);
+      // these times could be off by milliseconds, but not minutes
+      const diff = Math.abs(tokenBatch.expires.getTime() - expiry.getTime());
+      diff.should.be.lessThan(60000);
     }
   );
   it('should extend expiration periods with new token batches',
