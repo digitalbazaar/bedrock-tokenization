@@ -1,5 +1,16 @@
 # bedrock-tokenization ChangeLog
 
+## 16.1.0 - 2022-mm-dd
+
+### Added
+- Mark entity record with the token batch ID associated with the last
+  failure to resolve a token due to level of assurance not being met. This
+  tracking is useful in making decisions about whether to lower the minimum
+  required level of assurance for an entity. For example, an application may
+  opt not to lower the `minAssuranceForResolution` on an entity if its token
+  batches have been invalidated since the last time a token failed to
+  resolve based on assurance not being met.
+
 ## 16.0.0 - 2022-11-02
 
 ### Added
