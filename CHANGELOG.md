@@ -1,6 +1,6 @@
 # bedrock-tokenization ChangeLog
 
-## 16.1.0 - 2022-mm-dd
+## 16.1.0 - 2022-12-04
 
 ### Added
 - Mark entity record with the token batch ID associated with the last
@@ -30,7 +30,7 @@
   a level of assurance that was too low -- that no other user could have
   done the same within the specified time limit.
 
-## 16.0.0 - 2022-11-02
+## 16.0.0 - 2022-12-02
 
 ### Added
 - Add `tokens.updateEntityWithNoValidTokenBatches` to enable setting an
