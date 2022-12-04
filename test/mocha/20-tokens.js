@@ -371,10 +371,12 @@ describe('Tokens', function() {
     // entity's `lastAssuranceFailedBatchId` should match the token
     const {tokenBatch: {id: batchId}} = await getTokenBatch({internalId});
     const {entity} = await entities.get({internalId});
-    should.exist(entity.lastAssuranceFailedTokenBatch);
-    entity.lastAssuranceFailedTokenBatch.id.should.deep.equal(batchId);
-    entity.lastAssuranceFailedTokenBatch.batchInvalidationCount
+    should.exist(entity.lastAssuranceFailedTokenResolution);
+    entity.lastAssuranceFailedTokenResolution.batchId
+      .should.deep.equal(batchId);
+    entity.lastAssuranceFailedTokenResolution.batchInvalidationCount
       .should.deep.equal(0);
+    entity.lastAssuranceFailedTokenResolution.date.should.be.a('Date');
 
     // now ensure same pairwise token is resolved when LOA is high enough
     result2 = await tokens.resolve(
@@ -845,6 +847,16 @@ describe('Tokens', function() {
       result = await entities.setMinAssuranceForResolution(
         {entity, minAssuranceForResolution: 1});
       result.should.equal(true);
+
+      // now a simulated attempt to `setMinAssuranceForResolution` should
+      // fail because of a simulated last batch invalidation date at the
+      // current time
+      entity.lastBatchInvalidationDate = new Date();
+      result = await entities.setMinAssuranceForResolution(
+        {entity, minAssuranceForResolution: 2});
+      result.should.equal(false);
+      result = undefined;
+      delete entity.lastBatchInvalidationDate;
 
       // now a simulated attempt to `setMinAssuranceForResolution` should
       // fail because of a simulated increased `batchInvalidationCount` set
