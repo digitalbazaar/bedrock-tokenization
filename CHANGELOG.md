@@ -10,6 +10,10 @@
   opt not to lower the `minAssuranceForResolution` on an entity if its token
   batches have been invalidated since the last time a token failed to
   resolve based on assurance not being met.
+- Allow full `entity` to be passed to `setMinAssuranceForResolution` to
+  enable the call to return `false` if the entity's `batchInvalidationCount`
+  has changed. This allows the caller to be sure that no concurrent batch
+  invalidation events occur.
 
 ## 16.0.0 - 2022-11-02
 

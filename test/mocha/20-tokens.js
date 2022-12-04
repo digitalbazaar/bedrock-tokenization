@@ -786,6 +786,33 @@ describe('Tokens', function() {
       err.name.should.equal('NotAllowedError');
       err.message.should.equal('Token has been invalidated.');
     });
+  it('should not `setMinAssuranceForResolution` after batch invalidation',
+    async function() {
+      // create tokens
+      const tokenCount = 10;
+      const internalId = await documents._generateInternalId();
+      const attributes = new Uint8Array([1]);
+
+      // upsert mock entity the token is for
+      let {entity} = await entities._upsert({internalId, ttl: 60000});
+
+      // setting `setMinAssuranceForResolution` should succeed
+      let result = await entities.setMinAssuranceForResolution(
+        {entity, minAssuranceForResolution: 1});
+      result.should.equal(true);
+
+      // create and then invalidate tokens
+      await tokens.create(
+        {internalId, attributes, tokenCount, minAssuranceForResolution: -1});
+      ({entity} = await entities.get({internalId}));
+      await tokens.invalidateTokenBatches({entity});
+
+      // now an attempt to `setMinAssuranceForResolution` should fail because
+      // of a new `batchInvalidationCount`
+      result = await entities.setMinAssuranceForResolution(
+        {entity, minAssuranceForResolution: 2});
+      result.should.equal(false);
+    });
   it('batchInvalidationCount should not be null',
     async function() {
       // create tokens
