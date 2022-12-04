@@ -16,6 +16,19 @@
   This allows the caller to be sure that no batch invalidation events after
   the last time a token failed resolution because of a level of assurance
   that was too low.
+- Allow `lastBatchInvalidationNotAfter` to be passed to
+  `setMinAssuranceForResolution`. This optional parameter prevents an entity's
+  `minAssuranceForResolution` from being set if its unpinned token batches
+  have been invalidated after the passed `Date`. The default `Date` is set to
+  be 15 minutes before system time. This check will only be run when the
+  `requireAssuranceFailedTokenResolution` flag is set to `true` (which is
+  also the default). When this flag is `true`, the `minAssuranceForResolution`
+  will not be set unless a still-valid assurance-failed token resolution is
+  found and no token batch invalidation has occurred after the specified
+  `lastBatchInvalidationNotAfter` `Date`. This ensures that if a user is
+  known to have provided an unpinned token that failed resolution due to
+  a level of assurance that was too low -- that no other user could have
+  done the same within the specified time limit.
 
 ## 16.0.0 - 2022-11-02
 
