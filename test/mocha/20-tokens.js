@@ -371,8 +371,10 @@ describe('Tokens', function() {
     // entity's `lastAssuranceFailedBatchId` should match the token
     const {tokenBatch: {id: batchId}} = await getTokenBatch({internalId});
     const {entity} = await entities.get({internalId});
-    should.exist(entity.lastAssuranceFailedBatchId);
-    entity.lastAssuranceFailedBatchId.should.deep.equal(batchId);
+    should.exist(entity.lastAssuranceFailedTokenBatch);
+    entity.lastAssuranceFailedTokenBatch.id.should.deep.equal(batchId);
+    entity.lastAssuranceFailedTokenBatch.batchInvalidationCount
+      .should.deep.equal(0);
 
     // now ensure same pairwise token is resolved when LOA is high enough
     result2 = await tokens.resolve(
@@ -796,9 +798,102 @@ describe('Tokens', function() {
       // upsert mock entity the token is for
       let {entity} = await entities._upsert({internalId, ttl: 60000});
 
-      // setting `setMinAssuranceForResolution` should succeed
-      let result = await entities.setMinAssuranceForResolution(
+      // setting `setMinAssuranceForResolution` should fail because no
+      // token has failed to be resolved yet due to low level of assurance
+      let result = await entities.setMinAssuranceForResolution({
+        entity, minAssuranceForResolution: 1
+      });
+      result.should.equal(false);
+
+      // setting `setMinAssuranceForResolution` should succeed because
+      // we aren't checking for assurance-failed token resolution
+      result = await entities.setMinAssuranceForResolution({
+        entity, minAssuranceForResolution: 3,
+        requireAssuranceFailedTokenResolution: false
+      });
+      result.should.equal(true);
+
+      // create tokens
+      const tks = await tokens.create(
+        {internalId, attributes, tokenCount, minAssuranceForResolution: -1});
+      ({entity} = await entities.get({internalId}));
+
+      // now an attempt to `setMinAssuranceForResolution` should fail because
+      // no token has assurance-failed resolution yet
+      result = await entities.setMinAssuranceForResolution(
+        {entity, minAssuranceForResolution: 2});
+      result.should.equal(false);
+      result = undefined;
+
+      // now resolve a token with an assurance failure
+      let err;
+      try {
+        const requester = 'request-test';
+        const token = tks.tokens[0];
+        await tokens.resolve({requester, token, levelOfAssurance: 1});
+      } catch(e) {
+        err = e;
+      }
+      should.exist(err);
+      err.name.should.equal('NotAllowedError');
+      err.message.should.include(
+        'Could not resolve token; minimum level of assurance not met.');
+
+      // now an attempt to `setMinAssuranceForResolution` should succeed
+      // because of an assertion-failed token resolution
+      ({entity} = await entities.get({internalId}));
+      result = await entities.setMinAssuranceForResolution(
         {entity, minAssuranceForResolution: 1});
+      result.should.equal(true);
+
+      // now a simulated attempt to `setMinAssuranceForResolution` should
+      // fail because of a simulated increased `batchInvalidationCount` set
+      // in the `entity` record used
+      entity.batchInvalidationCount++;
+      result = await entities.setMinAssuranceForResolution(
+        {entity, minAssuranceForResolution: 2});
+      result.should.equal(false);
+      result = undefined;
+      entity.batchInvalidationCount--;
+
+      // invalidate tokens (and do not update `entity` afterwards before next
+      // `setMinAssuranceForResolution` call to simulate concurrent change)
+      ({entity} = await entities.get({internalId}));
+      await tokens.invalidateTokenBatches({entity});
+
+      // now an attempt to `setMinAssuranceForResolution` should fail because
+      // of a new `batchInvalidationCount` in the database (differs from the
+      // entity record)
+      result = await entities.setMinAssuranceForResolution(
+        {entity, minAssuranceForResolution: 2});
+      result.should.equal(false);
+      result = undefined;
+
+      // now an attempt to `setMinAssuranceForResolution` should *still* fail
+      // because of a new `batchInvalidationCount` in the database, even
+      // though the entity's `batchInvalidationCount` has been updated
+      ({entity} = await entities.get({internalId}));
+      result = await entities.setMinAssuranceForResolution(
+        {entity, minAssuranceForResolution: 2});
+      result.should.equal(false);
+    });
+  it(
+    'should not `setMinAssuranceForResolution` after batch invalidation ' +
+    'without requiring an assurance failed token resolution',
+    async function() {
+      // create tokens
+      const tokenCount = 10;
+      const internalId = await documents._generateInternalId();
+      const attributes = new Uint8Array([1]);
+
+      // upsert mock entity the token is for
+      let {entity} = await entities._upsert({internalId, ttl: 60000});
+
+      // setting `setMinAssuranceForResolution` should succeed
+      let result = await entities.setMinAssuranceForResolution({
+        entity, minAssuranceForResolution: 1,
+        requireAssuranceFailedTokenResolution: false
+      });
       result.should.equal(true);
 
       // create and then invalidate tokens
@@ -809,8 +904,10 @@ describe('Tokens', function() {
 
       // now an attempt to `setMinAssuranceForResolution` should fail because
       // of a new `batchInvalidationCount`
-      result = await entities.setMinAssuranceForResolution(
-        {entity, minAssuranceForResolution: 2});
+      result = await entities.setMinAssuranceForResolution({
+        entity, minAssuranceForResolution: 2,
+        requireAssuranceFailedTokenResolution: false
+      });
       result.should.equal(false);
     });
   it('batchInvalidationCount should not be null',
