@@ -368,6 +368,12 @@ describe('Tokens', function() {
     err.message.should.include(
       'Could not resolve token; minimum level of assurance not met.');
 
+    // entity's `lastAssuranceFailedBatchId` should match the token
+    const {tokenBatch: {id: batchId}} = await getTokenBatch({internalId});
+    const {entity} = await entities.get({internalId});
+    should.exist(entity.lastAssuranceFailedBatchId);
+    entity.lastAssuranceFailedBatchId.should.deep.equal(batchId);
+
     // now ensure same pairwise token is resolved when LOA is high enough
     result2 = await tokens.resolve(
       {requester, token, levelOfAssurance: 2});
