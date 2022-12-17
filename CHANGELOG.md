@@ -1,5 +1,13 @@
 # bedrock-tokenization ChangeLog
 
+## 16.2.0 - 2022-12-dd
+
+### Added
+- Add `validUntil` property in token creation results. This property
+  expresses the `Date` at which the latest token will expire. Other
+  returns tokens may expire sooner, but the last token in returned
+  will be valid until the given `Date`.
+
 ## 16.1.0 - 2022-12-04
 
 ### Added
