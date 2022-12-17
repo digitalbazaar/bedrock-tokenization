@@ -118,6 +118,8 @@ describe('Tokens', function() {
       }
       assertNoError(err);
       should.exist(tokenResult);
+      tokenResult.should.include.keys(['tokens', 'validUntil']);
+      tokenResult.validUntil.should.be.a('Date');
     }
   );
   it('should create token concurrently with registration',
@@ -159,7 +161,9 @@ describe('Tokens', function() {
       }
       assertNoError(err);
       should.exist(result);
-      result.should.include.keys(['registrationRecord', 'tokens']);
+      result.should.include.keys(
+        ['registrationRecord', 'tokens', 'validUntil']);
+      result.validUntil.should.be.a('Date');
 
       // registration record expiration should the same as the token batch
       const {registrationRecord} = result;
@@ -719,6 +723,8 @@ describe('Tokens', function() {
     }
     assertNoError(err);
     should.exist(tokenResult);
+    tokenResult.should.include.keys(['tokens', 'validUntil']);
+    tokenResult.validUntil.should.be.a('Date');
   });
   it('should register duplicate and create token concurrently',
     async function() {
@@ -759,6 +765,8 @@ describe('Tokens', function() {
       }
       assertNoError(err);
       should.exist(tokenResult);
+      tokenResult.should.include.keys(['tokens', 'validUntil']);
+      tokenResult.validUntil.should.be.a('Date');
     });
   it('should not resolve token from invalidated batch',
     async function() {
