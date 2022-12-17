@@ -1,6 +1,6 @@
 # bedrock-tokenization ChangeLog
 
-## 16.2.0 - 2022-12-dd
+## 16.2.0 - 2022-12-17
 
 ### Added
 - Add `validUntil` property in token creation results. This property
