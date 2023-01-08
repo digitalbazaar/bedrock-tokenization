@@ -1,5 +1,12 @@
 # bedrock-tokenization ChangeLog
 
+## 17.0.0 - 2023-01-dd
+
+### Changed
+- **BREAKING**: Use little-endian orders bits in the bitstrings
+  used to track token resolution. This is implemented by using the default
+  options via `@digitalbazaar/bitstring@3`.
+
 ## 16.2.0 - 2022-12-17
 
 ### Added
