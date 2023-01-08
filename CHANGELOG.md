@@ -1,6 +1,6 @@
 # bedrock-tokenization ChangeLog
 
-## 18.0.0 - 2023-01-dd
+## 18.0.0 - 2023-01-08
 
 ### Changed
 - **BREAKING**: Make default token batch TTL 240 instead of 120 days.
