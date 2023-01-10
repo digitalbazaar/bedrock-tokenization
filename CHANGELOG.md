@@ -1,6 +1,6 @@
 # bedrock-tokenization ChangeLog
 
-## 18.1.0 - 2023-01-dd
+## 18.1.0 - 2023-01-10
 
 ### Changed
 - When new token batches are created for a specific entity, restrict document
