@@ -1,5 +1,13 @@
 # bedrock-tokenization ChangeLog
 
+## 18.1.0 - 2023-01-dd
+
+### Changed
+- When new token batches are created for a specific entity, restrict document
+  registration record refreshes to those records that match the `internalId`
+  associated with the entity. Previous refreshes unnecessarily refreshed
+  registration records that did not match the `internalId`.
+
 ## 18.0.0 - 2023-01-08
 
 ### Changed
