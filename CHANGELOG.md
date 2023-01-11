@@ -1,5 +1,23 @@
 # bedrock-tokenization ChangeLog
 
+## 19.0.0 - 2023-01-dd
+
+### Added
+- **BREAKING**: Added a config option, `autoRemoveExpiredRecords`, to control
+  whether expired records are automatically removed via built-in MongoDB TTL
+  indexes (true = yes, false = no). This is a breaking change because the
+  option is set to `false` by default, thereby preserving all records that have
+  expired. Previous behavior automatically removed these records after ~24
+  hours via built-in MongoDB TTL indexes. If this config option is set to
+  `false` on a system where it was previously set to `true`, then any instance
+  running with this configuration will NOT delete existing TTL indexes. Setting
+  it to `true` on a system where it was previously `false` will result in the
+  creation of new TTL indexes. These TTL indexes will result in the eventual
+  removal of any records that have expired at least 24 hours ago. Note that
+  upgrading a system that used a previous version will require first upgrading
+  the software and then, if the configuration option is set to `false`, the
+  manual removal of the existing TTL indexes.
+
 ## 18.1.0 - 2023-01-10
 
 ### Changed
