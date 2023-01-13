@@ -1,6 +1,6 @@
 # bedrock-tokenization ChangeLog
 
-## 19.0.0 - 2023-01-dd
+## 19.0.0 - 2023-01-13
 
 ### Added
 - **BREAKING**: Added a config option, `autoRemoveExpiredRecords`, to control
