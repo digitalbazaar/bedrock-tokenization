@@ -1,6 +1,6 @@
 # bedrock-tokenization ChangeLog
 
-## 19.1.0 - 2023-01-dd
+## 19.1.0 - 2023-01-15
 
 ### Added
 - Include `validUntil` in token resolution meta data. This value indicates
