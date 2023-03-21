@@ -1,5 +1,5 @@
 /*!
- * Copyright (c) 2020-2022 Digital Bazaar, Inc. All rights reserved.
+ * Copyright (c) 2020-2023 Digital Bazaar, Inc. All rights reserved.
  */
 import * as database from '@bedrock/mongodb';
 import {areTokens, cleanDB, getTokenBatch, insertRecord} from './helpers.js';
@@ -630,6 +630,34 @@ describe('Tokens', function() {
     result.should.be.an('object');
     result.should.eql({internalId});
   });
+  it('should resolve token to "entity" it is linked to', async function() {
+    const tokenCount = 5;
+    const attributes = new Uint8Array([1]);
+    const internalId = await documents._generateInternalId();
+    let err;
+    let result;
+    let internalIdResult;
+
+    // upsert mock entity the token is for
+    await entities._upsert({internalId, ttl: 60000});
+
+    const {tokens: tks} = await tokens.create(
+      {internalId, attributes, tokenCount});
+    const token = tks[0];
+    try {
+      result = await tokens.resolveToEntity({token});
+      internalIdResult = await tokens.resolveToInternalId({token});
+    } catch(e) {
+      err = e;
+    }
+    assertNoError(err);
+    should.exist(result);
+    result.should.be.an('object');
+    result.should.include.keys(['entity', 'meta']);
+    result.entity.should.be.an('object');
+    result.entity.internalId.should.eql(internalId);
+    result.entity.internalId.should.eql(internalIdResult.internalId);
+  });
   it('should throw error when wrapped value fails to get decrypted',
     async function() {
       const tokenCount = 1;
@@ -798,6 +826,76 @@ describe('Tokens', function() {
       err.name.should.equal('NotAllowedError');
       err.message.should.equal('Token has been invalidated.');
     });
+  it('should not resolve invalidated token to "entity"', async function() {
+    // create tokens
+    const tokenCount = 10;
+    const internalId = await documents._generateInternalId();
+    const attributes = new Uint8Array([1]);
+    let err;
+    let result;
+
+    // upsert mock entity the token is for
+    const {entity} = await entities._upsert({internalId, ttl: 60000});
+
+    const tks = await tokens.create(
+      {internalId, attributes, tokenCount, minAssuranceForResolution: -1});
+    areTokens(tks);
+    const token = tks.tokens[0];
+    // invalidate tokens
+    const invalidateResult = await tokens.invalidateTokenBatches(
+      {entity});
+    invalidateResult.should.equal(true);
+    try {
+      result = await tokens.resolveToEntity({token});
+    } catch(e) {
+      err = e;
+    }
+    should.not.exist(result);
+    err.name.should.equal('NotAllowedError');
+    err.message.should.equal('Token has been invalidated.');
+  });
+  it('should resolve invalidated token to "entity"', async function() {
+    // create tokens
+    const tokenCount = 10;
+    const internalId = await documents._generateInternalId();
+    const attributes = new Uint8Array([1]);
+    let err;
+    let result;
+
+    // upsert mock entity the token is for
+    const {entity} = await entities._upsert({internalId, ttl: 60000});
+
+    const tks = await tokens.create(
+      {internalId, attributes, tokenCount, minAssuranceForResolution: -1});
+    areTokens(tks);
+    const token = tks.tokens[0];
+    // invalidate tokens
+    const invalidateResult = await tokens.invalidateTokenBatches(
+      {entity});
+    invalidateResult.should.equal(true);
+    try {
+      result = await tokens.resolveToEntity({token});
+    } catch(e) {
+      err = e;
+    }
+    should.not.exist(result);
+    err.name.should.equal('NotAllowedError');
+    err.message.should.equal('Token has been invalidated.');
+
+    err = undefined;
+    try {
+      result = await tokens.resolveToEntity(
+        {token, allowInvalidatedTokens: true});
+    } catch(e) {
+      err = e;
+    }
+    should.not.exist(err);
+    should.exist(result);
+    result.should.be.an('object');
+    result.should.include.keys(['entity', 'meta']);
+    result.entity.should.be.an('object');
+    result.entity.internalId.should.eql(internalId);
+  });
   it('should not `setMinAssuranceForResolution` after batch invalidation',
     async function() {
       // create tokens
