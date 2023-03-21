@@ -1,5 +1,14 @@
 # bedrock-tokenization ChangeLog
 
+## 19.2.0 - 2023-03-dd
+
+### Added
+- Add `resolveToEntity` to ensure that when resolving a token to an entity
+  that the token used, if unpinned, has not been invalidated. This helper
+  function is for internal use and does not track resolution of the used
+  token against a particular party. It's primary use case is for obtaining
+  an entity to set its `minAssuranceForResolution`.
+
 ## 19.1.0 - 2023-01-15
 
 ### Added
