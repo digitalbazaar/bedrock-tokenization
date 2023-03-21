@@ -1,6 +1,6 @@
 # bedrock-tokenization ChangeLog
 
-## 19.2.0 - 2023-03-dd
+## 19.2.0 - 2023-03-21
 
 ### Added
 - Add `resolveToEntity` to ensure that when resolving a token to an entity
