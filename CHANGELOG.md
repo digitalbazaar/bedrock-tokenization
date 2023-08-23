@@ -5,6 +5,7 @@
 ### Added
 - Add `entities.getCount({query})` API which retrieves the total count of
   entity records that match the specified query.
+- Add index on `meta.created` field for `tokenization-entity` collection.
 
 ### Changed
 - **BREAKING**: Drop support for Node.js 16.
