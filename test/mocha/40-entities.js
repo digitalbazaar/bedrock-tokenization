@@ -169,7 +169,7 @@ describe('Entities Database Tests', function() {
       });
     it('should get the total count of entity records that match the query.',
       async function() {
-        const query = {"entity.minAssuranceForResolution": 1};
+        const query = {'entity.minAssuranceForResolution': 1};
         const result = await entities.getCount({query});
         should.exist(result);
         result.should.be.a('number');
