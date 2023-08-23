@@ -1,5 +1,10 @@
 # bedrock-tokenization ChangeLog
 
+## 19.3.0 - 2023-08-TBD
+
+### Added
+- Add `stats.get()` API that retrieves statistics from the database.
+
 ## 19.2.0 - 2023-03-21
 
 ### Added
