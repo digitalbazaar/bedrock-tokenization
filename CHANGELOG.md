@@ -4,6 +4,7 @@
 
 ### Added
 - Add `stats.get()` API that retrieves statistics from the database.
+- Add index on `meta.created` field for `tokenization-entity` collection.
 
 ## 19.2.0 - 2023-03-21
 
