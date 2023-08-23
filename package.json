@@ -34,6 +34,7 @@
     "bnid": "^3.0.0",
     "canonicalize": "^1.0.8",
     "cit-context": "^2.0.0",
+    "dayjs": "^1.11.9",
     "lru-cache": "^6.0.0",
     "p-limit": "^4.0.0"
   },
