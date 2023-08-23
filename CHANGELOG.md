@@ -1,5 +1,10 @@
 # bedrock-tokenization ChangeLog
 
+## 20.0.0 - 2023-08-TBD
+
+### Changed
+- **BREAKING**: Drop support for Node.js 16.
+
 ## 19.2.0 - 2023-03-21
 
 ### Added
