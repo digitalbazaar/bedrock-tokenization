@@ -2,6 +2,11 @@
 
 ## 20.0.0 - 2023-08-TBD
 
+### Added
+- Add `entities.getAll()` and `entities.getCount({query})` APIs, which retrieves
+  the total count of entity records and the count of entities that match the
+  specified query, respectively.
+
 ### Changed
 - **BREAKING**: Drop support for Node.js 16.
 
