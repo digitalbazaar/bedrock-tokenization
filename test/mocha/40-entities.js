@@ -138,4 +138,42 @@ describe('Entities Database Tests', function() {
           .should.eql({'entity.internalId': 1});
       });
   });
+  describe('getCount()', function() {
+    beforeEach(async () => {
+      const collectionName = 'tokenization-entity';
+      await cleanDB({collectionName});
+
+      const idGenerator = new IdGenerator();
+      mockEntity1.entity.internalId = Buffer.from(
+        await idGenerator.generate());
+      mockEntity1.entity.openBatch[2] = Buffer.from(
+        await idGenerator.generate());
+      mockEntity2.entity.internalId = Buffer.from(
+        await idGenerator.generate());
+
+      // mutliple records are inserted here in order to do proper assertions
+      // for 'nReturned', 'totalKeysExamined' and 'totalDocsExamined'.
+      await insertRecord({
+        record: mockEntity1, collectionName
+      });
+      await insertRecord({
+        record: mockEntity2, collectionName
+      });
+    });
+    it('should get the total count of entity records in the database.',
+      async function() {
+        const result = await entities.getCount();
+        should.exist(result);
+        result.should.be.a('number');
+        result.should.equal(2);
+      });
+    it('should get the total count of entity records that match the query.',
+      async function() {
+        const query = {"entity.minAssuranceForResolution": 1};
+        const result = await entities.getCount({query});
+        should.exist(result);
+        result.should.be.a('number');
+        result.should.equal(1);
+      });
+  });
 });
