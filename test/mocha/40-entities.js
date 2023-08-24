@@ -2,7 +2,7 @@
  * Copyright (c) 2020-2023 Digital Bazaar, Inc. All rights reserved.
  */
 import {cleanDB, insertRecord} from './helpers.js';
-import {mockEntity1, mockEntity2} from './mock.data.js';
+import {mockEntity1, mockEntity2, mockEntity3} from './mock.data.js';
 import {entities} from '@bedrock/tokenization';
 import {IdGenerator} from 'bnid';
 
@@ -150,6 +150,8 @@ describe('Entities Database Tests', function() {
         await idGenerator.generate());
       mockEntity2.entity.internalId = Buffer.from(
         await idGenerator.generate());
+      mockEntity3.entity.internalId = Buffer.from(
+        await idGenerator.generate());
 
       // mutliple records are inserted here in order to do proper assertions
       // for 'nReturned', 'totalKeysExamined' and 'totalDocsExamined'.
@@ -159,21 +161,26 @@ describe('Entities Database Tests', function() {
       await insertRecord({
         record: mockEntity2, collectionName
       });
+      await insertRecord({
+        record: mockEntity3, collectionName
+      });
     });
     it('should get the total count of entity records in the database.',
       async function() {
         const result = await entities.getCount();
         should.exist(result);
-        result.should.be.a('number');
-        result.should.equal(2);
+        const {count} = result;
+        count.should.be.a('number');
+        count.should.equal(3);
       });
     it('should get the total count of entity records that match the query.',
       async function() {
         const query = {'entity.minAssuranceForResolution': 1};
         const result = await entities.getCount({query});
         should.exist(result);
-        result.should.be.a('number');
-        result.should.equal(1);
+        const {count} = result;
+        count.should.be.a('number');
+        count.should.equal(1);
       });
   });
 });
