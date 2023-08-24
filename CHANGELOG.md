@@ -1,6 +1,6 @@
 # bedrock-tokenization ChangeLog
 
-## 20.0.0 - 2023-08-TBD
+## 20.0.0 - 2023-08-24
 
 ### Added
 - Add `entities.getCount({query})` API which retrieves the total count of
