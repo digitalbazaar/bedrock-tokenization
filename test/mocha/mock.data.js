@@ -223,6 +223,20 @@ export const mockEntity2 = {
     // internalId is generated in tests.
     batchInvalidationCount: 0,
     openBatch: {},
+    minAssuranceForResolution: 2,
+    expires: tomorrow
+  }
+};
+
+export const mockEntity3 = {
+  meta: {
+    created: now,
+    updated: now
+  },
+  entity: {
+    // internalId is generated in tests.
+    batchInvalidationCount: 0,
+    openBatch: {},
     minAssuranceForResolution: 1,
     expires: tomorrow
   }
