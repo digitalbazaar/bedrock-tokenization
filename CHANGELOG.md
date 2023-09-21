@@ -1,5 +1,12 @@
 # bedrock-tokenization ChangeLog
 
+## 21.1.0 - 2023-10-xx
+
+### Added
+- Add `documents.getCount({query})` API which retrieves the total count of
+  document records that match the specified query.
+- Add an index on `registration.creatorHash` field for 
+  `tokenization-registration` collection.
 ## 21.0.2 - 2023-10-11
 
 ### Fixed
