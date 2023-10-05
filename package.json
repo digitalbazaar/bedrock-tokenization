@@ -39,7 +39,7 @@
   },
   "peerDependencies": {
     "@bedrock/core": "^6.0.1",
-    "@bedrock/did-io": "^9.0.1",
+    "@bedrock/did-io": "^10.0.0",
     "@bedrock/https-agent": "^4.0.0",
     "@bedrock/mongodb": "^10.0.0",
     "@bedrock/tokenizer": "^9.0.1"
