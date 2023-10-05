@@ -1,5 +1,11 @@
 # bedrock-tokenization ChangeLog
 
+## 21.0.0 - 2023-10-XX
+
+### Changed
+- **BREAKING**: Update peer deps:
+  - Use `@bedrock/did-io@10`.
+
 ## 20.0.0 - 2023-08-24
 
 ### Added
