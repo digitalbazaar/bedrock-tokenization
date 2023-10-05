@@ -42,7 +42,7 @@
     "@bedrock/did-io": "^10.0.0",
     "@bedrock/https-agent": "^4.0.0",
     "@bedrock/mongodb": "^10.0.0",
-    "@bedrock/tokenizer": "^9.0.1"
+    "@bedrock/tokenizer": "^10.0.0"
   },
   "devDependencies": {
     "eslint": "^8.47.0",
