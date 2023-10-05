@@ -6,6 +6,7 @@
 - **BREAKING**: Update peer deps:
   - Use `@bedrock/did-io@10`. This version requires Node.js 16+.
   - Use `@bedrock/tokenizer@10`. This version requires Node.js 18+.
+- Update test deps.
 
 ## 20.0.0 - 2023-08-24
 
