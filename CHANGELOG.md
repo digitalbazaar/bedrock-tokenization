@@ -1,6 +1,6 @@
 # bedrock-tokenization ChangeLog
 
-## 21.0.0 - 2023-10-XX
+## 21.0.0 - 2023-10-06
 
 ### Changed
 - **BREAKING**: Update peer deps:
