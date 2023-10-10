@@ -1,6 +1,6 @@
 # bedrock-tokenization ChangeLog
 
-## 21.0.1 - 2023-10-dd
+## 21.0.1 - 2023-10-10
 
 ### Fixed
 - Ensure pairwise token upsert does not loop because of an expired pairwise
