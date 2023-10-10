@@ -1,5 +1,15 @@
 # bedrock-tokenization ChangeLog
 
+## 21.0.1 - 2023-10-dd
+
+### Fixed
+- Ensure pairwise token upsert does not loop because of an expired pairwise
+  token record. If an expired record has not been removed from the database
+  when it needs to be used again (during an `upsert`), it will be
+  auto-refreshed. External processes must remove expired pairwise token
+  records if the `autoRemoveExpiredRecords` configuration option is not used
+  to cause new pairwise tokens to be generated after expiration.
+
 ## 21.0.0 - 2023-10-06
 
 ### Changed
