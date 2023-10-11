@@ -339,6 +339,80 @@ describe('Tokens', function() {
       result1.pairwiseToken.should.eql(result2.pairwiseToken);
       result2.internalId.should.eql(internalId);
     });
+  it('should resolve token when pairware token has expired w/same "requester"',
+    async function() {
+      const tokenCount = 1;
+      const internalId = await documents._generateInternalId();
+      const attributes = new Uint8Array([1]);
+      const requester = 'requester';
+      let err;
+      let result2;
+
+      // upsert mock entity the token is for
+      await entities._upsert({internalId, ttl: 60000});
+
+      const tks = await tokens.create(
+        {internalId, attributes, tokenCount});
+      const token = tks.tokens[0];
+      const result1 = await tokens.resolve({requester, token});
+
+      // forcibly expire pairwise token
+      const expires = new Date(Date.now() - 1000);
+      const updated = await _updatePairwiseToken(
+        {internalId, requester, expires});
+      updated.should.equal(true);
+
+      try {
+        // resolve token with same requester again
+        result2 = await tokens.resolve({requester, token});
+      } catch(e) {
+        err = e;
+      }
+      assertNoError(err);
+      areTokens(tks);
+      should.exist(result1.pairwiseToken);
+      should.exist(result2.pairwiseToken);
+      result1.pairwiseToken.should.eql(result2.pairwiseToken);
+      result2.internalId.should.eql(internalId);
+    });
+  it('should resolve token to same pairware token after pairwise expiry',
+    async function() {
+      const tokenCount = 2;
+      const internalId = await documents._generateInternalId();
+      const attributes = new Uint8Array([1]);
+      const requester = 'requester';
+      let err;
+      let result2;
+
+      // upsert mock entity the token is for
+      await entities._upsert({internalId, ttl: 60000});
+
+      const tks = await tokens.create(
+        {internalId, attributes, tokenCount});
+      const [token1, token2] = tks.tokens;
+
+      // resolve first token
+      const result1 = await tokens.resolve({requester, token: token1});
+
+      // forcibly expire pairwise token
+      const expires = new Date(Date.now() - 1000);
+      const updated = await _updatePairwiseToken(
+        {internalId, requester, expires});
+      updated.should.equal(true);
+
+      try {
+        // resolve second token with same requester again
+        result2 = await tokens.resolve({requester, token: token2});
+      } catch(e) {
+        err = e;
+      }
+      assertNoError(err);
+      areTokens(tks);
+      should.exist(result1.pairwiseToken);
+      should.exist(result2.pairwiseToken);
+      result1.pairwiseToken.should.eql(result2.pairwiseToken);
+      result2.internalId.should.eql(internalId);
+    });
   it('should not resolve unpinned token when called twice with same ' +
     '"requester" if level of assurance is too low', async function() {
     const tokenCount = 1;
@@ -1289,3 +1363,21 @@ describe('Tokens Database Tests', function() {
     });
   });
 });
+
+async function _updatePairwiseToken({internalId, requester, expires}) {
+  const query = {
+    'pairwiseToken.internalId': internalId,
+    'pairwiseToken.requester': requester
+  };
+  const update = {
+    $set: {
+      'meta.updated': Date.now(),
+      'pairwiseToken.expires': expires
+    }
+  };
+
+  // return `true` if the update occurred
+  const collection = database.collections['tokenization-pairwiseToken'];
+  const result = await collection.updateOne(query, update);
+  return result.result.n !== 0;
+}
