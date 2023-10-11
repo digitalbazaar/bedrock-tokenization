@@ -1,6 +1,6 @@
 # bedrock-tokenization ChangeLog
 
-## 21.0.2 - 2023-10-dd
+## 21.0.2 - 2023-10-11
 
 ### Fixed
 - Ensure expired pairwise tokens are refreshed and reused if they are
