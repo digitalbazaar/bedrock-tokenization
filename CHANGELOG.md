@@ -1,6 +1,6 @@
 # bedrock-tokenization ChangeLog
 
-## 21.1.0 - 2023-10-xx
+## 21.1.0 - 2023-10-12
 
 ### Added
 - Add `documents.getCount({query})` API which retrieves the total count of
