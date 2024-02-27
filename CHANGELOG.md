@@ -1,6 +1,6 @@
 # bedrock-tokenization ChangeLog
 
-## 21.1.1 - 2024-mm-dd
+## 21.1.1 - 2024-02-27
 
 ### Fixed
 - Ensure an expired (but still present in the database) document
@@ -12,7 +12,7 @@
 ### Added
 - Add `documents.getCount({query})` API which retrieves the total count of
   document records that match the specified query.
-- Add an index on `registration.creatorHash` field for 
+- Add an index on `registration.creatorHash` field for
   `tokenization-registration` collection.
 
 ## 21.0.2 - 2023-10-11
