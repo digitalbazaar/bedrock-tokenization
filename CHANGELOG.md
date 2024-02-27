@@ -1,5 +1,12 @@
 # bedrock-tokenization ChangeLog
 
+## 21.1.1 - 2024-mm-dd
+
+### Fixed
+- Ensure an expired (but still present in the database) document
+  registration record will be updated when a registration attempt using
+  a matching document is attempted.
+
 ## 21.1.0 - 2023-10-12
 
 ### Added

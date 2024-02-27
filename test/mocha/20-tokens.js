@@ -868,6 +868,94 @@ describe('Tokens', function() {
       tokenResult.should.include.keys(['tokens', 'validUntil']);
       tokenResult.validUntil.should.be.a('Date');
     });
+  it('should register expired duplicate and create token concurrently',
+    async function() {
+      const dateOfBirth = '2000-05-01';
+      const expires = '2021-05-01';
+      const identifier = 'T99991234';
+      const issuer = 'VA';
+      const type = 'DriversLicense';
+      const recipients = [
+        {
+          header: {
+            kid: 'did:key:z6MkpTHR8VNsBxYAAWHut2Geadd9jSwuBV8xRoA' +
+              'nwWsdvktH#z6LSbysY2xFMRpGMhb7tFTLMpeuPRaqaWM1yECx2AtzE3KCc',
+            alg: 'ECDH-ES+A256KW',
+          }
+        }
+      ];
+      const tokenCount = 1;
+      // canonicalize object then hash it then base58 encode it
+      const externalId = encode(crypto.createHash('sha256')
+        .update(canonicalize({dateOfBirth, identifier, issuer}))
+        .digest());
+
+      let registrationRecord;
+      {
+        let tokenResult;
+        let err;
+        try {
+          tokenResult = await tokens.registerDocumentAndCreate({
+            registerOptions: {
+              externalId,
+              document: {dateOfBirth, expires, identifier, issuer, type},
+              recipients,
+              ttl: 1209600000
+            },
+            tokenCount
+          });
+        } catch(e) {
+          err = e;
+        }
+        assertNoError(err);
+        should.exist(tokenResult);
+        tokenResult.should.include.keys(['tokens', 'validUntil']);
+        tokenResult.validUntil.should.be.a('Date');
+        ({registrationRecord} = tokenResult);
+      }
+
+      // now mark registration record expired and register again w/ success
+      const {registration} = registrationRecord;
+      const collection = database.collections['tokenization-registration'];
+      const yesterday = new Date();
+      yesterday.setDate(yesterday.getDate() - 1);
+      const updateResult = await collection.updateOne({
+        'registration.externalIdHash': registration.externalIdHash,
+        'registration.documentHash': registration.documentHash
+      }, {
+        $set: {'registration.expires': yesterday}
+      });
+      updateResult.result.nModified.should.equal(1);
+
+      // now re-registration should update expired registration record
+      {
+        let tokenResult;
+        let err;
+        try {
+          tokenResult = await tokens.registerDocumentAndCreate({
+            registerOptions: {
+              externalId,
+              document: {dateOfBirth, expires, identifier, issuer, type},
+              recipients,
+              ttl: 1209600000
+            },
+            tokenCount
+          });
+        } catch(e) {
+          err = e;
+        }
+        assertNoError(err);
+        should.exist(tokenResult);
+        tokenResult.should.include.keys(['tokens', 'validUntil']);
+        tokenResult.validUntil.should.be.a('Date');
+        tokenResult.registrationRecord.registration.externalIdHash.should
+          .deep.equal(registrationRecord.registration.externalIdHash);
+        tokenResult.registrationRecord.registration.documentHash.should
+          .deep.equal(registrationRecord.registration.documentHash);
+        tokenResult.registrationRecord.registration.expires.should.not.equal(
+          yesterday);
+      }
+    });
   it('should not resolve token from invalidated batch',
     async function() {
       // create tokens
