@@ -1,6 +1,6 @@
 {
   "name": "@bedrock/tokenization",
-  "version": "21.1.2-0",
+  "version": "22.0.0",
   "type": "module",
   "description": "Bedrock Tokenization Engine",
   "main": "./lib/index.js",
