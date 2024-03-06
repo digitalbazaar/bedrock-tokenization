@@ -1,6 +1,6 @@
 # bedrock-tokenization ChangeLog
 
-## 22.0.0 - 2024-03-xx
+## 22.0.0 - 2024-03-06
 
 ### Changed
 - **BREAKING**: Update index on `registration.creatorHash` to compound index
