@@ -339,7 +339,7 @@ describe('Tokens', function() {
       result1.pairwiseToken.should.eql(result2.pairwiseToken);
       result2.internalId.should.eql(internalId);
     });
-  it('should resolve token when pairware token has expired w/same "requester"',
+  it('should resolve token when pairwise token has expired w/same "requester"',
     async function() {
       const tokenCount = 1;
       const internalId = await documents._generateInternalId();
@@ -375,7 +375,7 @@ describe('Tokens', function() {
       result1.pairwiseToken.should.eql(result2.pairwiseToken);
       result2.internalId.should.eql(internalId);
     });
-  it('should resolve token to same pairware token after pairwise expiry',
+  it('should resolve token to same pairwise token after pairwise expiry',
     async function() {
       const tokenCount = 2;
       const internalId = await documents._generateInternalId();
