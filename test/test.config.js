@@ -1,5 +1,5 @@
 /*!
- * Copyright (c) 2020-2022 Digital Bazaar, Inc. All rights reserved.
+ * Copyright (c) 2020-2024 Digital Bazaar, Inc. All rights reserved.
  */
 import {config} from '@bedrock/core';
 import {fileURLToPath} from 'node:url';
@@ -26,3 +26,6 @@ config['https-agent'].rejectUnauthorized = false;
 
 config.tokenizer.kms.baseUrl = `${config.server.baseUri}/kms`;
 config.tokenizer.kms.ipAllowList = ['127.0.0.1/32', '::1/128'];
+
+// enable testing extra pairwise token features
+config.tokenization.ensurePairwiseTokenValueIndex = true;
