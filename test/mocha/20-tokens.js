@@ -1,6 +1,7 @@
 /*!
- * Copyright (c) 2020-2023 Digital Bazaar, Inc. All rights reserved.
+ * Copyright (c) 2020-2024 Digital Bazaar, Inc. All rights reserved.
  */
+import * as bedrock from '@bedrock/core';
 import * as database from '@bedrock/mongodb';
 import {areTokens, cleanDB, getTokenBatch, insertRecord} from './helpers.js';
 import {documents, entities, tokens} from '@bedrock/tokenization';
@@ -956,6 +957,145 @@ describe('Tokens', function() {
           yesterday);
       }
     });
+  it('should register and upsert a pairwise token', async function() {
+    const dateOfBirth = '2000-05-01';
+    const expires = '2021-05-01';
+    const identifier = 'T99991234';
+    const issuer = 'VA';
+    const type = 'DriversLicense';
+    const recipients = [
+      {
+        header: {
+          kid: 'did:key:z6MkpTHR8VNsBxYAAWHut2Geadd9jSwuBV8xRoA' +
+            'nwWsdvktH#z6LSbysY2xFMRpGMhb7tFTLMpeuPRaqaWM1yECx2AtzE3KCc',
+          alg: 'ECDH-ES+A256KW',
+        }
+      }
+    ];
+    // canonicalize object then hash it then base58 encode it
+    const externalId = encode(crypto.createHash('sha256')
+      .update(canonicalize({dateOfBirth, identifier, issuer}))
+      .digest());
+
+    const {registration: {internalId}} = await documents.register({
+      externalId,
+      document: {dateOfBirth, expires, identifier, issuer, type},
+      recipients,
+      ttl: 1209600000
+    });
+
+    const requester = 'requester';
+    let record;
+    let err;
+    try {
+      record = await tokens.upsertPairwiseToken({internalId, requester});
+    } catch(e) {
+      err = e;
+    }
+    assertNoError(err);
+    should.exist(record);
+    record.should.include.keys(['meta', 'pairwiseToken']);
+    record.pairwiseToken.value.should.be.a('Uint8Array');
+  });
+  it('should not resolve pairwise token when not enabled by configuration',
+    async function() {
+      const dateOfBirth = '2000-05-01';
+      const expires = '2021-05-01';
+      const identifier = 'T99991234';
+      const issuer = 'VA';
+      const type = 'DriversLicense';
+      const recipients = [
+        {
+          header: {
+            kid: 'did:key:z6MkpTHR8VNsBxYAAWHut2Geadd9jSwuBV8xRoA' +
+              'nwWsdvktH#z6LSbysY2xFMRpGMhb7tFTLMpeuPRaqaWM1yECx2AtzE3KCc',
+            alg: 'ECDH-ES+A256KW',
+          }
+        }
+      ];
+      // canonicalize object then hash it then base58 encode it
+      const externalId = encode(crypto.createHash('sha256')
+        .update(canonicalize({dateOfBirth, identifier, issuer}))
+        .digest());
+
+      const {registration: {internalId}} = await documents.register({
+        externalId,
+        document: {dateOfBirth, expires, identifier, issuer, type},
+        recipients,
+        ttl: 1209600000
+      });
+
+      const requester = 'requester';
+      const record = await tokens.upsertPairwiseToken({internalId, requester});
+      should.exist(record);
+      record.should.include.keys(['meta', 'pairwiseToken']);
+      record.pairwiseToken.value.should.be.a('Uint8Array');
+
+      const {internalId: internalId2} = await tokens.resolvePairwiseToken({
+        pairwiseToken: record.pairwiseToken.value
+      });
+
+      should.exist(internalId2);
+      internalId2.should.deep.equal(internalId);
+    });
+  it('should not resolve pairwise token when not enabled by configuration',
+    async function() {
+      const previousConfigValue = bedrock.config.tokenization
+        .ensurePairwiseTokenValueIndex;
+      bedrock.config.tokenization.ensurePairwiseTokenValueIndex = false;
+      try {
+        const dateOfBirth = '2000-05-01';
+        const expires = '2021-05-01';
+        const identifier = 'T99991234';
+        const issuer = 'VA';
+        const type = 'DriversLicense';
+        const recipients = [
+          {
+            header: {
+              kid: 'did:key:z6MkpTHR8VNsBxYAAWHut2Geadd9jSwuBV8xRoA' +
+                'nwWsdvktH#z6LSbysY2xFMRpGMhb7tFTLMpeuPRaqaWM1yECx2AtzE3KCc',
+              alg: 'ECDH-ES+A256KW',
+            }
+          }
+        ];
+        // canonicalize object then hash it then base58 encode it
+        const externalId = encode(crypto.createHash('sha256')
+          .update(canonicalize({dateOfBirth, identifier, issuer}))
+          .digest());
+
+        const {registration: {internalId}} = await documents.register({
+          externalId,
+          document: {dateOfBirth, expires, identifier, issuer, type},
+          recipients,
+          ttl: 1209600000
+        });
+
+        const requester = 'requester';
+        const record = await tokens.upsertPairwiseToken({
+          internalId, requester
+        });
+        should.exist(record);
+        record.should.include.keys(['meta', 'pairwiseToken']);
+        record.pairwiseToken.value.should.be.a('Uint8Array');
+
+        let err;
+        try {
+          await tokens.resolvePairwiseToken({
+            pairwiseToken: record.pairwiseToken.value
+          });
+        } catch(e) {
+          err = e;
+        }
+        should.exist(err);
+        err.name.should.equal('NotAllowedError');
+        err.message.should.include(
+          'Queries by pairwise token value are not allowed because the ' +
+          'pairwise token value index is not enabled.');
+      } finally {
+        bedrock.config.tokenization.ensurePairwiseTokenValueIndex =
+          previousConfigValue;
+      }
+    });
   it('should not resolve token from invalidated batch',
     async function() {
       // create tokens
@@ -1436,7 +1576,7 @@ describe('Tokens Database Tests', function() {
     it(`is properly indexed for compound query of 'pairwiseToken.internalId' ` +
       `and 'pairwiseToken.requester' in _getPairwiseToken()`, async function() {
       const {internalId, requester} = mockPairwise.pairwiseToken;
-      const {executionStats} = await tokens._getPairwiseToken({
+      const {executionStats} = await tokens.getPairwiseToken({
         internalId, requester, explain: true
       });
       executionStats.nReturned.should.equal(1);
