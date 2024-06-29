@@ -997,7 +997,7 @@ describe('Tokens', function() {
     record.should.include.keys(['meta', 'pairwiseToken']);
     record.pairwiseToken.value.should.be.a('Uint8Array');
   });
-  it('should not resolve pairwise token when not enabled by configuration',
+  it('should resolve pairwise token when enabled by configuration',
     async function() {
       const dateOfBirth = '2000-05-01';
       const expires = '2021-05-01';
@@ -1024,6 +1024,8 @@ describe('Tokens', function() {
         recipients,
         ttl: 1209600000
       });
+
+      bedrock.config.tokenization.ensurePairwiseTokenValueIndex.should.be.true;
 
       const requester = 'requester';
       const record = await tokens.upsertPairwiseToken({internalId, requester});
