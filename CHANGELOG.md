@@ -1,5 +1,12 @@
 # bedrock-tokenization ChangeLog
 
+## 22.1.0 - 2024-mm-dd
+
+### Added
+- Add optional feature (disabled by default) to enable lookups of pairwise
+  token records by value. This is useful for applications that need to
+  quickly resolve a pairwise token to an `internalId`.
+
 ## 22.0.0 - 2024-03-06
 
 ### Changed
