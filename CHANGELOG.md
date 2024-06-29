@@ -6,6 +6,8 @@
 - Add optional feature (disabled by default) to enable lookups of pairwise
   token records by value. This is useful for applications that need to
   quickly resolve a pairwise token to an `internalId`.
+- Add `tokens.resolvePairwiseToken` to resolve a pairwise token to an
+  `internalId`.
 - Expose `getPairwiseToken()` and `upsertPairwiseToken()` for external use.
 
 ## 22.0.0 - 2024-03-06
