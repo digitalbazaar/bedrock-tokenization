@@ -1,6 +1,6 @@
 # bedrock-tokenization ChangeLog
 
-## 22.1.0 - 2024-mm-dd
+## 22.1.0 - 2024-11-08
 
 ### Added
 - Add optional feature (disabled by default) to enable lookups of pairwise
