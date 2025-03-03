@@ -1,5 +1,5 @@
 /*!
- * Copyright (c) 2020-2024 Digital Bazaar, Inc. All rights reserved.
+ * Copyright (c) 2020-2025 Digital Bazaar, Inc. All rights reserved.
  */
 import * as bedrock from '@bedrock/core';
 import * as database from '@bedrock/mongodb';
@@ -926,7 +926,7 @@ describe('Tokens', function() {
       }, {
         $set: {'registration.expires': yesterday}
       });
-      updateResult.result.nModified.should.equal(1);
+      updateResult.modifiedCount.should.equal(1);
 
       // now re-registration should update expired registration record
       {
@@ -1609,5 +1609,5 @@ async function _updatePairwiseToken({internalId, requester, expires}) {
   // return `true` if the update occurred
   const collection = database.collections['tokenization-pairwiseToken'];
   const result = await collection.updateOne(query, update);
-  return result.result.n !== 0;
+  return result.modifiedCount !== 0;
 }
