@@ -1,5 +1,11 @@
 # bedrock-tokenization ChangeLog
 
+## 22.1.1 - 2025-mm-dd
+
+### Fixed
+- Return passed `record` instead of resulting record from mongodb calls to
+  enable using newer mongodb driver.
+
 ## 22.1.0 - 2024-11-08
 
 ### Added
