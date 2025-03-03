@@ -8,11 +8,11 @@ jobs:
     timeout-minutes: 10
     strategy:
       matrix:
-        node-version: [20.x]
+        node-version: [22.x]
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
     - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v3
+      uses: actions/setup-node@v4
       with:
         node-version: ${{ matrix.node-version }}
     - run: npm install
@@ -24,16 +24,16 @@ jobs:
     timeout-minutes: 10
     services:
       mongodb:
-        image: mongo:5
+        image: mongo:6
         ports:
           - 27017:27017
     strategy:
       matrix:
-        node-version: [18.x, 20.x]
+        node-version: [20.x, 22.x]
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
     - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v3
+      uses: actions/setup-node@v4
       with:
         node-version: ${{ matrix.node-version }}
     - run: |
@@ -50,16 +50,16 @@ jobs:
     timeout-minutes: 10
     services:
       mongodb:
-        image: mongo:5
+        image: mongo:6
         ports:
           - 27017:27017
     strategy:
       matrix:
-        node-version: [20.x]
+        node-version: [22.x]
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
     - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v3
+      uses: actions/setup-node@v4
       with:
         node-version: ${{ matrix.node-version }}
     - run: |
@@ -71,7 +71,8 @@ jobs:
         cd test
         npm run coverage-ci
     - name: Upload coverage to Codecov
-      uses: codecov/codecov-action@v3
+      uses: codecov/codecov-action@v4
       with:
         file: ./test/coverage/lcov.info
         fail_ci_if_error: true
+        token: ${{ secrets.CODECOV_TOKEN }}
