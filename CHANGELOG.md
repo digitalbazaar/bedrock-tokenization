@@ -1,5 +1,11 @@
 # bedrock-tokenization ChangeLog
 
+## 22.1.2 - 2025-mm-dd
+
+### Fixed
+- Do not pass `writeOptions` in database calls.
+- Use proper `"returnDocument": "after"` option w/`findOneAndUpdate`.
+
 ## 22.1.1 - 2025-03-04
 
 ### Fixed
