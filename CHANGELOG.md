@@ -5,6 +5,8 @@
 ### Fixed
 - Do not pass `writeOptions` in database calls.
 - Use proper `"returnDocument": "after"` option w/`findOneAndUpdate`.
+- Pass `includeResultMetadata: true` to `findOneAndUpdate` to ensure meta data
+  is always returned.
 
 ## 22.1.1 - 2025-03-04
 
