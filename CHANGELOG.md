@@ -1,6 +1,6 @@
 # bedrock-tokenization ChangeLog
 
-## 23.0.0 - 2025-03-xx
+## 23.0.0 - 2025-03-18
 
 ### Changed
 - Update dependencies.
