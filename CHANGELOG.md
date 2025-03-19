@@ -1,5 +1,30 @@
 # bedrock-tokenization ChangeLog
 
+## 23.0.0 - 2025-03-xx
+
+### Changed
+- Update dependencies.
+  - `@digitalbazaar/bitstring@3.1.0`.
+  - **BREAKING**: `@digitalbazaar/cborld@7.2.0`.
+    - Major update from 5.x. Check project changelog.
+    - Consider backwards compatibility issues.
+  - **BREAKING**: `@digitalbazaar/minimal-cipher@6.0.0`.
+  - `canonicalize@2.1.0`.
+  - `cit-context@2.0.1`.
+  - `p-limit@6.2.0`.
+- Update peer dependencies.
+  - `@bedrock/core@6.3.0`.
+  - `@bedrock/did-io@10.4.0`.
+  - `@bedrock/https-agent@4.1.0`.
+  - **BREAKING**: `@bedrock/mongodb@11`.
+    - Use MongoDB driver 6.x and update error names and details.
+    - See changelog for details.
+  - **BREAKING**: `@bedrock/tokenizer@11`.
+    - Updated for `@bedrock/mongodb@11`.
+    - `@digitalbazaar/webkms-client@14`.
+- Update dev dependencies.
+- Update test dependencies.
+
 ## 22.1.2 - 2025-03-04
 
 ### Fixed
