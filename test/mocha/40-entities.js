@@ -1,5 +1,5 @@
 /*!
- * Copyright (c) 2020-2023 Digital Bazaar, Inc. All rights reserved.
+ * Copyright (c) 2020-2025 Digital Bazaar, Inc. All rights reserved.
  */
 import {cleanDB, insertRecord} from './helpers.js';
 import {mockEntity1, mockEntity2, mockEntity3} from './mock.data.js';
@@ -53,10 +53,17 @@ describe('Entities Database Tests', function() {
       executionStats.nReturned.should.equal(1);
       executionStats.totalKeysExamined.should.equal(1);
       executionStats.totalDocsExamined.should.equal(1);
-      executionStats.executionStages.inputStage.inputStage.stage
-        .should.equal('IXSCAN');
-      executionStats.executionStages.inputStage.inputStage.keyPattern
-        .should.eql({'entity.internalId': 1});
+      const {executionStages: targetStage} = executionStats;
+      // only mongodb 8+ has 'EXPRESS_IXSCAN'
+      if(targetStage.stage === 'EXPRESS_IXSCAN') {
+        targetStage.keyPattern.should.eql(
+          '{ entity.internalId: 1 }');
+      } else {
+        targetStage = executionStages.inputStage.inputStage;
+        targetStage.stage.should.equal('IXSCAN');
+        targetStage.keyPattern.should.eql(
+          {'entity.internalId': 1});
+      }
     });
     it(`is properly indexed for 'entity.internalId' and` +
       `'entity.batchInvalidationCount' in ` +
@@ -81,10 +88,17 @@ describe('Entities Database Tests', function() {
         executionStats.nReturned.should.equal(1);
         executionStats.totalKeysExamined.should.equal(1);
         executionStats.totalDocsExamined.should.equal(1);
-        executionStats.executionStages.inputStage.inputStage.stage
-          .should.equal('IXSCAN');
-        executionStats.executionStages.inputStage.inputStage.keyPattern
-          .should.eql({'entity.internalId': 1});
+        const {executionStages: targetStage} = executionStats;
+        // only mongodb 8+ has 'EXPRESS_IXSCAN'
+        if(targetStage.stage === 'EXPRESS_IXSCAN') {
+          targetStage.keyPattern.should.eql(
+            '{ entity.internalId: 1 }');
+        } else {
+          targetStage = executionStages.inputStage.inputStage;
+          targetStage.stage.should.equal('IXSCAN');
+          targetStage.keyPattern.should.eql(
+            {'entity.internalId': 1});
+        }
       });
     it(`is properly indexed for 'entity.internalId' and ` +
       `'entity.batchInvalidationCount' in ` +
@@ -132,10 +146,17 @@ describe('Entities Database Tests', function() {
         executionStats.nReturned.should.equal(1);
         executionStats.totalKeysExamined.should.equal(1);
         executionStats.totalDocsExamined.should.equal(1);
-        executionStats.executionStages.inputStage.inputStage.stage
-          .should.equal('IXSCAN');
-        executionStats.executionStages.inputStage.inputStage.keyPattern
-          .should.eql({'entity.internalId': 1});
+        const {executionStages: targetStage} = executionStats;
+        // only mongodb 8+ has 'EXPRESS_IXSCAN'
+        if(targetStage.stage === 'EXPRESS_IXSCAN') {
+          targetStage.keyPattern.should.eql(
+            '{ entity.internalId: 1 }');
+        } else {
+          targetStage = executionStages.inputStage.inputStage;
+          targetStage.stage.should.equal('IXSCAN');
+          targetStage.keyPattern.should.eql(
+            {'entity.internalId': 1});
+        }
       });
   });
   describe('getCount()', function() {

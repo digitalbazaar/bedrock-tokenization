@@ -1,5 +1,5 @@
 /*!
- * Copyright (c) 2020-2022 Digital Bazaar, Inc. All rights reserved.
+ * Copyright (c) 2020-2025 Digital Bazaar, Inc. All rights reserved.
  */
 import {cleanDB, insertRecord, isBatchVersion} from './helpers.js';
 import {
@@ -221,10 +221,17 @@ describe('BatchVersions Database Tests', function() {
         executionStats.nReturned.should.equal(1);
         executionStats.totalKeysExamined.should.equal(1);
         executionStats.totalDocsExamined.should.equal(1);
-        executionStats.executionStages.inputStage.inputStage.stage
-          .should.equal('IXSCAN');
-        executionStats.executionStages.inputStage.inputStage.keyPattern
-          .should.eql({'batchVersionOptions.id': 1});
+        const {executionStages: targetStage} = executionStats;
+        // only mongodb 8+ has 'EXPRESS_IXSCAN'
+        if(targetStage.stage === 'EXPRESS_IXSCAN') {
+          targetStage.keyPattern.should.eql(
+            '{ batchVersionOptions.id: 1 }');
+        } else {
+          targetStage = executionStages.inputStage.inputStage;
+          targetStage.stage.should.equal('IXSCAN');
+          targetStage.keyPattern.should.eql(
+            {'batchVersionOptions.id': 1});
+        }
       });
     it(`is properly indexed for 'batchVersionOptions.id' in getOptions()`,
       async function() {
