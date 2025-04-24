@@ -1,5 +1,10 @@
 # bedrock-tokenization ChangeLog
 
+## 23.0.1 - 2025-mm-dd
+
+### Changed
+- Use `@digitalbazaar/cborld@8`.
+
 ## 23.0.0 - 2025-03-18
 
 ### Changed
