@@ -1,5 +1,10 @@
 # bedrock-tokenization ChangeLog
 
+## 23.1.0 - 2025-05-dd
+
+### Changed
+- Use `lru-cache@11`.
+
 ## 23.0.1 - 2025-04-24
 
 ### Changed
