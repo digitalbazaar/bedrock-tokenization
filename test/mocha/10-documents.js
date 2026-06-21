@@ -80,7 +80,7 @@ describe('Documents', function() {
         header: {
           kid: 'did:key:z6MkpTHR8VNsBxYAAWHut2Geadd9jSwuBV8xRoAnwWsdvktH#' +
             'z6LSbysY2xFMRpGMhb7tFTLMpeuPRaqaWM1yECx2AtzE3KCc',
-          alg: 'ECDH-ES+A256KW',
+          alg: 'ECDH-ES+A256KW'
         }
       }];
       const result = await documents.register({

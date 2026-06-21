@@ -1,5 +1,5 @@
 /*!
- * Copyright (c) 2021-2022 Digital Bazaar, Inc. All rights reserved.
+ * Copyright (c) 2021-2026 Digital Bazaar, Inc.
  */
 export const mockData = {};
 
@@ -13,7 +13,7 @@ const products = [{
   service: {
     // default dev `id` configured in `bedrock-kms-http`
     id: 'did:key:z6MkwZ7AXrDpuVi5duY2qvVSx1tBkGmVnmRjDvvwzoVnAzC4',
-    type: 'webkms',
+    type: 'webkms'
   }
 }];
 
