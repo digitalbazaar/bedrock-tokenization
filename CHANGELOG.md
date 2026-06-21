@@ -1,5 +1,14 @@
 # bedrock-tokenization ChangeLog
 
+## 23.3.0 - 2026-06-dd
+
+### Changed
+- Update dependencies:
+  - `canonicalize@3`
+  - `@digitalbazaar/cborld@8.1`
+  - `@digitalbazaar/minimal-cipher@6.1.1`
+  - `lru-cache@11.5.1`.
+
 ## 23.2.0 - 2026-06-21
 
 ### Added
