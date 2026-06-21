@@ -1,6 +1,6 @@
 # bedrock-tokenization ChangeLog
 
-## 23.3.0 - 2026-06-dd
+## 23.3.0 - 2026-06-21
 
 ### Changed
 - Expect node >= 22.
