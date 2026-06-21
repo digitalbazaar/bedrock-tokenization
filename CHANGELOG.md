@@ -3,6 +3,7 @@
 ## 23.3.0 - 2026-06-dd
 
 ### Changed
+- Expect node >= 22.
 - Update dependencies:
   - `canonicalize@3`
   - `@digitalbazaar/cborld@8.1`

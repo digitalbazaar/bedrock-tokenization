@@ -30,7 +30,6 @@
     "@digitalbazaar/minimal-cipher": "^6.1.1",
     "assert-plus": "^1.0.0",
     "base58-universal": "^2.0.0",
-    "base64url-universal": "^2.0.0",
     "bnid": "^3.0.0",
     "canonicalize": "^3.0.0",
     "cit-context": "^2.0.1",
