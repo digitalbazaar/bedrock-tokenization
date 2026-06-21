@@ -1,6 +1,6 @@
 # bedrock-tokenization ChangeLog
 
-## 23.2.0 - 2026-mm-dd
+## 23.2.0 - 2026-06-21
 
 ### Added
 - Allow document registration to occur without storing the encrypted document.
