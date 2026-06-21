@@ -5,7 +5,7 @@
   "description": "Bedrock Tokenization Engine",
   "main": "./lib/index.js",
   "scripts": {
-    "lint": "eslint ."
+    "lint": "eslint"
   },
   "repository": {
     "type": "git",
@@ -45,15 +45,13 @@
     "@bedrock/tokenizer": "^11.0.0"
   },
   "devDependencies": {
-    "eslint": "^8.57.1",
-    "eslint-config-digitalbazaar": "^5.2.0",
-    "eslint-plugin-jsdoc": "^50.6.8",
-    "eslint-plugin-unicorn": "^56.0.1"
+    "@digitalbazaar/eslint-config": "^9.0.0",
+    "eslint": "^10.5.0"
   },
   "directories": {
     "lib": "./lib"
   },
   "engines": {
-    "node": ">=18"
+    "node": ">=22"
   }
 }

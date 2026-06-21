@@ -90,7 +90,7 @@ describe('Tokens', function() {
           header: {
             kid: 'did:key:z6MkpTHR8VNsBxYAAWHut2Geadd9jSwuBV8xRoA' +
               'nwWsdvktH#z6LSbysY2xFMRpGMhb7tFTLMpeuPRaqaWM1yECx2AtzE3KCc',
-            alg: 'ECDH-ES+A256KW',
+            alg: 'ECDH-ES+A256KW'
           }
         }
       ];
@@ -133,7 +133,7 @@ describe('Tokens', function() {
           header: {
             kid: 'did:key:z6MkpTHR8VNsBxYAAWHut2Geadd9jSwuBV8xRoA' +
               'nwWsdvktH#z6LSbysY2xFMRpGMhb7tFTLMpeuPRaqaWM1yECx2AtzE3KCc',
-            alg: 'ECDH-ES+A256KW',
+            alg: 'ECDH-ES+A256KW'
           }
         }
       ];
@@ -229,7 +229,7 @@ describe('Tokens', function() {
           header: {
             kid: 'did:key:z6MkpTHR8VNsBxYAAWHut2Geadd9jSwuBV8xRoA' +
               'nwWsdvktH#z6LSbysY2xFMRpGMhb7tFTLMpeuPRaqaWM1yECx2AtzE3KCc',
-            alg: 'ECDH-ES+A256KW',
+            alg: 'ECDH-ES+A256KW'
           }
         }
       ];
@@ -647,9 +647,9 @@ describe('Tokens', function() {
 
     const {tokens: tks} = await tokens.create(
       {internalId, attributes, tokenCount});
-    let token = tks[0];
-    // change type of token to string
-    token = '';
+    tks.length.should.equal(tokenCount);
+    // set type of token to string
+    const token = '';
     try {
       result = await tokens.resolve({requester, token});
     } catch(e) {
@@ -658,8 +658,8 @@ describe('Tokens', function() {
     should.exist(err);
     should.not.exist(result);
     err.name.should.equal('TypeError');
-    err.message.should.equal('"token" must be a Uint8Array that is 2 bytes or' +
-      ' more in size.');
+    err.message.should.equal(
+      '"token" must be a Uint8Array that is 2 bytes or more in size.');
   });
   it('should throw error if token length is less than minimumSize',
     async function() {
@@ -700,12 +700,11 @@ describe('Tokens', function() {
       // upsert mock entity the token is for
       await entities._upsert({internalId, ttl: 60000});
 
-      let token;
       const {tokens: tks} = await tokens.create(
         {internalId, attributes, tokenCount});
-      token = tks[0];
+      tks.length.should.equal(tokenCount);
       // change length of token to be greater than 58
-      token = new Uint8Array([
+      const token = new Uint8Array([
         0, 0, 129, 160, 29, 189, 3, 64, 185, 31, 158,
         32, 154, 159, 45, 235, 20, 205, 64, 222, 9,
         66, 192, 79, 183, 54, 204, 169, 197, 19, 52,
@@ -841,7 +840,7 @@ describe('Tokens', function() {
         header: {
           kid: 'did:key:z6MkpTHR8VNsBxYAAWHut2Geadd9jSwuBV8xRoA' +
             'nwWsdvktH#z6LSbysY2xFMRpGMhb7tFTLMpeuPRaqaWM1yECx2AtzE3KCc',
-          alg: 'ECDH-ES+A256KW',
+          alg: 'ECDH-ES+A256KW'
         }
       }
     ];
@@ -883,7 +882,7 @@ describe('Tokens', function() {
           header: {
             kid: 'did:key:z6MkpTHR8VNsBxYAAWHut2Geadd9jSwuBV8xRoA' +
               'nwWsdvktH#z6LSbysY2xFMRpGMhb7tFTLMpeuPRaqaWM1yECx2AtzE3KCc',
-            alg: 'ECDH-ES+A256KW',
+            alg: 'ECDH-ES+A256KW'
           }
         }
       ];
@@ -925,7 +924,7 @@ describe('Tokens', function() {
           header: {
             kid: 'did:key:z6MkpTHR8VNsBxYAAWHut2Geadd9jSwuBV8xRoA' +
               'nwWsdvktH#z6LSbysY2xFMRpGMhb7tFTLMpeuPRaqaWM1yECx2AtzE3KCc',
-            alg: 'ECDH-ES+A256KW',
+            alg: 'ECDH-ES+A256KW'
           }
         }
       ];
@@ -1012,7 +1011,7 @@ describe('Tokens', function() {
         header: {
           kid: 'did:key:z6MkpTHR8VNsBxYAAWHut2Geadd9jSwuBV8xRoA' +
             'nwWsdvktH#z6LSbysY2xFMRpGMhb7tFTLMpeuPRaqaWM1yECx2AtzE3KCc',
-          alg: 'ECDH-ES+A256KW',
+          alg: 'ECDH-ES+A256KW'
         }
       }
     ];
@@ -1053,7 +1052,7 @@ describe('Tokens', function() {
           header: {
             kid: 'did:key:z6MkpTHR8VNsBxYAAWHut2Geadd9jSwuBV8xRoA' +
               'nwWsdvktH#z6LSbysY2xFMRpGMhb7tFTLMpeuPRaqaWM1yECx2AtzE3KCc',
-            alg: 'ECDH-ES+A256KW',
+            alg: 'ECDH-ES+A256KW'
           }
         }
       ];
@@ -1100,7 +1099,7 @@ describe('Tokens', function() {
             header: {
               kid: 'did:key:z6MkpTHR8VNsBxYAAWHut2Geadd9jSwuBV8xRoA' +
                 'nwWsdvktH#z6LSbysY2xFMRpGMhb7tFTLMpeuPRaqaWM1yECx2AtzE3KCc',
-              alg: 'ECDH-ES+A256KW',
+              alg: 'ECDH-ES+A256KW'
             }
           }
         ];
@@ -1270,6 +1269,7 @@ describe('Tokens', function() {
       // create tokens
       const tks = await tokens.create(
         {internalId, attributes, tokenCount, minAssuranceForResolution: -1});
+      areTokens(tks);
       ({entity} = await entities.get({internalId}));
 
       // now an attempt to `setMinAssuranceForResolution` should fail because
@@ -1277,7 +1277,6 @@ describe('Tokens', function() {
       result = await entities.setMinAssuranceForResolution(
         {entity, minAssuranceForResolution: 2});
       result.should.equal(false);
-      result = undefined;
 
       // now resolve a token with an assurance failure
       let err;
@@ -1307,7 +1306,6 @@ describe('Tokens', function() {
       result = await entities.setMinAssuranceForResolution(
         {entity, minAssuranceForResolution: 2});
       result.should.equal(false);
-      result = undefined;
       delete entity.lastBatchInvalidationDate;
 
       // now a simulated attempt to `setMinAssuranceForResolution` should
@@ -1317,7 +1315,6 @@ describe('Tokens', function() {
       result = await entities.setMinAssuranceForResolution(
         {entity, minAssuranceForResolution: 2});
       result.should.equal(false);
-      result = undefined;
       entity.batchInvalidationCount--;
 
       // invalidate tokens (and do not update `entity` afterwards before next
@@ -1331,7 +1328,6 @@ describe('Tokens', function() {
       result = await entities.setMinAssuranceForResolution(
         {entity, minAssuranceForResolution: 2});
       result.should.equal(false);
-      result = undefined;
 
       // now an attempt to `setMinAssuranceForResolution` should *still* fail
       // because of a new `batchInvalidationCount` in the database, even
