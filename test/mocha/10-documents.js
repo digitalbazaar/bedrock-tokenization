@@ -1,5 +1,5 @@
 /*!
- * Copyright (c) 2020-2022 Digital Bazaar, Inc. All rights reserved.
+ * Copyright (c) 2020-2026 Digital Bazaar, Inc.
  */
 import {cleanDB, insertRecord, isRegistration} from './helpers.js';
 import {mockDocument, mockDocument2} from './mock.data.js';
@@ -52,6 +52,25 @@ describe('Documents', function() {
         internalId
       });
       jwe.should.eql(encryptedRegistration);
+    });
+    it('should retrieve a registration w/store=false', async () => {
+      const document = {example: 'document'};
+      const externalId = 'did:test:getRegistration-no-store';
+      const {registration: {jwe: encryptedRegistration, internalId}} =
+        await documents.register({
+          externalId,
+          creator: 'someCreatorId',
+          document,
+          store: false,
+          ttl: 30000
+        });
+      should.not.exist(encryptedRegistration);
+
+      const {registration} = await documents.getRegistration({
+        internalId
+      });
+      should.exist(registration);
+      should.not.exist(registration.jwe);
     });
   });
 

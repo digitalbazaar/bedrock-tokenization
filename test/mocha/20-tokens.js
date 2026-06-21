@@ -1,5 +1,5 @@
 /*!
- * Copyright (c) 2020-2025 Digital Bazaar, Inc. All rights reserved.
+ * Copyright (c) 2020-2026 Digital Bazaar, Inc.
  */
 import * as bedrock from '@bedrock/core';
 import * as database from '@bedrock/mongodb';
@@ -166,6 +166,50 @@ describe('Tokens', function() {
 
       // registration record expiration should the same as the token batch
       const {registrationRecord} = result;
+      const {registration: {internalId, expires: expiry}} = registrationRecord;
+      const {tokenBatch} = await getTokenBatch({internalId});
+      // these times could be off by milliseconds, but not minutes
+      const diff = Math.abs(tokenBatch.expires.getTime() - expiry.getTime());
+      diff.should.be.lessThan(60000);
+    }
+  );
+  it('should create token concurrently with registration w/store=false',
+    async function() {
+      const dateOfBirth = '1970-01-01';
+      const expires = '2031-01-01';
+      const identifier = 'T12345678';
+      const issuer = 'VA';
+      const type = 'DriversLicense';
+      const tokenCount = 1;
+      // canonicalize object then hash it then base58 encode it
+      const externalId = encode(crypto.createHash('sha256')
+        .update(canonicalize({dateOfBirth, identifier, issuer}))
+        .digest());
+
+      let result;
+      let err;
+      try {
+        result = await tokens.registerDocumentAndCreate({
+          registerOptions: {
+            externalId,
+            document: {dateOfBirth, expires, identifier, issuer, type},
+            store: false,
+            ttl: 60000
+          },
+          tokenCount
+        });
+      } catch(e) {
+        err = e;
+      }
+      assertNoError(err);
+      should.exist(result);
+      result.should.include.keys(
+        ['registrationRecord', 'tokens', 'validUntil']);
+      result.validUntil.should.be.a('Date');
+
+      // registration record expiration should the same as the token batch
+      const {registrationRecord} = result;
+      should.not.exist(registrationRecord.jwe);
       const {registration: {internalId, expires: expiry}} = registrationRecord;
       const {tokenBatch} = await getTokenBatch({internalId});
       // these times could be off by milliseconds, but not minutes

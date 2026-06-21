@@ -1,5 +1,14 @@
 # bedrock-tokenization ChangeLog
 
+## 23.2.0 - 2026-mm-dd
+
+### Added
+- Allow document registration to occur without storing the encrypted document.
+  To register a document without storing an encrypted copy of it, pass no
+  `recipients`, no `recipientChain`, and set `store: false` when passing
+  document registration options to `documents.register()` or
+  `tokens.registerDocumentAndCreate()`.
+
 ## 23.1.0 - 2025-05-22
 
 ### Changed
