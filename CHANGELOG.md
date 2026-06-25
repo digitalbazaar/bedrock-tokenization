@@ -1,5 +1,13 @@
 # bedrock-tokenization ChangeLog
 
+## 23.4.0 - 2026-06-dd
+
+### Added
+- Allow document registration record expiration to be optional. To register
+  a document that will result in a non-expiring registration record, set
+  `expire: false` and do not set a `ttl` in the document registration options
+  passed to `documents.register()` or `tokens.registerDocumentAndCreate()`.
+
 ## 23.3.0 - 2026-06-21
 
 ### Changed
