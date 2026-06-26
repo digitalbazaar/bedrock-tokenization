@@ -1,5 +1,22 @@
 # bedrock-tokenization ChangeLog
 
+## 23.5.0 - 2026-06-dd
+
+### Added
+- Add `resolutionMeta` feature. When registering a document, a `resolutionMeta`
+  object may be provided for storage along with the related entity. This
+  object will be be included when resolving a token to a pairwise token. The
+  information stored in the object MUST NOT be conditionally different based
+  on the document that is being registered. This is because it will be
+  stored in the associated entity record, and a subset of document registration
+  records (but not all of them) may expire over time while the entity persists
+  or a new additional document registration may refresh the entity record but
+  fail to be stored itself due to an arbitrary failure. If auditing via stored
+  encrypted documents is a requirement, no single individual document on its
+  own can be considered a viable basis for the origin of the information, and
+  either any document will suffice to generate the `resolutionMeta` or the
+  origin of this information must be from some other independent source.
+
 ## 23.4.0 - 2026-06-26
 
 ### Added
