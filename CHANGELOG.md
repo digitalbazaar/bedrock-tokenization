@@ -1,5 +1,18 @@
 # bedrock-tokenization ChangeLog
 
+## 23.4.0 - 2026-06-dd
+
+### Added
+- Add a `ttl: -1` option to signal that document registration record TTL (and
+  related entity and pairwise token TTL) should be set to a maximum allowable
+  value (long-lived persistence is presently implemented via a year 9000
+  expiration date but that could perhaps become indefinite persistence with a
+  future update that might require new API surface and that would not result
+  in deoptimized existing queries). To register a document that will result in
+  a non-expiring registration, and entity records, set `ttl: -1` in the document
+  registration options passed to
+  `documents.register()` or `tokens.registerDocumentAndCreate()`.
+
 ## 23.3.0 - 2026-06-21
 
 ### Changed
