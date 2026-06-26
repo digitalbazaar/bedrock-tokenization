@@ -14,6 +14,7 @@ import crypto from 'node:crypto';
 import {encode} from 'base58-universal';
 import sinon from 'sinon';
 
+const DEFAULT_BATCH_TTL = 240 * 24 * 60 * 60 * 1000;
 const MAX_EXPIRATION_DATE = new Date('9000-01-01T00:00:00Z');
 const MAX_UINT32 = 4294967295;
 
@@ -355,6 +356,8 @@ describe('Tokens', function() {
       assertNoError(err);
       areTokens(tks);
       should.exist(result.pairwiseToken);
+      result.validUntil.should.be.lt(
+        new Date(Date.now() + DEFAULT_BATCH_TTL + 60000));
     });
   it('should resolve token when called twice with same "requester"',
     async function() {
@@ -384,6 +387,9 @@ describe('Tokens', function() {
       should.exist(result2.pairwiseToken);
       result1.pairwiseToken.should.eql(result2.pairwiseToken);
       result2.internalId.should.eql(internalId);
+      const maxDate = new Date(Date.now() + DEFAULT_BATCH_TTL + 60000);
+      result1.validUntil.should.be.lt(maxDate);
+      result2.validUntil.should.be.lt(maxDate);
     });
   it('should resolve token when pairwise token has expired w/same "requester"',
     async function() {
