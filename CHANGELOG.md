@@ -1,6 +1,6 @@
 # bedrock-tokenization ChangeLog
 
-## 23.4.0 - 2026-06-dd
+## 23.4.0 - 2026-06-26
 
 ### Added
 - Add a `ttl: -1` option to signal that document registration record TTL (and
