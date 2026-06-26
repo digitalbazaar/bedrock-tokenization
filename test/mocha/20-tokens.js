@@ -359,6 +359,37 @@ describe('Tokens', function() {
       result.validUntil.should.be.lt(
         new Date(Date.now() + DEFAULT_BATCH_TTL + 60000));
     });
+  it('should resolve token with `resolutionMeta`',
+    async function() {
+      const tokenCount = 1;
+      const internalId = await documents._generateInternalId();
+      const attributes = new Uint8Array([1]);
+      const requester = 'requester';
+      let err;
+      let result;
+
+      // upsert mock entity the token is for
+      await entities._upsert({
+        internalId, ttl: 60000,
+        resolutionMeta: {a: 1, b: 2, c: 'three'}
+      });
+
+      const tks = await tokens.create(
+        {internalId, attributes, tokenCount});
+      const token = tks.tokens[0];
+      try {
+        result = await tokens.resolve({requester, token});
+      } catch(e) {
+        err = e;
+      }
+      assertNoError(err);
+      areTokens(tks);
+      should.exist(result.pairwiseToken);
+      result.validUntil.should.be.lt(
+        new Date(Date.now() + DEFAULT_BATCH_TTL + 60000));
+      should.exist(result.resolutionMeta);
+      result.resolutionMeta.should.eql({a: 1, b: 2, c: 'three'});
+    });
   it('should resolve token when called twice with same "requester"',
     async function() {
       const tokenCount = 1;
@@ -1075,6 +1106,53 @@ describe('Tokens', function() {
     assertNoError(err);
     should.exist(result.pairwiseToken);
     result.validUntil.should.eql(MAX_EXPIRATION_DATE);
+  });
+  it('should register + create and resolve with `resolutionMeta`', async () => {
+    const dateOfBirth = '1980-06-01';
+    const expires = '2031-05-01';
+    const identifier = 'T00008765';
+    const issuer = 'VA';
+    const type = 'DriversLicense';
+    const tokenCount = 1;
+    // canonicalize object then hash it then base58 encode it
+    const externalId = encode(crypto.createHash('sha256')
+      .update(canonicalize({dateOfBirth, identifier, issuer}))
+      .digest());
+
+    let tokenResult;
+    let err;
+    try {
+      tokenResult = await tokens.registerDocumentAndCreate({
+        registerOptions: {
+          externalId,
+          document: {dateOfBirth, expires, identifier, issuer, type},
+          store: false,
+          ttl: -1,
+          resolutionMeta: {foo: 'bar'}
+        },
+        tokenCount
+      });
+    } catch(e) {
+      err = e;
+    }
+    assertNoError(err);
+    should.exist(tokenResult);
+    tokenResult.should.include.keys(['tokens', 'validUntil']);
+    tokenResult.validUntil.should.be.a('Date');
+
+    const [token] = tokenResult.tokens;
+    const requester = 'requester';
+    let result;
+    try {
+      result = await tokens.resolve({requester, token});
+    } catch(e) {
+      err = e;
+    }
+    assertNoError(err);
+    should.exist(result.pairwiseToken);
+    result.validUntil.should.eql(MAX_EXPIRATION_DATE);
+    should.exist(result.resolutionMeta);
+    result.resolutionMeta.should.eql({foo: 'bar'});
   });
   it('should register and upsert a pairwise token', async function() {
     const dateOfBirth = '2000-05-01';
