@@ -31,6 +31,8 @@ const key2 = new X25519KeyAgreementKey2020({
   privateKeyMultibase: 'z3web9AUP49zFCBVEdQ4ksbSmzgi6JqNCA84XNxUAcMDZgZc'
 });
 
+const MAX_EXPIRATION_DATE = new Date('9000-01-01T00:00:00Z');
+
 describe('Documents', function() {
   describe('documents.getRegistration()', () => {
     it('should retrieve a registration for an internalId', async () => {
@@ -189,6 +191,17 @@ describe('Documents', function() {
         ttl: 1000
       });
       isRegistration(result);
+    });
+
+    it('should register a document with max TTL', async () => {
+      const result = await documents.register({
+        externalId: 'did:test:register:with:max:ttl',
+        document: {},
+        store: false,
+        ttl: -1
+      });
+      isRegistration(result);
+      result.registration.expires.should.eql(MAX_EXPIRATION_DATE);
     });
   });
 
