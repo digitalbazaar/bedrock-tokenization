@@ -1,6 +1,6 @@
 # bedrock-tokenization ChangeLog
 
-## 23.5.0 - 2026-06-dd
+## 23.5.0 - 2026-06-27
 
 ### Added
 - Add `resolutionMeta` feature. When registering a document, a `resolutionMeta`
