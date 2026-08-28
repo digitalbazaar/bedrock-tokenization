@@ -1,5 +1,10 @@
 # bedrock-tokenization ChangeLog
 
+## 23.5.1 - TBD
+
+### Fixed
+- Update an entity's `resolutionMeta` on upsert, not only on insert.
+
 ## 23.5.0 - 2026-06-27
 
 ### Added
