@@ -1,6 +1,6 @@
 # bedrock-tokenization ChangeLog
 
-## 23.5.1 - 2026-mm-dd
+## 23.5.1 - 2026-08-28
 
 ### Fixed
 - When upserting an entity, always update its `resolutionMeta` (write the
