@@ -1154,6 +1154,62 @@ describe('Tokens', function() {
     should.exist(result.resolutionMeta);
     result.resolutionMeta.should.eql({foo: 'bar'});
   });
+  it('should update `resolutionMeta` for an existing entity', async () => {
+    const dateOfBirth = '1980-06-01';
+    const expires = '2031-05-01';
+    const identifier = 'T00008766';
+    const issuer = 'VA';
+    const type = 'DriversLicense';
+    const tokenCount = 1;
+    // canonicalize object then hash it then base58 encode it
+    const externalId = encode(crypto.createHash('sha256')
+      .update(canonicalize({dateOfBirth, identifier, issuer}))
+      .digest());
+    const registerOptions = {
+      externalId,
+      document: {dateOfBirth, expires, identifier, issuer, type},
+      store: false,
+      ttl: -1
+    };
+
+    // first registration creates the entity with initial `resolutionMeta`
+    let err;
+    try {
+      await tokens.registerDocumentAndCreate({
+        registerOptions: {...registerOptions, resolutionMeta: {foo: 'bar'}},
+        tokenCount
+      });
+    } catch(e) {
+      err = e;
+    }
+    assertNoError(err);
+
+    // second registration for the *same* entity must refresh `resolutionMeta`
+    let tokenResult;
+    try {
+      tokenResult = await tokens.registerDocumentAndCreate({
+        registerOptions: {...registerOptions, resolutionMeta: {foo: 'baz'}},
+        tokenCount
+      });
+    } catch(e) {
+      err = e;
+    }
+    assertNoError(err);
+    should.exist(tokenResult);
+
+    // resolving the newly created token must return the updated value
+    const [token] = tokenResult.tokens;
+    const requester = 'requester';
+    let result;
+    try {
+      result = await tokens.resolve({requester, token});
+    } catch(e) {
+      err = e;
+    }
+    assertNoError(err);
+    should.exist(result.resolutionMeta);
+    result.resolutionMeta.should.eql({foo: 'baz'});
+  });
   it('should register and upsert a pairwise token', async function() {
     const dateOfBirth = '2000-05-01';
     const expires = '2021-05-01';
